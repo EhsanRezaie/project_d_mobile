@@ -1,0 +1,90 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ/Android Studio
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# VS Code (uncomment if you DON'T want to share VS Code settings)
+# .vscode/
+
+# Flutter/Dart/Pub
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# Symbolication
+app.*.symbols
+
+# Obfuscation
+app.*.map.json
+
+# Android
+/android/.gradle/
+/android/.idea/
+/android/local.properties
+/android/**/*.iml
+/android/**/build/
+/android/captures/
+/android/app/debug/
+/android/app/profile/
+/android/app/release/
+
+# iOS
+/ios/.symlinks/
+/ios/Pods/
+/ios/Podfile.lock
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/flutter_export_environment.sh
+/ios/Flutter/Flutter.podspec
+
+# Web
+/build/web/
+
+# Desktop
+/windows/flutter/ephemeral/
+/windows/runner/Debug/
+/macos/Flutter/ephemeral/
+/linux/flutter/ephemeral/
+
+# Secrets
+*.key
+*.pem
+*.keystore
+*.jks
+.env
+.env.*
+!.env.example
+
+# Testing
+*.pid
+*.old
+*.tmp
+
+# Dependency directories
+**/packages/
+
+# Version file
+.flutter-version
+
+# Coverage reports
+coverage/
+lcov.info
