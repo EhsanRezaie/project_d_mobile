@@ -1,4 +1,4 @@
-## `mobile_dev.md` - Flutter Dating App (Updated Session 16)
+باشه سلطان. فایل `dev.md` رو آپدیت میکنم با تغییراتی که انجام دادیم.
 
 ```markdown
 # mobile_dev.md — Iranian Dating App Flutter (Badoo-style)
@@ -17,13 +17,14 @@
 4. [Project Structure](#4-project-structure)
 5. [Environment & Configuration](#5-environment--configuration)
 6. [Completed Features (Session 16)](#6-completed-features-session-16)
-7. [Session 17: Main Layout & Discover Screen](#7-session-17-main-layout--discover-screen)
-8. [Session 18: Search & Profile Screens](#8-session-18-search--profile-screens)
-9. [Session 19: Chat System (Messages + WebSocket)](#9-session-19-chat-system-messages--websocket)
-10. [Session 20: Likes & Matches Tabs](#10-session-20-likes--matches-tabs)
-11. [Session 21: Block & Safety Features](#11-session-21-block--safety-features)
-12. [Session 22: Polish & Production](#12-session-22-polish--production)
-13. [UI Mockups](#13-ui-mockups-badoo-inspired)
+7. [Onboarding Flow (Session 16.5)](#7-onboarding-flow-session-165)
+8. [Session 17: Main Layout & Discover Screen](#8-session-17-main-layout--discover-screen)
+9. [Session 18: Search & Profile Screens](#9-session-18-search--profile-screens)
+10. [Session 19: Chat System (Messages + WebSocket)](#10-session-19-chat-system-messages--websocket)
+11. [Session 20: Likes & Matches Tabs](#11-session-20-likes--matches-tabs)
+12. [Session 21: Block & Safety Features](#12-session-21-block--safety-features)
+13. [Session 22: Polish & Production](#13-session-22-polish--production)
+14. [UI Mockups](#14-ui-mockups-badoo-inspired)
 
 ---
 
@@ -46,6 +47,7 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 | Item | Status |
 |------|--------|
 | **Session 16** | ✅ COMPLETED |
+| **Session 16.5 (Onboarding Fix)** | ✅ COMPLETED |
 | Flutter project setup | ✅ |
 | Dependencies installed | ✅ |
 | Folder structure created | ✅ |
@@ -54,10 +56,17 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 | Auth Service (login, register) | ✅ |
 | Storage Service (secure token storage) | ✅ |
 | Auth Provider (state management) | ✅ |
+| Onboarding Provider (complete) | ✅ |
 | Splash Screen | ✅ |
 | Welcome Screen | ✅ |
 | Login Screen | ✅ |
-| Register Screen | ✅ |
+| EmailPasswordScreen (new) | ✅ |
+| NameAgeScreen (with registration) | ✅ |
+| HeightWeightScreen | ✅ |
+| PhotoScreen | ✅ |
+| LocationScreen | ✅ |
+| MainScreen (placeholder) | ✅ |
+| Onboarding progress bar | ✅ |
 | Error handling (user-friendly messages) | ✅ |
 | Navigation between auth screens | ✅ |
 
@@ -86,6 +95,7 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 ```
 lib/
 ├── main.dart
+├── main_screen.dart
 ├── config/
 │   ├── app_colors.dart          # Color palette
 │   ├── app_constants.dart       # API URLs, keys
@@ -98,15 +108,22 @@ lib/
 │   ├── auth_service.dart        # Login, register calls
 │   └── storage_service.dart     # Token storage
 ├── providers/
-│   └── auth_provider.dart       # Auth state management
+│   ├── auth_provider.dart       # Auth state management
+│   └── onboarding_provider.dart # Onboarding data + API submit
 ├── screens/
 │   ├── splash_screen.dart       # Splash screen
 │   ├── welcome_screen.dart      # Welcome screen
 │   ├── login_screen.dart        # Login screen
-│   ├── register_screen.dart     # Register screen
-│   └── main_screen.dart         # Main screen (placeholder)
+│   ├── main_screen.dart         # Main screen (bottom nav)
+│   └── onboarding/
+│       ├── email_password_screen.dart   # Step 0: Email & Password
+│       ├── name_age_screen.dart         # Step 1: Name, Age, Gender
+│       ├── height_weight_screen.dart    # Step 2: Height, Weight
+│       ├── photo_screen.dart            # Step 3: Photos (skip)
+│       └── location_screen.dart         # Step 4: Location & Submit
 ├── widgets/
-│   └── loading_widget.dart      # Loading indicator
+│   ├── loading_widget.dart      # Loading indicator
+│   └── progress_bar.dart        # Onboarding progress bar
 └── utils/
     └── validators.dart          # Form validators
 ```
@@ -143,7 +160,7 @@ flutter:
 
 ## 6. Completed Features (Session 16)
 
-### Authentication Flow
+### Authentication Flow (Basic)
 
 ```
 Splash Screen (2 sec)
@@ -168,40 +185,64 @@ On error → Show user-friendly error message
 | `/auth/refresh` | POST | ⬜ |
 | `/auth/logout` | POST | ⬜ |
 
-### Error Handling
+---
 
-| HTTP Status | User Message |
-|-------------|--------------|
-| 401 | "Incorrect email or password. Please try again." |
-| 404 | "User not found. Please check your email." |
-| 409 | "Account already exists. Please login." |
-| 422 | "Please check your information and try again." |
-| Network | "Cannot connect to server. Make sure backend is running." |
+## 7. Onboarding Flow (Session 16.5)
 
-### Files Created (Session 16)
+### Fixed Navigation Flow
 
-| File | Lines | Description |
-|------|-------|-------------|
-| `lib/main.dart` | 50 | App entry point, MultiProvider |
-| `lib/config/app_colors.dart` | 60 | Color definitions |
-| `lib/config/app_theme.dart` | 70 | Theme configuration |
-| `lib/config/app_constants.dart` | 30 | Constants from .env |
-| `lib/models/user.dart` | 50 | User model |
-| `lib/services/api_service.dart` | 80 | HTTP client with Dio |
-| `lib/services/auth_service.dart` | 60 | Auth API calls |
-| `lib/services/storage_service.dart` | 50 | Secure token storage |
-| `lib/providers/auth_provider.dart` | 180 | Auth state management |
-| `lib/screens/splash_screen.dart` | 50 | Splash screen |
-| `lib/screens/welcome_screen.dart` | 80 | Welcome screen |
-| `lib/screens/login_screen.dart` | 150 | Login form |
-| `lib/screens/register_screen.dart` | 200 | Register form |
-| `lib/screens/main_screen.dart` | 50 | Main screen (placeholder) |
-| `lib/widgets/loading_widget.dart` | 30 | Loading indicator |
-| `lib/utils/validators.dart` | 40 | Form validation |
+```
+Welcome Screen (Login / Create Account)
+    ↓ (Create Account)
+EmailPasswordScreen (No progress bar)
+    ↓
+NameAgeScreen (Progress 1/4) ← Registration API call here
+    ↓
+HeightWeightScreen (Progress 2/4)
+    ↓
+PhotoScreen (Progress 3/4)
+    ↓
+LocationScreen (Progress 4/4) ← Submit all data
+    ↓
+MainScreen
+```
+
+### Onboarding Screens Detail
+
+| Screen | Progress Bar | Fields Collected | API Call |
+|--------|--------------|-----------------|----------|
+| EmailPasswordScreen | ❌ | email, password | ❌ |
+| NameAgeScreen | 1/4 | name, age, gender, referralCode | ✅ register() |
+| HeightWeightScreen | 2/4 | height, weight | ❌ |
+| PhotoScreen | 3/4 | photos (optional/skip) | ❌ |
+| LocationScreen | 4/4 | gps, province, city | ✅ submitAllData() |
+
+### OnboardingProvider Methods
+
+| Method | Description |
+|--------|-------------|
+| `saveEmailAndPassword()` | Store temp email/password |
+| `updateUserInfo()` | Store name, age, gender, etc. |
+| `updatePhysicalInfo()` | Store height, weight |
+| `updateLocation()` | Store GPS or manual location |
+| `submitAllData()` | Send all collected data to backend |
+| `getAllData()` | Return all data as Map |
+| `clearAll()` | Reset all stored data |
+
+### Fixed Files (Session 16.5)
+
+| File | Fix Applied |
+|------|-------------|
+| `welcome_screen.dart` | Create Account button → EmailPasswordScreen |
+| `login_screen.dart` | Create Account button → EmailPasswordScreen |
+| `height_weight_screen.dart` | Navigation → PhotoScreen (not HomeScreen) |
+| `photo_screen.dart` | Added ProgressBar (step 3/4) |
+| `location_screen.dart` | Navigation → MainScreen, added validation |
+| `onboarding_provider.dart` | Added updateLocation(), submitAllData(), getAllData() |
 
 ---
 
-## 7. Session 17: Main Layout & Discover Screen
+## 8. Session 17: Main Layout & Discover Screen
 
 ### Goals
 - Bottom navigation bar with 4 tabs
@@ -215,7 +256,7 @@ On error → Show user-friendly error message
 | File | Description |
 |------|-------------|
 | `lib/models/profile.dart` | Profile model for discover |
-| `lib/screens/main_screen.dart` | Bottom nav shell, tab switching |
+| `lib/screens/main_screen.dart` | Bottom nav shell, tab switching (placeholder exists) |
 | `lib/screens/discover_screen.dart` | Card stack, action buttons |
 | `lib/widgets/profile_card.dart` | Profile photo, name, age, bio card |
 | `lib/providers/discover_provider.dart` | Fetch users, track swipe state |
@@ -229,35 +270,9 @@ On error → Show user-friendly error message
 | `/swipes` | POST | Send like/pass |
 | `/swipes/stats` | GET | Get remaining likes |
 
-### Implementation Details
-
-```dart
-// Card swipe using flutter_tinder_swipe
-TinderSwipeCard(
-  card: ProfileCard(user: user),
-  onSwipedLeft: () => onPass(user),
-  onSwipedRight: () => onLike(user),
-)
-
-// Match animation overlay
-if (matched) {
-  showMatchDialog(context, matchedUser);
-}
-```
-
-### Tests Checklist
-
-- [ ] Bottom navigation switches between 4 tabs
-- [ ] Discover loads card stack from API
-- [ ] Swipe right calls like API
-- [ ] Swipe left calls pass API
-- [ ] Match detection works
-- [ ] Match animation shows
-- [ ] "No more profiles" state shows when stack empty
-
 ---
 
-## 8. Session 18: Search & Profile Screens
+## 9. Session 18: Search & Profile Screens
 
 ### Goals
 - Search screen with age / location / gender filters
@@ -279,51 +294,14 @@ if (matched) {
 | `lib/services/profile_service.dart` | Profile API calls |
 | `lib/utils/image_picker_helper.dart` | Camera / gallery picker |
 
-### API Endpoints to Connect
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/search` | GET | Search users with filters |
-| `/users/me` | GET | Get own profile |
-| `/users/me` | PUT | Update own profile |
-| `/users/me/photos` | POST | Upload photo |
-| `/users/me/photos/{id}` | DELETE | Delete photo |
-| `/users/me/photos/{id}/main` | PUT | Set main photo |
-| `/users/{user_id}` | GET | Get other user's profile |
-
-### Search Filters
-
-| Filter | Type | Default |
-|--------|------|---------|
-| age_min | int | 18 |
-| age_max | int | 100 |
-| distance_km | int | null |
-| gender | string | null |
-| province | string | null |
-| city | string | null |
-| has_photos | bool | null |
-| is_verified | bool | null |
-
-### Tests Checklist
-
-- [ ] Search returns results based on filters
-- [ ] Province/city filters work
-- [ ] Profile screen shows user info
-- [ ] Edit profile updates data
-- [ ] Photo upload works
-- [ ] Set main photo works
-- [ ] Delete photo works
-
 ---
 
-## 9. Session 19: Chat System (Messages + WebSocket)
+## 10. Session 19: Chat System (Messages + WebSocket)
 
 ### Goals
 - Chats list screen
 - Chat detail screen with real-time messaging
 - WebSocket connection per chat
-- Message bubbles (sent / received)
-- Unread message indicators
 
 ### Files to Create
 
@@ -337,65 +315,14 @@ if (matched) {
 | `lib/models/message.dart` | Message model |
 | `lib/models/match.dart` | Match model |
 
-### API Endpoints to Connect
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/matches` | GET | Get matches list |
-| `/messages/{match_id}` | GET | Get chat history |
-| `/messages/{match_id}/text` | POST | Send text message |
-| `/messages/{match_id}/photo` | POST | Send photo message |
-| `/messages/{match_id}/voice` | POST | Send voice message |
-| `/messages/{match_id}/accept` | POST | Accept chat request |
-| `/messages/read` | POST | Mark as read |
-| `/messages/delivered` | POST | Mark as delivered |
-
-### WebSocket Connection
-
-```dart
-// Connect to chat
-ws://localhost:8000/api/v1/ws/chat/{match_id}?token={access_token}
-
-// Send message
-channel.sink.add(jsonEncode({'content': message}));
-
-// Receive message
-channel.stream.listen((message) {
-  // Handle incoming message
-});
-```
-
-### Tests Checklist
-
-- [ ] Chats list shows all matches
-- [ ] Last message preview shows
-- [ ] Tap chat opens detail screen
-- [ ] Messages load with pagination
-- [ ] Send text message via WebSocket
-- [ ] Receive messages in real-time
-- [ ] Message status (sent/delivered/read)
-- [ ] Unread message counter
-
 ---
 
-## 10. Session 20: Likes & Matches Tabs
+## 11. Session 20: Likes & Matches Tabs
 
 ### Goals
-- Messages tab (active chats) ✅ from Session 19
+- Messages tab (active chats)
 - Likes Sent tab (profiles you liked)
 - Likes Received tab (premium — who liked you)
-- MatchProvider for state
-
-### Files to Create
-
-| File | Description |
-|------|-------------|
-| `lib/screens/chats_screen.dart` | Updated with 3-tab structure |
-| `lib/widgets/messages_tab.dart` | Matched users list |
-| `lib/widgets/likes_sent_tab.dart` | Profiles I liked |
-| `lib/widgets/likes_received_tab.dart` | Profiles who liked me (premium gate) |
-| `lib/providers/match_provider.dart` | Fetch matches + likes state |
-| `lib/services/like_service.dart` | Get likes sent/received API calls |
 
 ### Tab Structure
 
@@ -406,50 +333,22 @@ Chats Screen
 └── Tab 3 — Likes Received → GET /likes/received (premium only)
 ```
 
-### Premium Gate for Likes Received
-
-```dart
-if (!isPremium) {
-  return PremiumRequiredWidget(
-    message: "Upgrade to premium to see who liked you",
-  );
-}
-```
-
-### Tests Checklist
-
-- [ ] Messages tab shows matches
-- [ ] Likes Sent tab shows profiles user liked
-- [ ] Likes Received tab shows premium gate for free users
-- [ ] Likes Received tab shows list for premium users
-
 ---
 
-## 11. Session 21: Block & Safety Features
+## 12. Session 21: Block & Safety Features
 
 ### Goals
 - Block a user from their profile
 - Block a user from Discover via long-press
 - Unblock from Blocked Users settings screen
-- BlockProvider managing state
 
-### Backend Endpoints (already live)
+### Backend Endpoints
 
 | Action | Method | Endpoint |
 |--------|--------|----------|
 | Block | POST | `/api/v1/blocks/{user_id}/block` |
 | Unblock | POST | `/api/v1/blocks/{user_id}/unblock` |
 | List blocked | GET | `/api/v1/blocks` |
-
-### Files to Create
-
-| File | Description |
-|------|-------------|
-| `lib/models/blocked_user.dart` | BlockedUser model |
-| `lib/services/block_service.dart` | blockUser(), unblockUser(), getBlockedUsers() |
-| `lib/providers/block_provider.dart` | blockedIds set, block/unblock actions |
-| `lib/screens/blocked_users_screen.dart` | Settings screen — list with Unblock button |
-| `lib/widgets/block_action_button.dart` | Reusable Block/Unblock button |
 
 ### Where Block Is Accessible
 
@@ -460,56 +359,18 @@ if (!isPremium) {
 | Chat detail screen | Tap ⋮ menu → "Block User" |
 | Settings screen | "Blocked Users" list item |
 
-### Block Flow
-
-1. User taps Block
-2. Confirmation dialog: "Block [Name]? They won't be able to message you or appear in your Discover."
-3. User confirms → POST to block endpoint
-4. On success:
-   - BlockProvider adds userId to blockedIds
-   - DiscoverProvider removes card from stack
-   - If in chat: input disabled, banner shown
-5. Snackbar: "User blocked"
-
-### Chat Behaviour After Block
-
-```
-┌──────────────────────────────────┐
-│  ⚠️  You have blocked this user.  │
-│     Unblock to send messages.    │
-└──────────────────────────────────┘
-```
-
 ---
 
-## 12. Session 22: Polish & Production
+## 13. Session 22: Polish & Production
 
 ### Goals
 - Hero animations for profile images
-- Staggered list animations
 - Shimmer / skeleton loaders
 - Network error handling + retry
 - Offline indicator
 - Build APK + App Bundle
 
-### Tasks
-
-1. **Animations**
-   - Hero animations on profile photos
-   - Staggered list animations
-   - Smooth page transitions
-
-2. **Loading States**
-   - Shimmer effect on Discover cards
-   - Skeleton loaders on search results
-   - Loading indicators on chat list
-
-3. **Error Handling**
-   - Global Dio interceptor for errors
-   - Retry logic for failed requests
-   - Offline banner when no connection
-
-4. **Build**
+### Build Commands
 
 ```bash
 # Debug APK
@@ -524,7 +385,7 @@ flutter build appbundle --release
 
 ---
 
-## 13. UI Mockups (Badoo-inspired)
+## 14. UI Mockups (Badoo-inspired)
 
 ### Discover Screen
 ```
@@ -556,9 +417,6 @@ flutter build appbundle --release
 ├─────────────────────────────┤
 │  ○ User Name       2 min ago│
 │    Last message preview      │
-├─────────────────────────────┤
-│  ○ User Name      1 hour ago│
-│    Last message preview      │
 └─────────────────────────────┘
 ```
 
@@ -575,26 +433,9 @@ flutter build appbundle --release
 │  ┌──────────────────────┐   │
 │  │ Bio text here...      │   │
 │  └──────────────────────┘   │
-│  Stats: 150 likes, 45 chats │
 │  ┌──────────────────────┐   │
 │  │   Edit Profile       │   │
 │  └──────────────────────┘   │
-│  ┌──────────────────────┐   │
-│  │   Get Premium        │   │
-│  └──────────────────────┘   │
-└─────────────────────────────┘
-```
-
-### Blocked Users Screen
-```
-┌─────────────────────────────┐
-│  ←  Blocked Users           │
-├─────────────────────────────┤
-│  ○ Username         Unblock │
-├─────────────────────────────┤
-│  ○ Username         Unblock │
-├─────────────────────────────┤
-│  ○ Username         Unblock │
 └─────────────────────────────┘
 ```
 
@@ -605,4 +446,28 @@ flutter build appbundle --release
 **Session 17: Main Layout & Discover Screen**
 
 Ready to start Session 17 when you are. 🚀
+```
+
+## خلاصه تغییرات اعمال شده در dev.md:
+
+1. **Current Status** - اضافه شدن Session 16.5 و Onboarding Fix
+2. **Project Structure** - آپدیت با فایل‌های جدید onboarding و widgets
+3. **Onboarding Flow (Section 7)** - اضافه شدن کامل
+   - جدول screens با progress bar و API calls
+   - OnboardingProvider متدها
+   - فایل‌های fixed شده
+4. **Session 17 و بعدش** - شماره‌ها تغییر کردند
+
+کامیت برای این تغییر:
+
+```bash
+git add dev.md
+git commit -m "docs: update dev.md with onboarding flow changes (Session 16.5)
+
+- Add complete onboarding flow documentation
+- Add EmailPasswordScreen as step 0
+- Document all 5 onboarding screens with progress bar steps
+- Add OnboardingProvider methods reference
+- List all fixed files from Session 16.5
+- Update project structure with new files"
 ```
