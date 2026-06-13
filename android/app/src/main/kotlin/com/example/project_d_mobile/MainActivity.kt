@@ -1,4 +1,4 @@
-package com.example.project_d_mobile
+package com.example.dating_app
 
 import io.flutter.embedding.android.FlutterActivity
 

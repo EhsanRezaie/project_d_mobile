@@ -12,7 +12,6 @@ class ApiService {
       headers: {'Content-Type': 'application/json'},
     ));
     
-    // Add logging interceptor for debugging
     _dio.interceptors.add(LogInterceptor(
       requestBody: true,
       responseBody: true,
@@ -29,32 +28,26 @@ class ApiService {
     _dio.options.headers.remove('Authorization');
   }
   
-  // GET request
   static Future<Response> get(String path, {Map<String, dynamic>? queryParams}) async {
     return await _dio.get(path, queryParameters: queryParams);
   }
   
-  // POST request
-  static Future<Response> post(String path, {dynamic data}) async {
-    return await _dio.post(path, data: data);
+  static Future<Response> post(String path, {dynamic data, Map<String, dynamic>? queryParams}) async {
+    return await _dio.post(path, data: data, queryParameters: queryParams);
   }
   
-  // PUT request
   static Future<Response> put(String path, {dynamic data}) async {
     return await _dio.put(path, data: data);
   }
   
-  // PATCH request
   static Future<Response> patch(String path, {dynamic data}) async {
     return await _dio.patch(path, data: data);
   }
   
-  // DELETE request
   static Future<Response> delete(String path) async {
     return await _dio.delete(path);
   }
   
-  // Upload file with FormData
   static Future<Response> upload(String path, FormData formData) async {
     return await _dio.post(path, data: formData);
   }

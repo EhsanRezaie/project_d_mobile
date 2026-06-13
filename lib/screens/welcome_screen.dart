@@ -1,12 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:dating_app/generated/app_localizations.dart';
 import 'login_screen.dart';
-import 'register_screen.dart';
+import 'onboarding/email_password_screen.dart';  // تغییر: اضافه شد
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
 
   @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  void _changeLanguage(Locale locale) {
+    // TODO: Implement language change
+  }
+
+  void _showLanguageDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Select Language'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: const Text('English'),
+              onTap: () {
+                _changeLanguage(const Locale('en'));
+                Navigator.pop(ctx);
+              },
+            ),
+            ListTile(
+              title: const Text('فارسی'),
+              onTap: () {
+                _changeLanguage(const Locale('fa'));
+                Navigator.pop(ctx);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -22,28 +62,30 @@ class WelcomeScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Spacer(),
-                const Icon(
-                  Icons.favorite,
-                  size: 100,
-                  color: Colors.white,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.language, color: Colors.white),
+                      onPressed: _showLanguageDialog,
+                    ),
+                  ],
                 ),
+                const Spacer(),
+                const Icon(Icons.favorite, size: 100, color: Colors.white),
                 const SizedBox(height: 24),
-                const Text(
-                  'Find Your Match',
-                  style: TextStyle(
+                Text(
+                  t.welcome_title,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  'Connect with people around you',
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 16,
-                  ),
+                Text(
+                  t.welcome_subtitle,
+                  style: const TextStyle(color: Colors.white70, fontSize: 16),
                   textAlign: TextAlign.center,
                 ),
                 const Spacer(),
@@ -64,10 +106,7 @@ class WelcomeScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                    ),
+                    child: Text(t.login_button),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -75,9 +114,10 @@ class WelcomeScreen extends StatelessWidget {
                   width: double.infinity,
                   child: OutlinedButton(
                     onPressed: () {
+                      // تغییر: رفتن به EmailPasswordScreen به جای NameAgeScreen
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const RegisterScreen()),
+                        MaterialPageRoute(builder: (_) => const EmailPasswordScreen()),
                       );
                     },
                     style: OutlinedButton.styleFrom(
@@ -88,10 +128,7 @@ class WelcomeScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    child: const Text(
-                      'Create Account',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                    ),
+                    child: Text(t.create_account_button),
                   ),
                 ),
               ],
