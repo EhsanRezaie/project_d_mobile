@@ -145,4 +145,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get select_gender => 'Select gender';
+
+  @override
+  String get continue_with_google => 'Continue with Google';
 }

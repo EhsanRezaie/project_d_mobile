@@ -4,7 +4,7 @@ import 'package:dating_app/generated/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import 'main_screen.dart';
 import 'welcome_screen.dart';
-import 'onboarding/email_password_screen.dart';  // تغییر: اضافه شد
+import 'onboarding/email_password_screen.dart'; 
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -172,7 +172,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   Text(t.dont_have_account),
                   TextButton(
                     onPressed: () {
-                      // تغییر: رفتن به EmailPasswordScreen به جای NameAgeScreen
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (_) => const EmailPasswordScreen()),

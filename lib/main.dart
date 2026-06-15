@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'generated/app_localizations.dart';
@@ -7,6 +6,7 @@ import 'config/app_constants.dart';
 import 'services/api_service.dart';
 import 'providers/auth_provider.dart';
 import 'providers/onboarding_provider.dart';
+import 'providers/language_provider.dart';   
 import 'screens/splash_screen.dart';
 
 void main() async {
@@ -31,18 +31,23 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => OnboardingProvider()),
+        ChangeNotifierProvider(create: (_) => LanguageProvider()),  
       ],
-      child: MaterialApp(
-        title: 'Dating App',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          useMaterial3: true,
-        ),
-        debugShowCheckedModeBanner: false,
-        locale: const Locale('en'),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: const SplashScreen(),
+      child: Consumer<LanguageProvider>(
+        builder: (context, languageProvider, child) {
+          return MaterialApp(
+            title: 'Dating App',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+              useMaterial3: true,
+            ),
+            debugShowCheckedModeBanner: false,
+            locale: languageProvider.locale, 
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const SplashScreen(),
+          );
+        },
       ),
     );
   }

@@ -1,4 +1,4 @@
-باشه سلطان. فایل `dev.md` رو آپدیت میکنم با تغییراتی که انجام دادیم.
+باشه. `dev.md` رو آپدیت میکنم با تغییراتی که روی `welcome_screen.dart` انجام دادیم.
 
 ```markdown
 # mobile_dev.md — Iranian Dating App Flutter (Badoo-style)
@@ -18,13 +18,14 @@
 5. [Environment & Configuration](#5-environment--configuration)
 6. [Completed Features (Session 16)](#6-completed-features-session-16)
 7. [Onboarding Flow (Session 16.5)](#7-onboarding-flow-session-165)
-8. [Session 17: Main Layout & Discover Screen](#8-session-17-main-layout--discover-screen)
-9. [Session 18: Search & Profile Screens](#9-session-18-search--profile-screens)
-10. [Session 19: Chat System (Messages + WebSocket)](#10-session-19-chat-system-messages--websocket)
-11. [Session 20: Likes & Matches Tabs](#11-session-20-likes--matches-tabs)
-12. [Session 21: Block & Safety Features](#12-session-21-block--safety-features)
-13. [Session 22: Polish & Production](#13-session-22-polish--production)
-14. [UI Mockups](#14-ui-mockups-badoo-inspired)
+8. [Session 16.6: Welcome Screen UI Enhancements](#8-session-166-welcome-screen-ui-enhancements)
+9. [Session 17: Main Layout & Discover Screen](#9-session-17-main-layout--discover-screen)
+10. [Session 18: Search & Profile Screens](#10-session-18-search--profile-screens)
+11. [Session 19: Chat System (Messages + WebSocket)](#11-session-19-chat-system-messages--websocket)
+12. [Session 20: Likes & Matches Tabs](#12-session-20-likes--matches-tabs)
+13. [Session 21: Block & Safety Features](#13-session-21-block--safety-features)
+14. [Session 22: Polish & Production](#14-session-22-polish--production)
+15. [UI Mockups](#15-ui-mockups-badoo-inspired)
 
 ---
 
@@ -48,6 +49,7 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 |------|--------|
 | **Session 16** | ✅ COMPLETED |
 | **Session 16.5 (Onboarding Fix)** | ✅ COMPLETED |
+| **Session 16.6 (Welcome Screen UI)** | ✅ COMPLETED |
 | Flutter project setup | ✅ |
 | Dependencies installed | ✅ |
 | Folder structure created | ✅ |
@@ -57,18 +59,18 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 | Storage Service (secure token storage) | ✅ |
 | Auth Provider (state management) | ✅ |
 | Onboarding Provider (complete) | ✅ |
+| Google Auth Provider (placeholder) | ✅ |
 | Splash Screen | ✅ |
-| Welcome Screen | ✅ |
+| Welcome Screen (enhanced) | ✅ |
 | Login Screen | ✅ |
-| EmailPasswordScreen (new) | ✅ |
+| EmailPasswordScreen | ✅ |
 | NameAgeScreen (with registration) | ✅ |
 | HeightWeightScreen | ✅ |
 | PhotoScreen | ✅ |
 | LocationScreen | ✅ |
 | MainScreen (placeholder) | ✅ |
-| Onboarding progress bar | ✅ |
-| Error handling (user-friendly messages) | ✅ |
-| Navigation between auth screens | ✅ |
+| Language selection (English/Persian) | ✅ |
+| Google Sign-In button | ✅ |
 
 ---
 
@@ -109,10 +111,12 @@ lib/
 │   └── storage_service.dart     # Token storage
 ├── providers/
 │   ├── auth_provider.dart       # Auth state management
+│   ├── language_provider.dart   # Language selection
+│   ├── google_auth_provider.dart # Google sign-in (placeholder)
 │   └── onboarding_provider.dart # Onboarding data + API submit
 ├── screens/
 │   ├── splash_screen.dart       # Splash screen
-│   ├── welcome_screen.dart      # Welcome screen
+│   ├── welcome_screen.dart      # Welcome screen (enhanced)
 │   ├── login_screen.dart        # Login screen
 │   ├── main_screen.dart         # Main screen (bottom nav)
 │   └── onboarding/
@@ -154,6 +158,7 @@ WS_BASE_URL=ws://localhost:8000/api/v1
 flutter:
   assets:
     - .env
+    - assets/images/google_logo.png
 ```
 
 ---
@@ -192,7 +197,7 @@ On error → Show user-friendly error message
 ### Fixed Navigation Flow
 
 ```
-Welcome Screen (Login / Create Account)
+Welcome Screen (Login / Create Account / Continue with Google)
     ↓ (Create Account)
 EmailPasswordScreen (No progress bar)
     ↓
@@ -229,20 +234,72 @@ MainScreen
 | `getAllData()` | Return all data as Map |
 | `clearAll()` | Reset all stored data |
 
-### Fixed Files (Session 16.5)
+---
 
-| File | Fix Applied |
-|------|-------------|
-| `welcome_screen.dart` | Create Account button → EmailPasswordScreen |
-| `login_screen.dart` | Create Account button → EmailPasswordScreen |
-| `height_weight_screen.dart` | Navigation → PhotoScreen (not HomeScreen) |
-| `photo_screen.dart` | Added ProgressBar (step 3/4) |
-| `location_screen.dart` | Navigation → MainScreen, added validation |
-| `onboarding_provider.dart` | Added updateLocation(), submitAllData(), getAllData() |
+## 8. Session 16.6: Welcome Screen UI Enhancements
+
+### Goals
+- Redesign welcome screen with clean Badoo-inspired layout
+- Add 3 uniform white elevated buttons
+- Add Google sign-in button with custom asset icon
+- Add language selection dialog (English/Persian)
+- Connect Google button to GoogleAuthProvider placeholder
+
+### Welcome Screen Features
+
+| Element | Description |
+|---------|-------------|
+| Background | LinearGradient (Color 0xFF2C3E50 to 0xFF3498DB) |
+| Logo | Icons.favorite (white, size 100) |
+| Title | Localized via AppLocalizations.welcome_title |
+| Subtitle | Localized via AppLocalizations.welcome_subtitle |
+| Login Button | White elevated button, 75% width, 16px padding, 30px radius |
+| Create Account Button | White elevated button, same style as Login |
+| Continue with Google Button | White elevated button with custom icon asset |
+| Language Button | Top-right corner, opens dialog with English/Persian options |
+
+### Button Specifications
+
+| Property | Value |
+|----------|-------|
+| Button width | 75% of screen width |
+| Button height | auto (vertical padding 16px) |
+| Background color | Colors.white |
+| Text color | Color(0xFF2C3E50) |
+| Font size | 16px |
+| Font weight | w600 |
+| Border radius | 30px |
+| Button spacing | 16px between buttons |
+
+### Google Sign-In Setup
+
+1. **Asset:** `assets/images/google_logo.png` (22x22px)
+2. **Provider:** `lib/providers/google_auth_provider.dart`
+3. **Method:** `signInWithGoogle()` (placeholder, prints to console)
+
+### Localization Updates
+
+Added `continue_with_google` to localization files:
+
+| Language | Translation |
+|----------|-------------|
+| English | "Continue with Google" |
+| Persian (Farsi) | "ادامه با گوگل" |
+
+### Files Created/Modified
+
+| File | Change |
+|------|--------|
+| `lib/screens/welcome_screen.dart` | Complete redesign |
+| `lib/providers/google_auth_provider.dart` | New placeholder provider |
+| `lib/generated/app_localizations.dart` | Added continue_with_google getter |
+| `lib/generated/app_localizations_en.dart` | Added English translation |
+| `lib/generated/app_localizations_fa.dart` | Added Persian translation |
+| `pubspec.yaml` | Added google_logo.png asset |
 
 ---
 
-## 8. Session 17: Main Layout & Discover Screen
+## 9. Session 17: Main Layout & Discover Screen
 
 ### Goals
 - Bottom navigation bar with 4 tabs
@@ -272,7 +329,7 @@ MainScreen
 
 ---
 
-## 9. Session 18: Search & Profile Screens
+## 10. Session 18: Search & Profile Screens
 
 ### Goals
 - Search screen with age / location / gender filters
@@ -296,7 +353,7 @@ MainScreen
 
 ---
 
-## 10. Session 19: Chat System (Messages + WebSocket)
+## 11. Session 19: Chat System (Messages + WebSocket)
 
 ### Goals
 - Chats list screen
@@ -317,7 +374,7 @@ MainScreen
 
 ---
 
-## 11. Session 20: Likes & Matches Tabs
+## 12. Session 20: Likes & Matches Tabs
 
 ### Goals
 - Messages tab (active chats)
@@ -335,7 +392,7 @@ Chats Screen
 
 ---
 
-## 12. Session 21: Block & Safety Features
+## 13. Session 21: Block & Safety Features
 
 ### Goals
 - Block a user from their profile
@@ -361,7 +418,7 @@ Chats Screen
 
 ---
 
-## 13. Session 22: Polish & Production
+## 14. Session 22: Polish & Production
 
 ### Goals
 - Hero animations for profile images
@@ -385,7 +442,29 @@ flutter build appbundle --release
 
 ---
 
-## 14. UI Mockups (Badoo-inspired)
+## 15. UI Mockups (Badoo-inspired)
+
+### Welcome Screen (Current)
+```
+┌─────────────────────────────┐
+│                          🌐  │
+│                             │
+│            ❤️               │
+│      Find Your Match        │
+│   Connect with people...    │
+│                             │
+│     ┌─────────────────┐     │
+│     │      Login      │     │
+│     └─────────────────┘     │
+│     ┌─────────────────┐     │
+│     │  Create Account │     │
+│     └─────────────────┘     │
+│     ┌─────────────────┐     │
+│     │ G Continue with │     │
+│     │     Google      │     │
+│     └─────────────────┘     │
+└─────────────────────────────┘
+```
 
 ### Discover Screen
 ```
@@ -450,24 +529,27 @@ Ready to start Session 17 when you are. 🚀
 
 ## خلاصه تغییرات اعمال شده در dev.md:
 
-1. **Current Status** - اضافه شدن Session 16.5 و Onboarding Fix
-2. **Project Structure** - آپدیت با فایل‌های جدید onboarding و widgets
-3. **Onboarding Flow (Section 7)** - اضافه شدن کامل
-   - جدول screens با progress bar و API calls
-   - OnboardingProvider متدها
-   - فایل‌های fixed شده
-4. **Session 17 و بعدش** - شماره‌ها تغییر کردند
+1. **Current Status** - اضافه شدن Session 16.6 و Google Auth Provider و Language selection
+2. **Section 8** - اضافه شدن کامل Session 16.6 با جزییات:
+   - Button specifications (width 75%, spacing 16px)
+   - Google Sign-In setup with asset icon
+   - Localization updates (continue_with_google)
+   - Files created/modified
+3. **Tech Stack** - بدون تغییر (نیاز نبود)
+4. **Project Structure** - اضافه شدن language_provider و google_auth_provider
+5. **UI Mockups** - اضافه شدن Welcome Screen mockup فعلی
 
 کامیت برای این تغییر:
 
 ```bash
 git add dev.md
-git commit -m "docs: update dev.md with onboarding flow changes (Session 16.5)
+git commit -m "docs: add Session 16.6 welcome screen UI enhancements
 
-- Add complete onboarding flow documentation
-- Add EmailPasswordScreen as step 0
-- Document all 5 onboarding screens with progress bar steps
-- Add OnboardingProvider methods reference
-- List all fixed files from Session 16.5
-- Update project structure with new files"
+- Add 3 uniform white elevated buttons (Login, Create Account, Google)
+- Set button width to 75% with 16px spacing
+- Add Google sign-in button with custom asset icon
+- Add language selection dialog (English/Persian)
+- Add GoogleAuthProvider placeholder
+- Update localizations with continue_with_google string
+- Update project structure with new providers"
 ```

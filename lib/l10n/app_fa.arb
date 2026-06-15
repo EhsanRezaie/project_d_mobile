@@ -45,5 +45,6 @@
   "already_have_account": "حساب کاربری دارید؟",
   "dont_have_account": "حساب کاربری ندارید؟",
   "or": "یا",
-  "select_gender": "انتخاب جنسیت"
+  "select_gender": "انتخاب جنسیت",
+  "continue_with_google": "ادامه با گوگل"
 }

@@ -69,7 +69,8 @@ class AppLocalizationsFa extends AppLocalizations {
   String get photo_title => 'آپلود عکس پروفایل';
 
   @override
-  String get photo_subtitle => 'حداقل یک عکس اضافه کنید تا شانس تطابق بیشتری داشته باشید';
+  String get photo_subtitle =>
+      'حداقل یک عکس اضافه کنید تا شانس تطابق بیشتری داشته باشید';
 
   @override
   String get gallery_button => 'انتخاب از گالری';
@@ -81,7 +82,8 @@ class AppLocalizationsFa extends AppLocalizations {
   String get location_title => 'موقعیت مکانی';
 
   @override
-  String get location_subtitle => 'موقعیت خود را تنظیم کنید تا افراد نزدیک را پیدا کنید';
+  String get location_subtitle =>
+      'موقعیت خود را تنظیم کنید تا افراد نزدیک را پیدا کنید';
 
   @override
   String get gps_option => 'استفاده از موقعیت فعلی (GPS)';
@@ -145,4 +147,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get select_gender => 'انتخاب جنسیت';
+
+  @override
+  String get continue_with_google => 'ادامه با گوگل';
 }
