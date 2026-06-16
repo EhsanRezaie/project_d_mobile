@@ -101,8 +101,8 @@ class _EmailPasswordScreenState extends State<EmailPasswordScreen> {
                   ),
                   keyboardType: TextInputType.emailAddress,
                   validator: (v) {
-                    if (v == null || v.isEmpty) return t.email_required;
-                    if (!v.contains('@') || !v.contains('.')) return t.email_invalid;
+                    if (v == null || v.isEmpty) return 't.email_required';
+                    if (!v.contains('@') || !v.contains('.')) return' t.email_invalid';
                     return null;
                   },
                 ),
@@ -110,7 +110,7 @@ class _EmailPasswordScreenState extends State<EmailPasswordScreen> {
                 TextFormField(
                   controller: _passwordController,
                   decoration: InputDecoration(
-                    labelText: t.password_label,
+                    labelText: 't.password_label',
                     prefixIcon: const Icon(Icons.lock, color: Color(0xFF2C3E50)),
                     suffixIcon: IconButton(
                       icon: Icon(

@@ -5,8 +5,12 @@ class LanguageProvider extends ChangeNotifier {
 
   Locale get locale => _locale;
 
-  void setLanguage(Locale locale) {
-    _locale = locale;
+  void changeLanguage(String languageCode) {
+    _locale = Locale(languageCode);
     notifyListeners();
   }
+
+  String get currentLanguageCode => _locale.languageCode;
+
+  bool get isEnglish => _locale.languageCode == 'en';
 }

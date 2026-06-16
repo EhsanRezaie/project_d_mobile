@@ -29,12 +29,12 @@ class _PhotoScreenState extends State<PhotoScreen> {
                     const Icon(Icons.camera_alt, size: 80),
                     const SizedBox(height: 20),
                     Text(
-                      t.photo_title,
+                      't.photo_title',
                       style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      t.photo_subtitle,
+                      't.photo_subtitle',
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 40),
@@ -43,7 +43,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
                         // TODO: Open image picker
                       },
                       icon: const Icon(Icons.photo_library),
-                      label: Text(t.gallery_button),
+                      label: Text('t.gallery_button'),
                     ),
                     const SizedBox(height: 16),
                     OutlinedButton.icon(
@@ -51,12 +51,12 @@ class _PhotoScreenState extends State<PhotoScreen> {
                         // TODO: Open camera
                       },
                       icon: const Icon(Icons.camera_alt),
-                      label: Text(t.camera_button),
+                      label: Text('t.camera_button'),
                     ),
                     const Spacer(),
                     TextButton(
                       onPressed: _nextStep,
-                      child: Text(t.skip_button),
+                      child: Text('t.skip_button'),
                     ),
                     const SizedBox(height: 16),
                   ],

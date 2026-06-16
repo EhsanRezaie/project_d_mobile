@@ -1,5 +1,3 @@
-باشه. `dev.md` رو آپدیت میکنم با تغییراتی که روی `welcome_screen.dart` انجام دادیم.
-
 ```markdown
 # mobile_dev.md — Iranian Dating App Flutter (Badoo-style)
 
@@ -16,16 +14,9 @@
 3. [Tech Stack](#3-tech-stack)
 4. [Project Structure](#4-project-structure)
 5. [Environment & Configuration](#5-environment--configuration)
-6. [Completed Features (Session 16)](#6-completed-features-session-16)
-7. [Onboarding Flow (Session 16.5)](#7-onboarding-flow-session-165)
-8. [Session 16.6: Welcome Screen UI Enhancements](#8-session-166-welcome-screen-ui-enhancements)
-9. [Session 17: Main Layout & Discover Screen](#9-session-17-main-layout--discover-screen)
-10. [Session 18: Search & Profile Screens](#10-session-18-search--profile-screens)
-11. [Session 19: Chat System (Messages + WebSocket)](#11-session-19-chat-system-messages--websocket)
-12. [Session 20: Likes & Matches Tabs](#12-session-20-likes--matches-tabs)
-13. [Session 21: Block & Safety Features](#13-session-21-block--safety-features)
-14. [Session 22: Polish & Production](#14-session-22-polish--production)
-15. [UI Mockups](#15-ui-mockups-badoo-inspired)
+6. [Completed Features (Session 16 - Night Build)](#6-completed-features-session-16---night-build)
+7. [TODO - Next Session](#7-todo---next-session)
+8. [UI Mockups](#8-ui-mockups-badoo-inspired)
 
 ---
 
@@ -47,9 +38,7 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 
 | Item | Status |
 |------|--------|
-| **Session 16** | ✅ COMPLETED |
-| **Session 16.5 (Onboarding Fix)** | ✅ COMPLETED |
-| **Session 16.6 (Welcome Screen UI)** | ✅ COMPLETED |
+| **Session 16 (Night Build)** | ✅ COMPLETED |
 | Flutter project setup | ✅ |
 | Dependencies installed | ✅ |
 | Folder structure created | ✅ |
@@ -59,18 +48,16 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 | Storage Service (secure token storage) | ✅ |
 | Auth Provider (state management) | ✅ |
 | Onboarding Provider (complete) | ✅ |
-| Google Auth Provider (placeholder) | ✅ |
+| Language Provider | ✅ |
 | Splash Screen | ✅ |
 | Welcome Screen (enhanced) | ✅ |
-| Login Screen | ✅ |
-| EmailPasswordScreen | ✅ |
-| NameAgeScreen (with registration) | ✅ |
-| HeightWeightScreen | ✅ |
-| PhotoScreen | ✅ |
-| LocationScreen | ✅ |
-| MainScreen (placeholder) | ✅ |
+| Email & Password validation | ✅ |
+| Password visibility toggle | ✅ |
 | Language selection (English/Persian) | ✅ |
-| Google Sign-In button | ✅ |
+| Google Sign-In button with custom icon | ✅ |
+| Input filtering (English only) | ✅ |
+| Real-time validation with localized errors | ✅ |
+| Password min length: 8 characters | ✅ |
 
 ---
 
@@ -112,7 +99,6 @@ lib/
 ├── providers/
 │   ├── auth_provider.dart       # Auth state management
 │   ├── language_provider.dart   # Language selection
-│   ├── google_auth_provider.dart # Google sign-in (placeholder)
 │   └── onboarding_provider.dart # Onboarding data + API submit
 ├── screens/
 │   ├── splash_screen.dart       # Splash screen
@@ -128,6 +114,13 @@ lib/
 ├── widgets/
 │   ├── loading_widget.dart      # Loading indicator
 │   └── progress_bar.dart        # Onboarding progress bar
+├── l10n/
+│   ├── app_en.arb               # English translations
+│   └── app_fa.arb               # Persian translations
+├── generated/
+│   ├── app_localizations.dart   # Generated localization
+│   ├── app_localizations_en.dart
+│   └── app_localizations_fa.dart
 └── utils/
     └── validators.dart          # Form validators
 ```
@@ -163,310 +156,147 @@ flutter:
 
 ---
 
-## 6. Completed Features (Session 16)
-
-### Authentication Flow (Basic)
-
-```
-Splash Screen (2 sec)
-    ↓
-Check token in secure storage
-    ↓
-If token exists → Main Screen
-If no token → Welcome Screen
-    ↓
-Login / Register
-    ↓
-On success → Save token → Main Screen
-On error → Show user-friendly error message
-```
-
-### API Integration
-
-| Endpoint | Method | Status |
-|----------|--------|--------|
-| `/auth/register` | POST | ✅ |
-| `/auth/login` | POST | ✅ |
-| `/auth/refresh` | POST | ⬜ |
-| `/auth/logout` | POST | ⬜ |
-
----
-
-## 7. Onboarding Flow (Session 16.5)
-
-### Fixed Navigation Flow
-
-```
-Welcome Screen (Login / Create Account / Continue with Google)
-    ↓ (Create Account)
-EmailPasswordScreen (No progress bar)
-    ↓
-NameAgeScreen (Progress 1/4) ← Registration API call here
-    ↓
-HeightWeightScreen (Progress 2/4)
-    ↓
-PhotoScreen (Progress 3/4)
-    ↓
-LocationScreen (Progress 4/4) ← Submit all data
-    ↓
-MainScreen
-```
-
-### Onboarding Screens Detail
-
-| Screen | Progress Bar | Fields Collected | API Call |
-|--------|--------------|-----------------|----------|
-| EmailPasswordScreen | ❌ | email, password | ❌ |
-| NameAgeScreen | 1/4 | name, age, gender, referralCode | ✅ register() |
-| HeightWeightScreen | 2/4 | height, weight | ❌ |
-| PhotoScreen | 3/4 | photos (optional/skip) | ❌ |
-| LocationScreen | 4/4 | gps, province, city | ✅ submitAllData() |
-
-### OnboardingProvider Methods
-
-| Method | Description |
-|--------|-------------|
-| `saveEmailAndPassword()` | Store temp email/password |
-| `updateUserInfo()` | Store name, age, gender, etc. |
-| `updatePhysicalInfo()` | Store height, weight |
-| `updateLocation()` | Store GPS or manual location |
-| `submitAllData()` | Send all collected data to backend |
-| `getAllData()` | Return all data as Map |
-| `clearAll()` | Reset all stored data |
-
----
-
-## 8. Session 16.6: Welcome Screen UI Enhancements
-
-### Goals
-- Redesign welcome screen with clean Badoo-inspired layout
-- Add 3 uniform white elevated buttons
-- Add Google sign-in button with custom asset icon
-- Add language selection dialog (English/Persian)
-- Connect Google button to GoogleAuthProvider placeholder
+## 6. Completed Features (Session 16 - Night Build)
 
 ### Welcome Screen Features
 
 | Element | Description |
 |---------|-------------|
-| Background | LinearGradient (Color 0xFF2C3E50 to 0xFF3498DB) |
-| Logo | Icons.favorite (white, size 100) |
+| Background | Color(0xFFFBF9F9) - light gray |
+| App Name | "AURA" (font size 40, weight 700) |
 | Title | Localized via AppLocalizations.welcome_title |
 | Subtitle | Localized via AppLocalizations.welcome_subtitle |
-| Login Button | White elevated button, 75% width, 16px padding, 30px radius |
-| Create Account Button | White elevated button, same style as Login |
-| Continue with Google Button | White elevated button with custom icon asset |
-| Language Button | Top-right corner, opens dialog with English/Persian options |
+| Community Text | Localized via AppLocalizations.join_community_text |
+| Email Field | With input filtering (English only), real-time validation |
+| Password Field | With eye toggle, input filtering, real-time validation, min 8 chars |
+| Sign Up Button | Primary navy button |
+| OR Divider | Centered "OR" text |
+| Google Button | Custom asset icon + localized text |
+| Sign In Link | "Already have an account? Sign in" |
+| Terms & Policy | Small text at bottom |
+| Language Button | Top-right globe icon, opens dialog |
 
-### Button Specifications
+### Input Validation Rules
 
-| Property | Value |
-|----------|-------|
-| Button width | 75% of screen width |
-| Button height | auto (vertical padding 16px) |
-| Background color | Colors.white |
-| Text color | Color(0xFF2C3E50) |
-| Font size | 16px |
-| Font weight | w600 |
-| Border radius | 30px |
-| Button spacing | 16px between buttons |
+| Field | Validation |
+|-------|------------|
+| Email | Required, valid email format (RegExp) |
+| Password | Required, minimum 8 characters |
 
-### Google Sign-In Setup
+### Input Filtering
 
-1. **Asset:** `assets/images/google_logo.png` (22x22px)
-2. **Provider:** `lib/providers/google_auth_provider.dart`
-3. **Method:** `signInWithGoogle()` (placeholder, prints to console)
+| Field | Allowed Characters |
+|-------|-------------------|
+| Email | a-zA-Z0-9@._%+- |
+| Password | a-zA-Z0-9!@#$%^&*()_+{}|:<>?~ |
 
-### Localization Updates
+### Localization Strings
 
-Added `continue_with_google` to localization files:
+All error messages are localized via AppLocalizations:
 
-| Language | Translation |
-|----------|-------------|
-| English | "Continue with Google" |
-| Persian (Farsi) | "ادامه با گوگل" |
+| Key | English | Persian |
+|-----|---------|---------|
+| email_required | Email is required | ایمیل الزامی است |
+| email_invalid | Please enter a valid email | لطفاً یک ایمیل معتبر وارد کنید |
+| password_required | Password is required | رمز عبور الزامی است |
+| password_min_length | Password must be at least 8 characters | رمز عبور باید حداقل ۸ کاراکتر باشد |
 
-### Files Created/Modified
+### Language Selection Dialog
 
-| File | Change |
-|------|--------|
-| `lib/screens/welcome_screen.dart` | Complete redesign |
-| `lib/providers/google_auth_provider.dart` | New placeholder provider |
-| `lib/generated/app_localizations.dart` | Added continue_with_google getter |
-| `lib/generated/app_localizations_en.dart` | Added English translation |
-| `lib/generated/app_localizations_fa.dart` | Added Persian translation |
-| `pubspec.yaml` | Added google_logo.png asset |
+- Opens as a centered Dialog (not bottom sheet)
+- Options: English 🇺🇸, Persian 🇮🇷
+- Selected option highlighted with checkmark
+- Cancel button to close
 
----
+### Google Sign-In Button
 
-## 9. Session 17: Main Layout & Discover Screen
-
-### Goals
-- Bottom navigation bar with 4 tabs
-- Discover screen with swipeable profile cards
-- Like / Pass / Super Like actions wired to API
-- DiscoverProvider managing card stack state
-- Real match animation when both users like each other
-
-### Files to Create
-
-| File | Description |
-|------|-------------|
-| `lib/models/profile.dart` | Profile model for discover |
-| `lib/screens/main_screen.dart` | Bottom nav shell, tab switching (placeholder exists) |
-| `lib/screens/discover_screen.dart` | Card stack, action buttons |
-| `lib/widgets/profile_card.dart` | Profile photo, name, age, bio card |
-| `lib/providers/discover_provider.dart` | Fetch users, track swipe state |
-| `lib/services/discover_service.dart` | Get users, post like/pass |
-
-### API Endpoints to Connect
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/discover` | GET | Get card stack |
-| `/swipes` | POST | Send like/pass |
-| `/swipes/stats` | GET | Get remaining likes |
+- Custom asset: `assets/images/google_logo.png`
+- Size: 24x24
+- Background: Color.fromARGB(255, 224, 229, 231)
+- Text: Localized via `continue_with_google`
 
 ---
 
-## 10. Session 18: Search & Profile Screens
+## 7. TODO - Next Session
 
-### Goals
-- Search screen with age / location / gender filters
-- View any user's profile
-- Own profile screen
-- Edit profile + photo upload
+### Session 17: Authentication & Navigation Flow
 
-### Files to Create
+| Task | Priority | Description |
+|------|----------|-------------|
+| Connect Login Button | 🔴 High | Navigate to Login Screen |
+| Connect Sign Up Button | 🔴 High | Navigate to EmailPasswordScreen |
+| Connect Sign In Link | 🔴 High | Navigate to Login Screen |
+| Connect Google Button | 🟡 Medium | Implement GoogleAuthProvider |
+| Connect Continue Button | 🔴 High | Validate and proceed to next screen |
+| Create Login Screen | 🔴 High | Email + Password with validation |
+| Create MainScreen Navigation | 🔴 High | Bottom nav with 4 tabs (placeholder) |
 
-| File | Description |
-|------|-------------|
-| `lib/screens/search_screen.dart` | Search input + filter chips + results grid |
-| `lib/screens/profile_screen.dart` | User profile view (own + others) |
-| `lib/screens/edit_profile_screen.dart` | Edit bio, age, photos |
-| `lib/widgets/filter_chip.dart` | Reusable filter chip widget |
-| `lib/providers/search_provider.dart` | Search state management |
-| `lib/providers/profile_provider.dart` | Profile state |
-| `lib/services/search_service.dart` | Search API calls |
-| `lib/services/profile_service.dart` | Profile API calls |
-| `lib/utils/image_picker_helper.dart` | Camera / gallery picker |
+### Session 18: Onboarding Flow
 
----
+| Task | Priority | Description |
+|------|----------|-------------|
+| EmailPasswordScreen | 🔴 High | Step 0: Email & Password |
+| NameAgeScreen | 🔴 High | Step 1: Name, Age, Gender |
+| HeightWeightScreen | 🟡 Medium | Step 2: Height, Weight |
+| PhotoScreen | 🟡 Medium | Step 3: Photos (skip option) |
+| LocationScreen | 🟡 Medium | Step 4: Location & Submit |
+| OnboardingProvider | 🔴 High | State management for all steps |
+| Registration API | 🔴 High | Connect to backend |
 
-## 11. Session 19: Chat System (Messages + WebSocket)
+### Session 19: Main App Features
 
-### Goals
-- Chats list screen
-- Chat detail screen with real-time messaging
-- WebSocket connection per chat
-
-### Files to Create
-
-| File | Description |
-|------|-------------|
-| `lib/screens/chats_screen.dart` | Chat list (matches with last message) |
-| `lib/screens/chat_detail_screen.dart` | Full conversation screen |
-| `lib/services/websocket_service.dart` | Connect, send, receive, disconnect |
-| `lib/providers/chat_provider.dart` | Message state, unread counts |
-| `lib/widgets/chat_bubble.dart` | Sent/received bubble with timestamp |
-| `lib/models/message.dart` | Message model |
-| `lib/models/match.dart` | Match model |
+| Task | Priority | Description |
+|------|----------|-------------|
+| Discover Screen | 🔴 High | Swipeable profile cards |
+| Search Screen | 🟡 Medium | Search with filters |
+| Profile Screen | 🟡 Medium | View and edit profile |
+| Chats Screen | 🟡 Medium | Messages list |
+| Chat Detail | 🟡 Medium | Real-time messaging |
+| Likes Tab | 🟢 Low | Likes sent/received |
 
 ---
 
-## 12. Session 20: Likes & Matches Tabs
-
-### Goals
-- Messages tab (active chats)
-- Likes Sent tab (profiles you liked)
-- Likes Received tab (premium — who liked you)
-
-### Tab Structure
-
-```
-Chats Screen
-├── Tab 1 — Messages   → GET /matches
-├── Tab 2 — Likes Sent → GET /likes/sent
-└── Tab 3 — Likes Received → GET /likes/received (premium only)
-```
-
----
-
-## 13. Session 21: Block & Safety Features
-
-### Goals
-- Block a user from their profile
-- Block a user from Discover via long-press
-- Unblock from Blocked Users settings screen
-
-### Backend Endpoints
-
-| Action | Method | Endpoint |
-|--------|--------|----------|
-| Block | POST | `/api/v1/blocks/{user_id}/block` |
-| Unblock | POST | `/api/v1/blocks/{user_id}/unblock` |
-| List blocked | GET | `/api/v1/blocks` |
-
-### Where Block Is Accessible
-
-| Location | How to Trigger |
-|----------|---------------|
-| Profile screen (other user) | Tap ⋮ menu → "Block User" |
-| Discover card | Long-press card → bottom sheet → "Block" |
-| Chat detail screen | Tap ⋮ menu → "Block User" |
-| Settings screen | "Blocked Users" list item |
-
----
-
-## 14. Session 22: Polish & Production
-
-### Goals
-- Hero animations for profile images
-- Shimmer / skeleton loaders
-- Network error handling + retry
-- Offline indicator
-- Build APK + App Bundle
-
-### Build Commands
-
-```bash
-# Debug APK
-flutter build apk --debug
-
-# Release APK
-flutter build apk --release
-
-# App Bundle (Google Play)
-flutter build appbundle --release
-```
-
----
-
-## 15. UI Mockups (Badoo-inspired)
+## 8. UI Mockups (Badoo-inspired)
 
 ### Welcome Screen (Current)
 ```
 ┌─────────────────────────────┐
 │                          🌐  │
 │                             │
-│            ❤️               │
+│           AURA              │
 │      Find Your Match        │
 │   Connect with people...    │
 │                             │
-│     ┌─────────────────┐     │
-│     │      Login      │     │
-│     └─────────────────┘     │
-│     ┌─────────────────┐     │
-│     │  Create Account │     │
-│     └─────────────────┘     │
-│     ┌─────────────────┐     │
-│     │ G Continue with │     │
-│     │     Google      │     │
-│     └─────────────────┘     │
+│   Join a community of...    │
+│                             │
+│  ┌──────────────────────┐   │
+│  │ Enter your email      │   │
+│  └──────────────────────┘   │
+│  ┌──────────────────────┐   │
+│  │ Enter your password  │ 👁️ │
+│  └──────────────────────┘   │
+│                             │
+│  ┌──────────────────────┐   │
+│  │      Sign Up         │   │
+│  └──────────────────────┘   │
+│                             │
+│        ──── OR ────         │
+│                             │
+│  ┌──────────────────────┐   │
+│  │ G   Continue with    │   │
+│  │      Google          │   │
+│  └──────────────────────┘   │
+│                             │
+│  Already have an account?   │
+│         Sign in             │
+│                             │
+│  By continuing, you agree   │
+│  to our Terms of Service    │
+│  and Privacy Policy.        │
 └─────────────────────────────┘
 ```
 
-### Discover Screen
+### Discover Screen (Planned)
 ```
 ┌─────────────────────────────┐
 │  🔍  👤  💬  👥              │
@@ -485,36 +315,24 @@ flutter build appbundle --release
 └─────────────────────────────┘
 ```
 
-### Chats Screen (3 tabs)
+### Login Screen (Planned)
 ```
 ┌─────────────────────────────┐
-│  ←  Chats                   │
-├─────────────────────────────┤
-│ ┌──────────┬──────────┬────┐│
-│ │ Messages │Likes Sent│Likes││
-│ └──────────┴──────────┴────┘│
-├─────────────────────────────┤
-│  ○ User Name       2 min ago│
-│    Last message preview      │
-└─────────────────────────────┘
-```
-
-### Profile Screen
-```
-┌─────────────────────────────┐
-│  ←  Profile          ✏️  ⋮  │
-├─────────────────────────────┤
-│         ┌───────┐           │
-│         │ Photo │           │
-│         └───────┘           │
-│        Name, Age            │
-│        Location             │
+│  ←  Welcome Back            │
+│                             │
 │  ┌──────────────────────┐   │
-│  │ Bio text here...      │   │
+│  │ Enter your email      │   │
 │  └──────────────────────┘   │
 │  ┌──────────────────────┐   │
-│  │   Edit Profile       │   │
+│  │ Enter your password  │ 👁️ │
 │  └──────────────────────┘   │
+│                             │
+│  ┌──────────────────────┐   │
+│  │       Login          │   │
+│  └──────────────────────┘   │
+│                             │
+│  Don't have an account?     │
+│     Create Account          │
 └─────────────────────────────┘
 ```
 
@@ -522,34 +340,7 @@ flutter build appbundle --release
 
 ## Next Session
 
-**Session 17: Main Layout & Discover Screen**
+**Session 17: Authentication & Navigation Flow**
 
 Ready to start Session 17 when you are. 🚀
-```
-
-## خلاصه تغییرات اعمال شده در dev.md:
-
-1. **Current Status** - اضافه شدن Session 16.6 و Google Auth Provider و Language selection
-2. **Section 8** - اضافه شدن کامل Session 16.6 با جزییات:
-   - Button specifications (width 75%, spacing 16px)
-   - Google Sign-In setup with asset icon
-   - Localization updates (continue_with_google)
-   - Files created/modified
-3. **Tech Stack** - بدون تغییر (نیاز نبود)
-4. **Project Structure** - اضافه شدن language_provider و google_auth_provider
-5. **UI Mockups** - اضافه شدن Welcome Screen mockup فعلی
-
-کامیت برای این تغییر:
-
-```bash
-git add dev.md
-git commit -m "docs: add Session 16.6 welcome screen UI enhancements
-
-- Add 3 uniform white elevated buttons (Login, Create Account, Google)
-- Set button width to 75% with 16px spacing
-- Add Google sign-in button with custom asset icon
-- Add language selection dialog (English/Persian)
-- Add GoogleAuthProvider placeholder
-- Update localizations with continue_with_google string
-- Update project structure with new providers"
 ```

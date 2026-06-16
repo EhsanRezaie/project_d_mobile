@@ -6,7 +6,7 @@ import 'config/app_constants.dart';
 import 'services/api_service.dart';
 import 'providers/auth_provider.dart';
 import 'providers/onboarding_provider.dart';
-import 'providers/language_provider.dart';   
+import 'providers/language_provider.dart';
 import 'screens/splash_screen.dart';
 
 void main() async {
@@ -31,18 +31,23 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => OnboardingProvider()),
-        ChangeNotifierProvider(create: (_) => LanguageProvider()),  
+        ChangeNotifierProvider(create: (_) => LanguageProvider()),
       ],
       child: Consumer<LanguageProvider>(
         builder: (context, languageProvider, child) {
           return MaterialApp(
-            title: 'Dating App',
+            title: 'AURA',
             theme: ThemeData(
-              primarySwatch: Colors.blue,
+              fontFamily: 'Inter',
+              primaryColor: const Color(0xFF001F3F),
+              colorScheme: const ColorScheme.light(
+                primary: Color(0xFF001F3F),
+              ),
+              scaffoldBackgroundColor: const Color(0xFFFBF9F9),
               useMaterial3: true,
             ),
             debugShowCheckedModeBanner: false,
-            locale: languageProvider.locale, 
+            locale: languageProvider.locale,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const SplashScreen(),

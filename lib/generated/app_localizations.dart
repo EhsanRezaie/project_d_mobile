@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// No description provided for @welcome_title.
   ///
   /// In en, this message translates to:
-  /// **'Find Your Match'**
+  /// **'Hugsy'**
   String get welcome_title;
 
   /// No description provided for @welcome_subtitle.
@@ -110,257 +110,17 @@ abstract class AppLocalizations {
   /// **'Connect with people around you'**
   String get welcome_subtitle;
 
-  /// No description provided for @login_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Welcome Back'**
-  String get login_title;
-
-  /// No description provided for @register_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Join Us'**
-  String get register_title;
-
-  /// No description provided for @name_label.
-  ///
-  /// In en, this message translates to:
-  /// **'Full Name'**
-  String get name_label;
-
   /// No description provided for @email_label.
   ///
   /// In en, this message translates to:
   /// **'Email'**
   String get email_label;
 
-  /// No description provided for @password_label.
+  /// No description provided for @sign_up_button.
   ///
   /// In en, this message translates to:
-  /// **'Password'**
-  String get password_label;
-
-  /// No description provided for @age_label.
-  ///
-  /// In en, this message translates to:
-  /// **'Age'**
-  String get age_label;
-
-  /// No description provided for @gender_label.
-  ///
-  /// In en, this message translates to:
-  /// **'Gender'**
-  String get gender_label;
-
-  /// No description provided for @male.
-  ///
-  /// In en, this message translates to:
-  /// **'Male'**
-  String get male;
-
-  /// No description provided for @female.
-  ///
-  /// In en, this message translates to:
-  /// **'Female'**
-  String get female;
-
-  /// No description provided for @referral_code_hint.
-  ///
-  /// In en, this message translates to:
-  /// **'Referral Code (Optional)'**
-  String get referral_code_hint;
-
-  /// No description provided for @continue_button.
-  ///
-  /// In en, this message translates to:
-  /// **'Continue'**
-  String get continue_button;
-
-  /// No description provided for @skip_button.
-  ///
-  /// In en, this message translates to:
-  /// **'Skip'**
-  String get skip_button;
-
-  /// No description provided for @complete_button.
-  ///
-  /// In en, this message translates to:
-  /// **'Complete'**
-  String get complete_button;
-
-  /// No description provided for @height_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Height & Weight'**
-  String get height_title;
-
-  /// No description provided for @height_subtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'These help with match accuracy'**
-  String get height_subtitle;
-
-  /// No description provided for @height_cm.
-  ///
-  /// In en, this message translates to:
-  /// **'cm'**
-  String get height_cm;
-
-  /// No description provided for @weight_kg.
-  ///
-  /// In en, this message translates to:
-  /// **'kg'**
-  String get weight_kg;
-
-  /// No description provided for @photo_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Upload Profile Photo'**
-  String get photo_title;
-
-  /// No description provided for @photo_subtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Add at least one photo to get more matches'**
-  String get photo_subtitle;
-
-  /// No description provided for @gallery_button.
-  ///
-  /// In en, this message translates to:
-  /// **'Choose from gallery'**
-  String get gallery_button;
-
-  /// No description provided for @camera_button.
-  ///
-  /// In en, this message translates to:
-  /// **'Take a photo'**
-  String get camera_button;
-
-  /// No description provided for @location_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Location'**
-  String get location_title;
-
-  /// No description provided for @location_subtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Set your location to find people nearby'**
-  String get location_subtitle;
-
-  /// No description provided for @gps_option.
-  ///
-  /// In en, this message translates to:
-  /// **'Use my current location (GPS)'**
-  String get gps_option;
-
-  /// No description provided for @manual_option.
-  ///
-  /// In en, this message translates to:
-  /// **'Select manually'**
-  String get manual_option;
-
-  /// No description provided for @province_label.
-  ///
-  /// In en, this message translates to:
-  /// **'Province'**
-  String get province_label;
-
-  /// No description provided for @city_label.
-  ///
-  /// In en, this message translates to:
-  /// **'City'**
-  String get city_label;
-
-  /// No description provided for @step_1.
-  ///
-  /// In en, this message translates to:
-  /// **'Step 1 of 4'**
-  String get step_1;
-
-  /// No description provided for @step_2.
-  ///
-  /// In en, this message translates to:
-  /// **'Step 2 of 4'**
-  String get step_2;
-
-  /// No description provided for @step_3.
-  ///
-  /// In en, this message translates to:
-  /// **'Step 3 of 4'**
-  String get step_3;
-
-  /// No description provided for @step_4.
-  ///
-  /// In en, this message translates to:
-  /// **'Step 4 of 4'**
-  String get step_4;
-
-  /// No description provided for @basic_info_title.
-  ///
-  /// In en, this message translates to:
-  /// **'Basic Information'**
-  String get basic_info_title;
-
-  /// No description provided for @email_invalid.
-  ///
-  /// In en, this message translates to:
-  /// **'Valid email required'**
-  String get email_invalid;
-
-  /// No description provided for @age_invalid.
-  ///
-  /// In en, this message translates to:
-  /// **'Age must be 18-100'**
-  String get age_invalid;
-
-  /// No description provided for @name_required.
-  ///
-  /// In en, this message translates to:
-  /// **'Name required'**
-  String get name_required;
-
-  /// No description provided for @email_required.
-  ///
-  /// In en, this message translates to:
-  /// **'Email required'**
-  String get email_required;
-
-  /// No description provided for @age_required.
-  ///
-  /// In en, this message translates to:
-  /// **'Age required'**
-  String get age_required;
-
-  /// No description provided for @gender_required.
-  ///
-  /// In en, this message translates to:
-  /// **'Please select gender'**
-  String get gender_required;
-
-  /// No description provided for @login_button.
-  ///
-  /// In en, this message translates to:
-  /// **'Login'**
-  String get login_button;
-
-  /// No description provided for @create_account_button.
-  ///
-  /// In en, this message translates to:
-  /// **'Create Account'**
-  String get create_account_button;
-
-  /// No description provided for @already_have_account.
-  ///
-  /// In en, this message translates to:
-  /// **'Already have an account?'**
-  String get already_have_account;
-
-  /// No description provided for @dont_have_account.
-  ///
-  /// In en, this message translates to:
-  /// **'Don\'t have an account?'**
-  String get dont_have_account;
+  /// **'Sign Up'**
+  String get sign_up_button;
 
   /// No description provided for @or.
   ///
@@ -368,17 +128,101 @@ abstract class AppLocalizations {
   /// **'OR'**
   String get or;
 
-  /// No description provided for @select_gender.
-  ///
-  /// In en, this message translates to:
-  /// **'Select gender'**
-  String get select_gender;
-
   /// No description provided for @continue_with_google.
   ///
   /// In en, this message translates to:
   /// **'Continue with Google'**
   String get continue_with_google;
+
+  /// No description provided for @already_have_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get already_have_account;
+
+  /// No description provided for @login_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get login_button;
+
+  /// No description provided for @join_community_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Join a community of intentional individuals seeking meaningful relationships'**
+  String get join_community_text;
+
+  /// No description provided for @enter_email_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email'**
+  String get enter_email_hint;
+
+  /// No description provided for @enter_password_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password'**
+  String get enter_password_hint;
+
+  /// No description provided for @terms_and_policy.
+  ///
+  /// In en, this message translates to:
+  /// **'By continuing, you agree to our Terms of Service and Privacy Policy'**
+  String get terms_and_policy;
+
+  /// No description provided for @select_language.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Language'**
+  String get select_language;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get english;
+
+  /// No description provided for @persian.
+  ///
+  /// In en, this message translates to:
+  /// **'Persian'**
+  String get persian;
+
+  /// No description provided for @sign_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get sign_in;
+
+  /// No description provided for @email_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required'**
+  String get email_required;
+
+  /// No description provided for @email_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email'**
+  String get email_invalid;
+
+  /// No description provided for @password_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required'**
+  String get password_required;
+
+  /// No description provided for @password_min_length.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 8 characters'**
+  String get password_min_length;
 }
 
 class _AppLocalizationsDelegate

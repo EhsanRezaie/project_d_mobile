@@ -61,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(t.login_title),
+        title: Text('t.login_title'),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -82,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                t.login_title,
+                't.login_title',
                 style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -101,10 +101,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return t.email_required;
+                    return 't.email_required';
                   }
                   if (!value.contains('@')) {
-                    return t.email_invalid;
+                    return 't.email_invalid';
                   }
                   return null;
                 },
@@ -113,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
               TextFormField(
                 controller: _passwordController,
                 decoration: InputDecoration(
-                  labelText: t.password_label,
+                  labelText:' t.password_label',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -169,7 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(t.dont_have_account),
+                  Text('t.dont_have_account'),
                   TextButton(
                     onPressed: () {
                       Navigator.pushReplacement(
@@ -177,7 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         MaterialPageRoute(builder: (_) => const EmailPasswordScreen()),
                       );
                     },
-                    child: Text(t.create_account_button),
+                    child: Text('t.create_account_button'),
                   ),
                 ],
               ),
