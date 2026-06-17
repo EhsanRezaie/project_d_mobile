@@ -1,50 +1,143 @@
+// lib/providers/auth_provider.dart
 import 'package:flutter/material.dart';
-import 'dart:convert';
-import '../models/user.dart';
+import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../services/auth_service.dart';
-import '../services/api_service.dart';
 import '../services/storage_service.dart';
+import '../models/user.dart';
 
 class AuthProvider extends ChangeNotifier {
-  User? _currentUser;
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+  final StorageService _storageService = StorageService();
+  
+  User? _user;
+  String? _accessToken;
+  String? _refreshToken;
   bool _isLoading = false;
+  bool _isAuthenticated = false;
+  bool _isServerHealthy = true;
+  String? _serverError;
   String? _error;
 
-  User? get currentUser => _currentUser;
+  User? get user => _user;
+  String? get accessToken => _accessToken;
   bool get isLoading => _isLoading;
+  bool get isAuthenticated => _isAuthenticated;
+  bool get isServerHealthy => _isServerHealthy;
+  String? get serverError => _serverError;
   String? get error => _error;
-  bool get isAuthenticated => _currentUser != null;
 
-  String _getErrorMessage(int statusCode, dynamic data, {bool isLogin = true}) {
-    switch (statusCode) {
-      case 401:
-        return 'Incorrect email or password. Please try again.';
-      case 404:
-        return 'User not found. Please check your email.';
-      case 409:
-        return isLogin 
-            ? 'Account already exists. Please login.'
-            : 'This email is already registered. Please login.';
-      case 422:
-        if (data != null && data['detail'] != null) {
-          return 'Invalid data: ${data['detail']}';
-        }
-        return 'Please check your information and try again.';
-      default:
-        return isLogin 
-            ? 'Login failed. Please try again.'
-            : 'Registration failed. Please try again.';
+  AuthProvider() {
+    _loadTokens();
+  }
+
+  Future<void> _loadTokens() async {
+    _accessToken = await _secureStorage.read(key: 'access_token');
+    _refreshToken = await _secureStorage.read(key: 'refresh_token');
+    if (_accessToken != null) {
+      _isAuthenticated = true;
+    }
+    notifyListeners();
+  }
+
+  Future<bool> initializeApp() async {
+    _isLoading = true;
+    _isServerHealthy = true;
+    _serverError = null;
+    notifyListeners();
+
+    final isHealthy = await _checkServerHealth();
+    if (!isHealthy) {
+      _isLoading = false;
+      _isServerHealthy = false;
+      _serverError = 'Server connection failed';
+      notifyListeners();
+      return false;
+    }
+
+    await _loadTokens();
+
+    if (_accessToken != null) {
+      final isValid = await _validateToken();
+      if (!isValid) {
+        await _logout();
+        _isAuthenticated = false;
+        _accessToken = null;
+        _refreshToken = null;
+      } else {
+        _isAuthenticated = true;
+      }
+    }
+
+    _isLoading = false;
+    notifyListeners();
+    return _isAuthenticated;
+  }
+
+  Future<bool> _checkServerHealth() async {
+    try {
+      final response = await AuthService.healthCheck();
+      return response.statusCode == 200;
+    } catch (e) {
+      return false;
     }
   }
 
-  String _getNetworkErrorMessage(dynamic error) {
-    if (error.toString().contains('Connection refused') ||
-        error.toString().contains('SocketException')) {
-      return 'Cannot connect to server. Make sure backend is running on port 8000';
-    } else if (error.toString().contains('Timeout')) {
-      return 'Connection timeout. Please try again.';
-    } else {
-      return 'Network error. Please check your connection.';
+  Future<bool> _validateToken() async {
+    try {
+      final response = await AuthService.getCurrentUser();
+      if (response.statusCode == 200) {
+        _user = User.fromJson(response.data);
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> login({
+    required String email,
+    required String password,
+  }) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final response = await AuthService.login(
+        email: email,
+        password: password,
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        _accessToken = data['access_token'];
+        _refreshToken = data['refresh_token'];
+        _user = User.fromJson(data['user']);
+        _isAuthenticated = true;
+
+        await _storageService.saveTokens(
+          accessToken: _accessToken!,
+          refreshToken: _refreshToken!,
+        );
+        await _storageService.saveUser(_user!);
+
+        _isLoading = false;
+        notifyListeners();
+        return true;
+      } else {
+        _error = response.data['detail'] ?? 'Login failed';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      _error = 'Network error. Please try again.';
+      _isLoading = false;
+      notifyListeners();
+      return false;
     }
   }
 
@@ -72,104 +165,70 @@ class AuthProvider extends ChangeNotifier {
 
       if (response.statusCode == 201) {
         final data = response.data;
-        final token = data['access_token'];
-        final refreshToken = data['refresh_token'];
-        final userJson = data['user'];
+        _accessToken = data['access_token'];
+        _refreshToken = data['refresh_token'];
+        _user = User.fromJson(data['user']);
+        _isAuthenticated = true;
 
-        await StorageService.saveToken(token);
-        await StorageService.saveRefreshToken(refreshToken);
-        await StorageService.saveUser(jsonEncode(userJson));
-        
-        ApiService.setAuthToken(token);
-        _currentUser = User.fromJson(userJson);
+        await _storageService.saveTokens(
+          accessToken: _accessToken!,
+          refreshToken: _refreshToken!,
+        );
+        await _storageService.saveUser(_user!);
 
         _isLoading = false;
         notifyListeners();
         return true;
       } else {
-        _error = _getErrorMessage(response.statusCode!, response.data, isLogin: false);
+        _error = response.data['detail'] ?? 'Registration failed';
         _isLoading = false;
         notifyListeners();
         return false;
       }
     } catch (e) {
-      _error = _getNetworkErrorMessage(e);
+      _error = 'Network error. Please try again.';
       _isLoading = false;
       notifyListeners();
       return false;
     }
   }
 
-  Future<bool> login({required String email, required String password}) async {
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
-
-    try {
-      final response = await AuthService.login(email: email, password: password);
-
-      if (response.statusCode == 200) {
-        final data = response.data;
-        final token = data['access_token'];
-        final refreshToken = data['refresh_token'];
-        final userJson = data['user'];
-
-        await StorageService.saveToken(token);
-        await StorageService.saveRefreshToken(refreshToken);
-        await StorageService.saveUser(jsonEncode(userJson));
-        
-        ApiService.setAuthToken(token);
-        _currentUser = User.fromJson(userJson);
-
-        _isLoading = false;
-        notifyListeners();
-        return true;
-      } else {
-        _error = _getErrorMessage(response.statusCode!, response.data, isLogin: true);
-        _isLoading = false;
-        notifyListeners();
-        return false;
-      }
-    } catch (e) {
-      _error = _getNetworkErrorMessage(e);
-      _isLoading = false;
-      notifyListeners();
-      return false;
-    }
-  }
-
-  Future<void> checkAuthStatus() async {
-    _isLoading = true;
-    notifyListeners();
-
-    final token = await StorageService.getToken();
-    final userJson = await StorageService.getUser();
-
-    if (token != null && userJson != null) {
-      ApiService.setAuthToken(token);
-      try {
-        _currentUser = User.fromJson(jsonDecode(userJson));
-      } catch (e) {
-        print('Error parsing user: $e');
-      }
-    }
-
-    _isLoading = false;
+  Future<void> _logout() async {
+    await _storageService.clearAll();
+    _accessToken = null;
+    _refreshToken = null;
+    _user = null;
+    _isAuthenticated = false;
     notifyListeners();
   }
 
   Future<void> logout() async {
-    final refreshToken = await StorageService.getRefreshToken();
-    if (refreshToken != null) {
+    if (_refreshToken != null) {
       try {
-        await AuthService.logout(refreshToken);
+        await AuthService.logout(_refreshToken!);
       } catch (e) {
-        print('Logout error: $e');
+        // Ignore errors on logout
       }
     }
-    await StorageService.clearAll();
-    ApiService.clearAuthToken();
-    _currentUser = null;
+    await _logout();
+  }
+
+  Future<void> checkAuthStatus() async {
+    await _loadTokens();
+    if (_accessToken != null) {
+      final isValid = await _validateToken();
+      if (!isValid) {
+        await _logout();
+      } else {
+        _isAuthenticated = true;
+      }
+    }
+    notifyListeners();
+  }
+
+  void resetServerError() {
+    _serverError = null;
+    _isServerHealthy = true;
     notifyListeners();
   }
 }

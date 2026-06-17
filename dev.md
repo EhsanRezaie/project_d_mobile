@@ -14,7 +14,7 @@
 3. [Tech Stack](#3-tech-stack)
 4. [Project Structure](#4-project-structure)
 5. [Environment & Configuration](#5-environment--configuration)
-6. [Completed Features (Session 16 - Night Build)](#6-completed-features-session-16---night-build)
+6. [Completed Features](#6-completed-features)
 7. [TODO - Next Session](#7-todo---next-session)
 8. [UI Mockups](#8-ui-mockups-badoo-inspired)
 
@@ -38,19 +38,21 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 
 | Item | Status |
 |------|--------|
-| **Session 16 (Night Build)** | ✅ COMPLETED |
+| **Session 16-17** | ✅ COMPLETED |
 | Flutter project setup | ✅ |
 | Dependencies installed | ✅ |
 | Folder structure created | ✅ |
 | Environment variables (.env) | ✅ |
-| API Service (Dio) | ✅ |
-| Auth Service (login, register) | ✅ |
+| API Service (Dio) with interceptors | ✅ |
+| Auth Service (login, register, healthCheck) | ✅ |
 | Storage Service (secure token storage) | ✅ |
 | Auth Provider (state management) | ✅ |
-| Onboarding Provider (complete) | ✅ |
+| Onboarding Provider | ✅ |
 | Language Provider | ✅ |
-| Splash Screen | ✅ |
+| App Theme (Light/Dark mode ready) | ✅ |
+| Splash Screen (with progress bar & random target) | ✅ |
 | Welcome Screen (enhanced) | ✅ |
+| Login Screen (with validation) | ✅ |
 | Email & Password validation | ✅ |
 | Password visibility toggle | ✅ |
 | Language selection (English/Persian) | ✅ |
@@ -58,6 +60,9 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 | Input filtering (English only) | ✅ |
 | Real-time validation with localized errors | ✅ |
 | Password min length: 8 characters | ✅ |
+| Health Check on Splash | ✅ |
+| Retry button on connection error | ✅ |
+| Token refresh interceptor | ✅ |
 
 ---
 
@@ -84,27 +89,24 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 ```
 lib/
 ├── main.dart
-├── main_screen.dart
 ├── config/
-│   ├── app_colors.dart          # Color palette
 │   ├── app_constants.dart       # API URLs, keys
-│   ├── app_theme.dart           # Theme configuration
-│   └── app_routes.dart          # Named routes
+│   └── app_theme.dart           # Theme configuration (Light/Dark)
 ├── models/
 │   └── user.dart                # User model
 ├── services/
-│   ├── api_service.dart         # Dio HTTP client
-│   ├── auth_service.dart        # Login, register calls
+│   ├── api_service.dart         # Dio HTTP client + interceptors
+│   ├── auth_service.dart        # Login, register, healthCheck
 │   └── storage_service.dart     # Token storage
 ├── providers/
 │   ├── auth_provider.dart       # Auth state management
 │   ├── language_provider.dart   # Language selection
 │   └── onboarding_provider.dart # Onboarding data + API submit
 ├── screens/
-│   ├── splash_screen.dart       # Splash screen
+│   ├── splash_screen.dart       # Splash with progress & health check
 │   ├── welcome_screen.dart      # Welcome screen (enhanced)
 │   ├── login_screen.dart        # Login screen
-│   ├── main_screen.dart         # Main screen (bottom nav)
+│   ├── main_screen.dart         # Main screen (bottom nav) - PLACEHOLDER
 │   └── onboarding/
 │       ├── email_password_screen.dart   # Step 0: Email & Password
 │       ├── name_age_screen.dart         # Step 1: Name, Age, Gender
@@ -154,94 +156,90 @@ flutter:
     - assets/images/google_logo.png
 ```
 
+### App Constants
+
+```dart
+// lib/config/app_constants.dart
+class AppConstants {
+  static const String apiBaseUrl = 'http://10.0.2.2:8000/api/v1';
+  static const int connectTimeout = 10;
+  static const int receiveTimeout = 10;
+}
+```
+
 ---
 
-## 6. Completed Features (Session 16 - Night Build)
+## 6. Completed Features
 
-### Welcome Screen Features
+### App Theme System
 
-| Element | Description |
+| Feature | Description |
 |---------|-------------|
-| Background | Color(0xFFFBF9F9) - light gray |
-| App Name | "AURA" (font size 40, weight 700) |
-| Title | Localized via AppLocalizations.welcome_title |
-| Subtitle | Localized via AppLocalizations.welcome_subtitle |
-| Community Text | Localized via AppLocalizations.join_community_text |
-| Email Field | With input filtering (English only), real-time validation |
-| Password Field | With eye toggle, input filtering, real-time validation, min 8 chars |
-| Sign Up Button | Primary navy button |
-| OR Divider | Centered "OR" text |
-| Google Button | Custom asset icon + localized text |
-| Sign In Link | "Already have an account? Sign in" |
-| Terms & Policy | Small text at bottom |
-| Language Button | Top-right globe icon, opens dialog |
+| Light Theme | Clean, minimal with navy primary |
+| Dark Theme | Ready for dark mode support |
+| Color System | Centralized in AppTheme class |
+| Text Styles | Consistent typography with Inter font |
+| Button Styles | Primary, outline, small variants |
+| Input Decoration | Consistent form field styling |
+| Extension | `context.primaryColor`, `context.isDarkMode` |
 
-### Input Validation Rules
+### Splash Screen
 
-| Field | Validation |
-|-------|------------|
-| Email | Required, valid email format (RegExp) |
-| Password | Required, minimum 8 characters |
+| Feature | Description |
+|---------|-------------|
+| Progress Bar | Animated from 0 to 100% |
+| Random Target | Each run targets 50-99% before health check |
+| Health Check | GET /health to verify server connection |
+| Error State | Shows wifi icon + retry button on failure |
+| Auto-Navigation | Goes to MainScreen if authenticated, else WelcomeScreen |
+| Theme Aware | Uses AppTheme colors (Light/Dark ready) |
 
-### Input Filtering
+### Auth Flow
 
-| Field | Allowed Characters |
-|-------|-------------------|
-| Email | a-zA-Z0-9@._%+- |
-| Password | a-zA-Z0-9!@#$%^&*()_+{}|:<>?~ |
+| Feature | Description |
+|---------|-------------|
+| Login | Email + password validation |
+| Register | Complete profile with email, password, name, age, gender |
+| Token Storage | Secure storage with flutter_secure_storage |
+| Token Refresh | Automatic on 401 response via interceptor |
+| Health Check | Separate Dio instance without /api/v1 prefix |
+| Error Handling | Localized error messages |
 
-### Localization Strings
+### API Service Features
 
-All error messages are localized via AppLocalizations:
+| Feature | Description |
+|---------|-------------|
+| Base URL | From AppConstants.apiBaseUrl |
+| Interceptors | Auto token injection + refresh on 401 |
+| Health Check | Separate baseUrl without /api/v1 prefix |
+| Logging | Request/Response logging in debug mode |
 
-| Key | English | Persian |
-|-----|---------|---------|
-| email_required | Email is required | ایمیل الزامی است |
-| email_invalid | Please enter a valid email | لطفاً یک ایمیل معتبر وارد کنید |
-| password_required | Password is required | رمز عبور الزامی است |
-| password_min_length | Password must be at least 8 characters | رمز عبور باید حداقل ۸ کاراکتر باشد |
+### Login Screen
 
-### Language Selection Dialog
-
-- Opens as a centered Dialog (not bottom sheet)
-- Options: English 🇺🇸, Persian 🇮🇷
-- Selected option highlighted with checkmark
-- Cancel button to close
-
-### Google Sign-In Button
-
-- Custom asset: `assets/images/google_logo.png`
-- Size: 24x24
-- Background: Color.fromARGB(255, 224, 229, 231)
-- Text: Localized via `continue_with_google`
+| Feature | Description |
+|---------|-------------|
+| Form Validation | Email format + password length (min 8) |
+| Password Visibility | Toggle show/hide |
+| Loading State | Disabled button with spinner |
+| Error Handling | SnackBar with error message |
+| Navigation | Back to Welcome, forward to MainScreen |
+| Theme Aware | Uses AppTheme colors |
 
 ---
 
 ## 7. TODO - Next Session
 
-### Session 17: Authentication & Navigation Flow
-
-| Task | Priority | Description |
-|------|----------|-------------|
-| Connect Login Button | 🔴 High | Navigate to Login Screen |
-| Connect Sign Up Button | 🔴 High | Navigate to EmailPasswordScreen |
-| Connect Sign In Link | 🔴 High | Navigate to Login Screen |
-| Connect Google Button | 🟡 Medium | Implement GoogleAuthProvider |
-| Connect Continue Button | 🔴 High | Validate and proceed to next screen |
-| Create Login Screen | 🔴 High | Email + Password with validation |
-| Create MainScreen Navigation | 🔴 High | Bottom nav with 4 tabs (placeholder) |
-
 ### Session 18: Onboarding Flow
 
 | Task | Priority | Description |
 |------|----------|-------------|
-| EmailPasswordScreen | 🔴 High | Step 0: Email & Password |
+| EmailPasswordScreen | 🔴 High | Step 0: Email & Password (connect to API) |
 | NameAgeScreen | 🔴 High | Step 1: Name, Age, Gender |
 | HeightWeightScreen | 🟡 Medium | Step 2: Height, Weight |
 | PhotoScreen | 🟡 Medium | Step 3: Photos (skip option) |
 | LocationScreen | 🟡 Medium | Step 4: Location & Submit |
 | OnboardingProvider | 🔴 High | State management for all steps |
-| Registration API | 🔴 High | Connect to backend |
+| Registration API | 🔴 High | Connect to backend POST /auth/register |
 
 ### Session 19: Main App Features
 
@@ -254,9 +252,58 @@ All error messages are localized via AppLocalizations:
 | Chat Detail | 🟡 Medium | Real-time messaging |
 | Likes Tab | 🟢 Low | Likes sent/received |
 
+### Session 20: Polish & Production
+
+| Task | Priority | Description |
+|------|----------|-------------|
+| Deep Link | 🟡 Medium | App navigation from notifications |
+| Push Notifications | 🟡 Medium | FCM integration |
+| Crash Reporting | 🟢 Low | Sentry or Firebase Crashlytics |
+| Analytics | 🟢 Low | User behavior tracking |
+
 ---
 
 ## 8. UI Mockups (Badoo-inspired)
+
+### Splash Screen (Current)
+```
+┌─────────────────────────────┐
+│                             │
+│         ❤️ (Logo)           │
+│                             │
+│          AURA               │
+│     Find Your Match         │
+│                             │
+│    ████████████░░░░░░ 65%   │
+│                             │
+│   Connecting to server...   │
+│                             │
+└─────────────────────────────┘
+```
+
+### Login Screen (Current)
+```
+┌─────────────────────────────┐
+│  ←  Welcome Back            │
+│                             │
+│        Welcome Back         │
+│     Sign in to continue     │
+│                             │
+│  ┌──────────────────────┐   │
+│  │ 📧 Enter your email   │   │
+│  └──────────────────────┘   │
+│  ┌──────────────────────┐   │
+│  │ 🔒 Enter your password│ 👁️ │
+│  └──────────────────────┘   │
+│                             │
+│  ┌──────────────────────┐   │
+│  │       Login          │   │
+│  └──────────────────────┘   │
+│                             │
+│  Don't have an account?     │
+│     Create Account          │
+└─────────────────────────────┘
+```
 
 ### Welcome Screen (Current)
 ```
@@ -315,32 +362,31 @@ All error messages are localized via AppLocalizations:
 └─────────────────────────────┘
 ```
 
-### Login Screen (Planned)
-```
-┌─────────────────────────────┐
-│  ←  Welcome Back            │
-│                             │
-│  ┌──────────────────────┐   │
-│  │ Enter your email      │   │
-│  └──────────────────────┘   │
-│  ┌──────────────────────┐   │
-│  │ Enter your password  │ 👁️ │
-│  └──────────────────────┘   │
-│                             │
-│  ┌──────────────────────┐   │
-│  │       Login          │   │
-│  └──────────────────────┘   │
-│                             │
-│  Don't have an account?     │
-│     Create Account          │
-└─────────────────────────────┘
-```
+---
+
+## Key Implementation Notes
+
+### Health Check Path
+- Backend: `GET /health` (without /api/v1 prefix)
+- Frontend: `ApiService.healthCheck()` uses separate Dio with baseUrl without /api/v1
+
+### Token Refresh Flow
+1. Request returns 401
+2. Interceptor catches error
+3. Calls `/auth/refresh` with refresh_token
+4. On success: updates tokens, retries original request
+5. On failure: clears all tokens
+
+### Splash Progress Logic
+1. Generate random target between 50-99%
+2. Animate progress to target
+3. Call health check
+4. If healthy, animate to 100%
+5. Navigate based on auth status
 
 ---
 
-## Next Session
+**Next: Session 18 - Onboarding Flow**
 
-**Session 17: Authentication & Navigation Flow**
-
-Ready to start Session 17 when you are. 🚀
+Ready to start Session 18 when you are. 🚀
 ```

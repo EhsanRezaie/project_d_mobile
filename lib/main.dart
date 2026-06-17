@@ -16,9 +16,6 @@ void main() async {
   
   ApiService.init();
   
-  print('API URL: ${AppConstants.apiBaseUrl}');
-  print('WS URL: ${AppConstants.wsBaseUrl}');
-  
   runApp(const MyApp());
 }
 

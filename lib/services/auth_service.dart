@@ -1,7 +1,19 @@
+// lib/services/auth_service.dart
 import 'package:dio/dio.dart';
 import 'api_service.dart';
 
 class AuthService {
+  static Future<Response> healthCheck() async {
+    try {
+      return await ApiService.healthCheck();
+    } on DioException catch (e) {
+      if (e.response != null) {
+        return e.response!;
+      }
+      rethrow;
+    }
+  }
+
   static Future<Response> register({
     required String email,
     required String password,
@@ -64,5 +76,9 @@ class AuthService {
       'old_password': oldPassword,
       'new_password': newPassword,
     });
+  }
+
+  static Future<Response> getCurrentUser() async {
+    return await ApiService.get('/users/me');
   }
 }
