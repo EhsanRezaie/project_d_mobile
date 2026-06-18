@@ -1,4 +1,3 @@
-// lib/services/storage_service.dart
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -6,14 +5,18 @@ import '../models/user.dart';
 
 class StorageService {
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
-  
-  // Token methods
+
+  // ============================================================
+  // Token Methods
+  // ============================================================
   Future<void> saveTokens({
     required String accessToken,
     required String refreshToken,
+    required String userId,
   }) async {
     await _secureStorage.write(key: 'access_token', value: accessToken);
     await _secureStorage.write(key: 'refresh_token', value: refreshToken);
+    await _secureStorage.write(key: 'user_id', value: userId);
   }
 
   Future<String?> getAccessToken() async {
@@ -24,12 +27,24 @@ class StorageService {
     return await _secureStorage.read(key: 'refresh_token');
   }
 
+  Future<String?> getUserId() async {
+    return await _secureStorage.read(key: 'user_id');
+  }
+
   Future<void> clearTokens() async {
     await _secureStorage.delete(key: 'access_token');
     await _secureStorage.delete(key: 'refresh_token');
+    await _secureStorage.delete(key: 'user_id');
   }
 
-  // User methods
+  Future<bool> hasTokens() async {
+    final accessToken = await getAccessToken();
+    return accessToken != null && accessToken.isNotEmpty;
+  }
+
+  // ============================================================
+  // User Methods
+  // ============================================================
   Future<void> saveUser(User user) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('user', jsonEncode(user.toJson()));
@@ -53,7 +68,9 @@ class StorageService {
     await prefs.remove('user');
   }
 
-  // Language methods
+  // ============================================================
+  // Language Methods
+  // ============================================================
   Future<void> saveLanguage(String languageCode) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('language', languageCode);
@@ -64,7 +81,9 @@ class StorageService {
     return prefs.getString('language');
   }
 
-  // Onboarding methods
+  // ============================================================
+  // Onboarding Methods
+  // ============================================================
   Future<void> saveOnboardingComplete(bool completed) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('onboarding_complete', completed);
@@ -75,16 +94,12 @@ class StorageService {
     return prefs.getBool('onboarding_complete') ?? false;
   }
 
-  // Clear all data
+  // ============================================================
+  // Clear All
+  // ============================================================
   Future<void> clearAll() async {
     await _secureStorage.deleteAll();
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
-  }
-
-  // Check if user is logged in (has tokens)
-  Future<bool> isLoggedIn() async {
-    final accessToken = await getAccessToken();
-    return accessToken != null;
   }
 }

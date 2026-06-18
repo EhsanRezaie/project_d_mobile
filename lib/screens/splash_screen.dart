@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:dating_app/generated/app_localizations.dart';
 import '../config/app_theme.dart';
 import '../providers/auth_provider.dart';
-import 'welcome_screen.dart';
+import 'login_screen.dart';
 import 'main_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -62,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
       );
     }
   }

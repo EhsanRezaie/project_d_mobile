@@ -1,3 +1,5 @@
+## `mobile_dev.md` - Iranian Dating App Flutter (Updated)
+
 ```markdown
 # mobile_dev.md — Iranian Dating App Flutter (Badoo-style)
 
@@ -17,6 +19,8 @@
 6. [Completed Features](#6-completed-features)
 7. [TODO - Next Session](#7-todo---next-session)
 8. [UI Mockups](#8-ui-mockups-badoo-inspired)
+9. [Key Implementation Notes](#9-key-implementation-notes)
+10. [Backend Compatibility](#10-backend-compatibility)
 
 ---
 
@@ -39,21 +43,26 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 | Item | Status |
 |------|--------|
 | **Session 16-17** | ✅ COMPLETED |
+| **Session 18** | ✅ IN PROGRESS |
 | Flutter project setup | ✅ |
 | Dependencies installed | ✅ |
 | Folder structure created | ✅ |
 | Environment variables (.env) | ✅ |
 | API Service (Dio) with interceptors | ✅ |
-| Auth Service (login, register, healthCheck) | ✅ |
+| Auth Service (3-step registration) | ✅ |
 | Storage Service (secure token storage) | ✅ |
 | Auth Provider (state management) | ✅ |
 | Onboarding Provider | ✅ |
 | Language Provider | ✅ |
 | App Theme (Light/Dark mode ready) | ✅ |
 | Splash Screen (with progress bar & random target) | ✅ |
-| Welcome Screen (enhanced) | ✅ |
-| Login Screen (with validation) | ✅ |
+| Login Screen (combined with Welcome) | ✅ |
 | Sign Up Screen (with validation) | ✅ |
+| Verify Code Screen (6-digit + referral) | ✅ |
+| Main Screen (bottom nav with 4 tabs) | ✅ |
+| Profile Screen (user info + logout) | ✅ |
+| Token persistence on app restart | ✅ |
+| Backend UserProfileResponse compatibility | ✅ |
 | Email & Password validation | ✅ |
 | Password visibility toggle | ✅ |
 | Language selection (English/Persian) | ✅ |
@@ -96,22 +105,27 @@ lib/
 │   ├── app_constants.dart       # API URLs, keys
 │   └── app_theme.dart           # Theme configuration (Light/Dark)
 ├── models/
-│   └── user.dart                # User model
+│   └── user.dart                # User model (full Badoo fields)
 ├── services/
 │   ├── api_service.dart         # Dio HTTP client + interceptors
-│   ├── auth_service.dart        # Login, register, healthCheck
-│   └── storage_service.dart     # Token storage
+│   ├── auth_service.dart        # 3-step registration (init, verify, complete)
+│   └── storage_service.dart     # Token storage + secure storage
 ├── providers/
-│   ├── auth_provider.dart       # Auth state management
+│   ├── auth_provider.dart       # Auth state management (3-step)
 │   ├── language_provider.dart   # Language selection
 │   └── onboarding_provider.dart # Onboarding data + API submit
 ├── screens/
 │   ├── splash_screen.dart       # Splash with progress & health check
-│   ├── welcome_screen.dart      # Welcome screen (enhanced)
-│   ├── login_screen.dart        # Login screen
-│   ├── main_screen.dart         # Main screen (bottom nav) - PLACEHOLDER
-│   └── auth/
-│       └── sign_up_screen.dart  # Sign Up screen (3 fields)
+│   ├── login_screen.dart        # Login + Welcome combined
+│   ├── main_screen.dart         # Main screen (bottom nav with 4 tabs)
+│   ├── auth/
+│   │   ├── sign_up_screen.dart  # Step 1: Email + Password
+│   │   └── verify_code_screen.dart # Step 2: 6-digit code + referral
+│   └── onboarding/
+│       ├── personal_info_screen.dart  # Step 3a: Name, Birth Date, Gender
+│       ├── lifestyle_screen.dart      # Step 3b: Height, Weight, Lifestyle (TODO)
+│       ├── interests_screen.dart      # Step 3c: Interests & Prompts (TODO)
+│       └── location_screen.dart       # Step 3d: Location & Submit (TODO)
 ├── widgets/
 │   ├── loading_widget.dart      # Loading indicator
 │   └── progress_bar.dart        # Onboarding progress bar
@@ -170,6 +184,14 @@ class AppConstants {
 
 ## 6. Completed Features
 
+### Auth Flow (3-Step Registration)
+
+| Step | Endpoint | Description |
+|------|----------|-------------|
+| 1 | `POST /auth/register/init` | Check email, send 6-digit code |
+| 2 | `POST /auth/register/verify` | Verify code + create user (email + password) |
+| 3 | `POST /auth/register/complete` | Complete profile (all Badoo fields) |
+
 ### App Theme System
 
 | Feature | Description |
@@ -190,10 +212,10 @@ class AppConstants {
 | Random Target | Each run targets 50-99% before health check |
 | Health Check | GET /health to verify server connection |
 | Error State | Shows wifi icon + retry button on failure |
-| Auto-Navigation | Goes to MainScreen if authenticated, else WelcomeScreen |
+| Auto-Navigation | Goes to MainScreen if authenticated, else LoginScreen |
 | Theme Aware | Uses AppTheme colors (Light/Dark ready) |
 
-### Welcome Screen
+### Login Screen (Welcome + Login combined)
 
 | Feature | Description |
 |---------|-------------|
@@ -201,7 +223,7 @@ class AppConstants {
 | Community Text | Join community message |
 | Email Field | With real-time validation |
 | Password Field | With visibility toggle & real-time validation |
-| Sign In Button | Navigates to LoginScreen |
+| Sign In Button | Calls login API |
 | OR Divider | Centered "OR" text |
 | Google Button | Custom asset icon + localized text |
 | Sign Up Link | Navigates to SignUpScreen |
@@ -209,18 +231,6 @@ class AppConstants {
 | Terms & Policy | Small text at bottom |
 | Keyboard Handling | Resize on open, dismiss on tap outside |
 | Theme Aware | Light/Dark mode ready |
-
-### Login Screen
-
-| Feature | Description |
-|---------|-------------|
-| Form Validation | Email format + password length (min 8) |
-| Password Visibility | Toggle show/hide |
-| Loading State | Disabled button with spinner |
-| Error Handling | SnackBar with error message |
-| Navigation | Back to Welcome, forward to MainScreen |
-| Theme Aware | Uses AppTheme colors (Light/Dark ready) |
-| Keyboard Handling | Resize on open, dismiss on tap outside |
 
 ### Sign Up Screen
 
@@ -230,48 +240,58 @@ class AppConstants {
 | Password Visibility | Toggle show/hide for both password fields |
 | Confirm Password | Validates match with password |
 | Loading State | Disabled button with spinner |
-| Navigation | Back to Welcome, forward to LoginScreen |
+| Error Handling | SnackBar with error message |
+| Navigation | Back to Login, forward to VerifyCodeScreen |
 | Theme Aware | Uses AppTheme colors (Light/Dark ready) |
 | Keyboard Handling | Resize on open, dismiss on tap outside |
 
-### Auth Flow
+### Verify Code Screen
 
 | Feature | Description |
 |---------|-------------|
-| Login | Email + password validation |
-| Register | Complete profile with email, password, name, age, gender |
-| Token Storage | Secure storage with flutter_secure_storage |
-| Token Refresh | Automatic on 401 response via interceptor |
-| Health Check | Separate Dio instance without /api/v1 prefix |
-| Error Handling | Localized error messages |
+| 6-digit Code Input | Auto-focus next field on entry |
+| Resend Code | Button to request new code |
+| Referral Code | Optional field for referral code |
+| Loading State | Disabled button with spinner |
+| Error Handling | SnackBar with error message |
+| Navigation | Back to SignUp, forward to MainScreen |
+| Theme Aware | Uses AppTheme colors (Light/Dark ready) |
 
-### API Service Features
+### Main Screen
 
 | Feature | Description |
 |---------|-------------|
-| Base URL | From AppConstants.apiBaseUrl |
-| Interceptors | Auto token injection + refresh on 401 |
-| Health Check | Separate baseUrl without /api/v1 prefix |
-| Logging | Request/Response logging in debug mode |
+| Bottom Navigation | 4 tabs (Discover, Search, Chats, Profile) |
+| Discover Tab | Placeholder for swipe cards |
+| Search Tab | Placeholder for search |
+| Chats Tab | Placeholder for messages |
+| Profile Tab | Shows user info + logout button |
+| Onboarding Check | Redirects to PersonalInfoScreen if profile incomplete |
+
+### Token Management
+
+| Feature | Description |
+|---------|-------------|
+| Storage | `flutter_secure_storage` for tokens |
+| Auto-Refresh | Interceptor handles 401 with refresh token |
+| Persistence | Tokens survive app restart |
+| Logout | Clears tokens and navigates to Login |
 
 ---
 
 ## 7. TODO - Next Session
 
-### Session 18: Onboarding Flow
+### Session 19: Complete Onboarding Flow
 
 | Task | Priority | Description |
 |------|----------|-------------|
-| EmailPasswordScreen | 🔴 High | Step 0: Email & Password (connect to API) |
-| NameAgeScreen | 🔴 High | Step 1: Name, Age, Gender |
-| HeightWeightScreen | 🟡 Medium | Step 2: Height, Weight |
-| PhotoScreen | 🟡 Medium | Step 3: Photos (skip option) |
-| LocationScreen | 🟡 Medium | Step 4: Location & Submit |
-| OnboardingProvider | 🔴 High | State management for all steps |
-| Registration API | 🔴 High | Connect to backend POST /auth/register |
-| MainScreen | 🔴 High | Bottom nav with 4 tabs (placeholder) |
+| LifestyleScreen | 🔴 High | Step 3b: Height, Weight, Lifestyle |
+| InterestsScreen | 🔴 High | Step 3c: Interests & Prompts |
+| LocationScreen | 🔴 High | Step 3d: Location & Submit |
+| Register Complete API | 🔴 High | Connect to backend POST /auth/register/complete |
+| Onboarding Navigation | 🔴 High | Connect all screens with navigation |
 
-### Session 19: Main App Features
+### Session 20: Main App Features
 
 | Task | Priority | Description |
 |------|----------|-------------|
@@ -282,7 +302,7 @@ class AppConstants {
 | Chat Detail | 🟡 Medium | Real-time messaging |
 | Likes Tab | 🟢 Low | Likes sent/received |
 
-### Session 20: Polish & Production
+### Session 21: Polish & Production
 
 | Task | Priority | Description |
 |------|----------|-------------|
@@ -311,7 +331,7 @@ class AppConstants {
 └─────────────────────────────┘
 ```
 
-### Welcome Screen (Current)
+### Login Screen (Current)
 ```
 ┌─────────────────────────────┐
 │                          🌐  │
@@ -349,30 +369,6 @@ class AppConstants {
 └─────────────────────────────┘
 ```
 
-### Login Screen (Current)
-```
-┌─────────────────────────────┐
-│  ←  Welcome Back            │
-│                             │
-│        Welcome Back         │
-│     Sign in to continue     │
-│                             │
-│  ┌──────────────────────┐   │
-│  │ 📧 Enter your email   │   │
-│  └──────────────────────┘   │
-│  ┌──────────────────────┐   │
-│  │ 🔒 Enter your password│ 👁️ │
-│  └──────────────────────┘   │
-│                             │
-│  ┌──────────────────────┐   │
-│  │       Login          │   │
-│  └──────────────────────┘   │
-│                             │
-│  Don't have an account?     │
-│     Create Account          │
-└─────────────────────────────┘
-```
-
 ### Sign Up Screen (Current)
 ```
 ┌─────────────────────────────┐
@@ -400,6 +396,34 @@ class AppConstants {
 └─────────────────────────────┘
 ```
 
+### Verify Code Screen (Current)
+```
+┌─────────────────────────────┐
+│  ←  Verify Your Email       │
+│                             │
+│        Verify Your Email    │
+│   Enter the 6-digit code    │
+│   sent to test@example.com  │
+│                             │
+│     [1] [2] [3] [4] [5] [6] │
+│                             │
+│        Resend Code          │
+│                             │
+│   Enter your referral code  │
+│   ┌──────────────────────┐  │
+│   │  Referral code       │  │
+│   └──────────────────────┘  │
+│                             │
+│  ┌──────────────────────┐   │
+│  │   Verify & Continue  │   │
+│  └──────────────────────┘   │
+│                             │
+│  💡 Get 3 days of premium   │
+│     free with a referral    │
+│     code                    │
+└─────────────────────────────┘
+```
+
 ### Discover Screen (Planned)
 ```
 ┌─────────────────────────────┐
@@ -421,7 +445,7 @@ class AppConstants {
 
 ---
 
-## Key Implementation Notes
+## 9. Key Implementation Notes
 
 ### Health Check Path
 - Backend: `GET /health` (without /api/v1 prefix)
@@ -452,9 +476,56 @@ class AppConstants {
 - Text styles from `AppTheme` (headlineLarge, headlineMedium, bodyLarge, etc.)
 - Button styles from `AppTheme` (primaryButton, outlineButton)
 
+### Registration Flow (3-Step)
+1. **SignUpScreen** → `POST /auth/register/init` → VerifyCodeScreen
+2. **VerifyCodeScreen** → `POST /auth/register/verify` → MainScreen
+3. **Onboarding screens** → `POST /auth/register/complete` → MainScreen (with profile)
+
+### Navigation Guards
+- If user has tokens → auto-login on app restart
+- If token expired → refresh token interceptor
+- If refresh token expired → redirect to LoginScreen
+- If profile incomplete → redirect to PersonalInfoScreen
+
 ---
 
-**Next: Session 18 - Onboarding Flow**
+## 10. Backend Compatibility
 
-Ready to start Session 18 when you are. 🚀
+### User Model Changes (Backend Session 16-17)
+
+| Old Field | New Field | Location |
+|-----------|-----------|----------|
+| `name` | `name` | `UserProfile` |
+| `age` | `birth_date` + `age` property | `UserProfile` |
+| `gender` | `gender` | `UserProfile` |
+| `height` | `height` | `UserProfile` |
+| `weight` | `weight` | `UserProfile` |
+| `bio` | `bio` | `UserProfile` |
+| `lat/lng` | `lat/lng` | `UserProfile` |
+| `country/province/city` | `country/province/city` | `UserProfile` |
+| `premium_until` | `premium_until` | `UserProfile` |
+| `is_premium` | `is_premium` (property) | `UserProfile` |
+| `is_profile_complete` | `is_profile_complete` (property) | `UserProfile` |
+| `hide_last_seen` | `hide_last_seen` | `UserSettings` |
+| `hide_online_status` | `hide_online_status` | `UserSettings` |
+
+### API Endpoints Used
+
+| Endpoint | Method | Status |
+|----------|--------|--------|
+| `/auth/register/init` | POST | ✅ Working |
+| `/auth/register/verify` | POST | ✅ Working |
+| `/auth/register/complete` | POST | 🔜 TODO |
+| `/auth/login` | POST | ✅ Working |
+| `/auth/refresh` | POST | ✅ Working |
+| `/auth/logout` | POST | ✅ Working |
+| `/auth/health` | GET | ✅ Working |
+| `/users/me` | GET | ✅ Working |
+| `/users/me` | PUT | 🔜 TODO |
+
+---
+
+**Next: Session 19 - Complete Onboarding Flow (Lifestyle, Interests, Location)**
+
+Ready to start Session 19 when you are. 🚀
 ```
