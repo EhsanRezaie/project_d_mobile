@@ -9,7 +9,7 @@ class AppLocalizationsFa extends AppLocalizations {
   AppLocalizationsFa([String locale = 'fa']) : super(locale);
 
   @override
-  String get welcome_title => 'هاگزی';
+  String get app_title => 'باندی';
 
   @override
   String get welcome_subtitle => 'ارتباط با افراد نزدیکت';
@@ -18,7 +18,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get email_label => 'ایمیل';
 
   @override
-  String get sign_up_button => 'ثبت نام';
+  String get sign_in_button => 'ورود';
 
   @override
   String get or => 'یا';
@@ -27,7 +27,7 @@ class AppLocalizationsFa extends AppLocalizations {
   String get continue_with_google => 'ادامه با گوگل';
 
   @override
-  String get already_have_account => 'حساب کاربری دارید؟';
+  String get dont_have_an_account => 'حساب کاربری ندارید؟';
 
   @override
   String get login_button => 'ورود';
@@ -59,6 +59,9 @@ class AppLocalizationsFa extends AppLocalizations {
   String get persian => 'فارسی';
 
   @override
+  String get sign_up => 'ثبت نام';
+
+  @override
   String get sign_in => 'ورود';
 
   @override
@@ -72,4 +75,70 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get password_min_length => 'رمز عبور باید حداقل ۸ کاراکتر باشد';
+
+  @override
+  String get splash_subtitle => 'پیدا کردن همتا';
+
+  @override
+  String get splash_connecting => 'در حال اتصال به سرور...';
+
+  @override
+  String get splash_check_internet => 'لطفاً اتصال اینترنت خود را بررسی کنید';
+
+  @override
+  String get splash_retry => 'تلاش مجدد';
+
+  @override
+  String get splash_connection_failed => 'ارتباط با سرور برقرار نشد';
+
+  @override
+  String get signup_title => 'ایجاد حساب کاربری';
+
+  @override
+  String get signup_subtitle => 'به ما ملحق شو و همتای خودت رو پیدا کن';
+
+  @override
+  String get signup_email_label => 'ایمیل';
+
+  @override
+  String get signup_password_label => 'رمز عبور';
+
+  @override
+  String get signup_confirm_password_label => 'تکرار رمز عبور';
+
+  @override
+  String get signup_button => 'ثبت نام';
+
+  @override
+  String get signup_already_have_account => 'حساب کاربری دارید؟ ';
+
+  @override
+  String get signup_email_required => 'ایمیل الزامی است';
+
+  @override
+  String get signup_email_invalid => 'لطفاً یک ایمیل معتبر وارد کنید';
+
+  @override
+  String get signup_password_required => 'رمز عبور الزامی است';
+
+  @override
+  String get signup_password_min_length => 'رمز عبور باید حداقل ۸ کاراکتر باشد';
+
+  @override
+  String get signup_confirm_password_required => 'لطفاً رمز عبور را تکرار کنید';
+
+  @override
+  String get signup_passwords_do_not_match => 'رمز عبورها مطابقت ندارند';
+
+  @override
+  String get signin_button => 'ورود';
+
+  @override
+  String get signup_email_hint => 'ایمیل خود را وارد کنید';
+
+  @override
+  String get signup_password_hint => 'رمز عبور خود را وارد کنید';
+
+  @override
+  String get signup_confirm_password_hint => 'رمز عبور را تکرار کنید';
 }

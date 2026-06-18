@@ -98,11 +98,11 @@ abstract class AppLocalizations {
     Locale('fa'),
   ];
 
-  /// No description provided for @welcome_title.
+  /// No description provided for @app_title.
   ///
   /// In en, this message translates to:
-  /// **'Hugsy'**
-  String get welcome_title;
+  /// **'Bondi'**
+  String get app_title;
 
   /// No description provided for @welcome_subtitle.
   ///
@@ -116,11 +116,11 @@ abstract class AppLocalizations {
   /// **'Email'**
   String get email_label;
 
-  /// No description provided for @sign_up_button.
+  /// No description provided for @sign_in_button.
   ///
   /// In en, this message translates to:
-  /// **'Sign Up'**
-  String get sign_up_button;
+  /// **'Sign In'**
+  String get sign_in_button;
 
   /// No description provided for @or.
   ///
@@ -134,11 +134,11 @@ abstract class AppLocalizations {
   /// **'Continue with Google'**
   String get continue_with_google;
 
-  /// No description provided for @already_have_account.
+  /// No description provided for @dont_have_an_account.
   ///
   /// In en, this message translates to:
-  /// **'Already have an account?'**
-  String get already_have_account;
+  /// **'Don\'t have an account?'**
+  String get dont_have_an_account;
 
   /// No description provided for @login_button.
   ///
@@ -194,10 +194,16 @@ abstract class AppLocalizations {
   /// **'Persian'**
   String get persian;
 
+  /// No description provided for @sign_up.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up'**
+  String get sign_up;
+
   /// No description provided for @sign_in.
   ///
   /// In en, this message translates to:
-  /// **'Sign in'**
+  /// **'Sign In'**
   String get sign_in;
 
   /// No description provided for @email_required.
@@ -223,6 +229,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Password must be at least 8 characters'**
   String get password_min_length;
+
+  /// No description provided for @splash_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Find Your Match'**
+  String get splash_subtitle;
+
+  /// No description provided for @splash_connecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting to server...'**
+  String get splash_connecting;
+
+  /// No description provided for @splash_check_internet.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your internet connection'**
+  String get splash_check_internet;
+
+  /// No description provided for @splash_retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get splash_retry;
+
+  /// No description provided for @splash_connection_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection failed'**
+  String get splash_connection_failed;
+
+  /// No description provided for @signup_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account'**
+  String get signup_title;
+
+  /// No description provided for @signup_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Join us and find your match'**
+  String get signup_subtitle;
+
+  /// No description provided for @signup_email_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get signup_email_label;
+
+  /// No description provided for @signup_password_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get signup_password_label;
+
+  /// No description provided for @signup_confirm_password_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get signup_confirm_password_label;
+
+  /// No description provided for @signup_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up'**
+  String get signup_button;
+
+  /// No description provided for @signup_already_have_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? '**
+  String get signup_already_have_account;
+
+  /// No description provided for @signup_email_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required'**
+  String get signup_email_required;
+
+  /// No description provided for @signup_email_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email'**
+  String get signup_email_invalid;
+
+  /// No description provided for @signup_password_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required'**
+  String get signup_password_required;
+
+  /// No description provided for @signup_password_min_length.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 8 characters'**
+  String get signup_password_min_length;
+
+  /// No description provided for @signup_confirm_password_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm your password'**
+  String get signup_confirm_password_required;
+
+  /// No description provided for @signup_passwords_do_not_match.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get signup_passwords_do_not_match;
+
+  /// No description provided for @signin_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get signin_button;
+
+  /// No description provided for @signup_email_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email'**
+  String get signup_email_hint;
+
+  /// No description provided for @signup_password_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password'**
+  String get signup_password_hint;
+
+  /// No description provided for @signup_confirm_password_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm your password'**
+  String get signup_confirm_password_hint;
 }
 
 class _AppLocalizationsDelegate

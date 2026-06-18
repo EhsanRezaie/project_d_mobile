@@ -53,6 +53,7 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 | Splash Screen (with progress bar & random target) | ✅ |
 | Welcome Screen (enhanced) | ✅ |
 | Login Screen (with validation) | ✅ |
+| Sign Up Screen (with validation) | ✅ |
 | Email & Password validation | ✅ |
 | Password visibility toggle | ✅ |
 | Language selection (English/Persian) | ✅ |
@@ -63,6 +64,8 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 | Health Check on Splash | ✅ |
 | Retry button on connection error | ✅ |
 | Token refresh interceptor | ✅ |
+| Theme-aware colors (Light/Dark ready) | ✅ |
+| Keyboard handling (resize & dismiss on tap) | ✅ |
 
 ---
 
@@ -107,12 +110,8 @@ lib/
 │   ├── welcome_screen.dart      # Welcome screen (enhanced)
 │   ├── login_screen.dart        # Login screen
 │   ├── main_screen.dart         # Main screen (bottom nav) - PLACEHOLDER
-│   └── onboarding/
-│       ├── email_password_screen.dart   # Step 0: Email & Password
-│       ├── name_age_screen.dart         # Step 1: Name, Age, Gender
-│       ├── height_weight_screen.dart    # Step 2: Height, Weight
-│       ├── photo_screen.dart            # Step 3: Photos (skip)
-│       └── location_screen.dart         # Step 4: Location & Submit
+│   └── auth/
+│       └── sign_up_screen.dart  # Sign Up screen (3 fields)
 ├── widgets/
 │   ├── loading_widget.dart      # Loading indicator
 │   └── progress_bar.dart        # Onboarding progress bar
@@ -194,6 +193,47 @@ class AppConstants {
 | Auto-Navigation | Goes to MainScreen if authenticated, else WelcomeScreen |
 | Theme Aware | Uses AppTheme colors (Light/Dark ready) |
 
+### Welcome Screen
+
+| Feature | Description |
+|---------|-------------|
+| App Logo & Title | "AURA" with subtitle |
+| Community Text | Join community message |
+| Email Field | With real-time validation |
+| Password Field | With visibility toggle & real-time validation |
+| Sign In Button | Navigates to LoginScreen |
+| OR Divider | Centered "OR" text |
+| Google Button | Custom asset icon + localized text |
+| Sign Up Link | Navigates to SignUpScreen |
+| Language Selector | Top-right globe icon with dialog |
+| Terms & Policy | Small text at bottom |
+| Keyboard Handling | Resize on open, dismiss on tap outside |
+| Theme Aware | Light/Dark mode ready |
+
+### Login Screen
+
+| Feature | Description |
+|---------|-------------|
+| Form Validation | Email format + password length (min 8) |
+| Password Visibility | Toggle show/hide |
+| Loading State | Disabled button with spinner |
+| Error Handling | SnackBar with error message |
+| Navigation | Back to Welcome, forward to MainScreen |
+| Theme Aware | Uses AppTheme colors (Light/Dark ready) |
+| Keyboard Handling | Resize on open, dismiss on tap outside |
+
+### Sign Up Screen
+
+| Feature | Description |
+|---------|-------------|
+| Form Validation | Email format + password length (min 8) |
+| Password Visibility | Toggle show/hide for both password fields |
+| Confirm Password | Validates match with password |
+| Loading State | Disabled button with spinner |
+| Navigation | Back to Welcome, forward to LoginScreen |
+| Theme Aware | Uses AppTheme colors (Light/Dark ready) |
+| Keyboard Handling | Resize on open, dismiss on tap outside |
+
 ### Auth Flow
 
 | Feature | Description |
@@ -214,17 +254,6 @@ class AppConstants {
 | Health Check | Separate baseUrl without /api/v1 prefix |
 | Logging | Request/Response logging in debug mode |
 
-### Login Screen
-
-| Feature | Description |
-|---------|-------------|
-| Form Validation | Email format + password length (min 8) |
-| Password Visibility | Toggle show/hide |
-| Loading State | Disabled button with spinner |
-| Error Handling | SnackBar with error message |
-| Navigation | Back to Welcome, forward to MainScreen |
-| Theme Aware | Uses AppTheme colors |
-
 ---
 
 ## 7. TODO - Next Session
@@ -240,6 +269,7 @@ class AppConstants {
 | LocationScreen | 🟡 Medium | Step 4: Location & Submit |
 | OnboardingProvider | 🔴 High | State management for all steps |
 | Registration API | 🔴 High | Connect to backend POST /auth/register |
+| MainScreen | 🔴 High | Bottom nav with 4 tabs (placeholder) |
 
 ### Session 19: Main App Features
 
@@ -281,6 +311,44 @@ class AppConstants {
 └─────────────────────────────┘
 ```
 
+### Welcome Screen (Current)
+```
+┌─────────────────────────────┐
+│                          🌐  │
+│                             │
+│           AURA              │
+│      Find Your Match        │
+│   Connect with people...    │
+│                             │
+│   Join a community of...    │
+│                             │
+│  ┌──────────────────────┐   │
+│  │ Enter your email      │   │
+│  └──────────────────────┘   │
+│  ┌──────────────────────┐   │
+│  │ Enter your password  │ 👁️ │
+│  └──────────────────────┘   │
+│                             │
+│  ┌──────────────────────┐   │
+│  │      Sign In         │   │
+│  └──────────────────────┘   │
+│                             │
+│        ──── OR ────         │
+│                             │
+│  ┌──────────────────────┐   │
+│  │ G   Continue with    │   │
+│  │      Google          │   │
+│  └──────────────────────┘   │
+│                             │
+│  Don't have an account?     │
+│         Sign Up             │
+│                             │
+│  By continuing, you agree   │
+│  to our Terms of Service    │
+│  and Privacy Policy.        │
+└─────────────────────────────┘
+```
+
 ### Login Screen (Current)
 ```
 ┌─────────────────────────────┐
@@ -305,41 +373,30 @@ class AppConstants {
 └─────────────────────────────┘
 ```
 
-### Welcome Screen (Current)
+### Sign Up Screen (Current)
 ```
 ┌─────────────────────────────┐
-│                          🌐  │
+│  ←  Create Account          │
 │                             │
-│           AURA              │
-│      Find Your Match        │
-│   Connect with people...    │
-│                             │
-│   Join a community of...    │
+│        Create Account       │
+│   Join us and find your match│
 │                             │
 │  ┌──────────────────────┐   │
-│  │ Enter your email      │   │
+│  │ 📧 Enter your email   │   │
 │  └──────────────────────┘   │
 │  ┌──────────────────────┐   │
-│  │ Enter your password  │ 👁️ │
+│  │ 🔒 Enter your password│ 👁️ │
+│  └──────────────────────┘   │
+│  ┌──────────────────────┐   │
+│  │ 🔒 Confirm your pass │ 👁️ │
 │  └──────────────────────┘   │
 │                             │
 │  ┌──────────────────────┐   │
 │  │      Sign Up         │   │
 │  └──────────────────────┘   │
 │                             │
-│        ──── OR ────         │
-│                             │
-│  ┌──────────────────────┐   │
-│  │ G   Continue with    │   │
-│  │      Google          │   │
-│  └──────────────────────┘   │
-│                             │
 │  Already have an account?   │
-│         Sign in             │
-│                             │
-│  By continuing, you agree   │
-│  to our Terms of Service    │
-│  and Privacy Policy.        │
+│         Sign In             │
 └─────────────────────────────┘
 ```
 
@@ -383,6 +440,17 @@ class AppConstants {
 3. Call health check
 4. If healthy, animate to 100%
 5. Navigate based on auth status
+
+### Keyboard Handling
+- All screens use `resizeToAvoidBottomInset: true`
+- `GestureDetector` with `behavior: HitTestBehavior.opaque` and `onTap: FocusScope.of(context).unfocus()` to dismiss keyboard
+- `SingleChildScrollView` for scroll when keyboard is open
+
+### Theme System
+- Colors from `AppTheme` (Light/Dark ready)
+- Use `context.isDarkMode` to detect theme
+- Text styles from `AppTheme` (headlineLarge, headlineMedium, bodyLarge, etc.)
+- Button styles from `AppTheme` (primaryButton, outlineButton)
 
 ---
 

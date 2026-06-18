@@ -1,8 +1,12 @@
+// lib/screens/welcome_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:dating_app/generated/app_localizations.dart';
 import 'package:dating_app/providers/language_provider.dart';
+import '../config/app_theme.dart';
+import 'auth/sign_up_screen.dart';
+import 'login_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -20,13 +24,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   
   String? _emailError;
   String? _passwordError;
-
-  static const Color colorBackground = Color(0xFFFBF9F9);
-  static const Color colorPrimaryNavy = Color(0xFF001F3F);
-  static const Color colorSecondarySurface = Color.fromARGB(255, 224, 229, 231);
-  static const Color colorBorder = Color(0xFFE0E5EB);
-  static const Color colorTextMuted = Color(0xFF707070);
-  static const Color colorError = Color(0xFFDC3545);
 
   @override
   void initState() {
@@ -52,6 +49,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     final l10n = AppLocalizations.of(context)!;
     final languageProvider = context.read<LanguageProvider>();
     final isEnglish = languageProvider.isEnglish;
+    final colors = Theme.of(context).colorScheme;
     
     showDialog(
       context: context,
@@ -70,15 +68,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               children: [
                 Text(
                   l10n.select_language,
-                  style: const TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w600,
-                    color: colorPrimaryNavy,
+                  style: AppTheme.titleMedium.copyWith(
+                    color: colors.primary,
                   ),
                 ),
                 const SizedBox(height: 16.0),
-                const Divider(color: colorBorder),
+                const Divider(color: AppTheme.lightBorder),
                 const SizedBox(height: 16.0),
                 _LanguageOption(
                   languageCode: 'EN',
@@ -106,10 +101,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   onPressed: () => Navigator.pop(context),
                   child: Text(
                     l10n.cancel,
-                    style: const TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 16.0,
-                      color: colorTextMuted,
+                    style: AppTheme.bodyMedium.copyWith(
+                      color: AppTheme.lightTextMuted,
                     ),
                   ),
                 ),
@@ -145,351 +138,356 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     });
   }
 
+  void _handleSignIn() {
+    _validateEmail(_emailController.text);
+    _validatePassword(_passwordController.text);
+    if (_emailError == null && _passwordError == null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final t = AppLocalizations.of(context)!;
     final languageProvider = context.watch<LanguageProvider>();
     final currentLanguage = languageProvider.currentLanguageCode.toUpperCase();
+    final colors = Theme.of(context).colorScheme;
+    final isDark = context.isDarkMode;
     
+    final Color bgColor = isDark ? AppTheme.darkBackground : AppTheme.lightBackground;
+    final Color primaryColor = isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary;
+    final Color surfaceColor = isDark ? AppTheme.darkSurface : AppTheme.lightSurface;
+    final Color borderColor = isDark ? AppTheme.darkBorder : AppTheme.lightBorder;
+    final Color textMutedColor = isDark ? AppTheme.darkTextMuted : AppTheme.lightTextMuted;
+    final Color errorColor = AppTheme.lightError;
+    final Color secondaryColor = isDark ? AppTheme.darkSecondary : AppTheme.lightSecondary;
+
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: colorBackground,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton.icon(
-                      onPressed: _showLanguageSelector,
-                      icon: const Icon(
-                        Icons.language,
-                        size: 18.0,
-                        color: colorTextMuted,
-                      ),
-                      label: Text(
-                        currentLanguage,
-                        style: const TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w600,
-                          color: colorTextMuted,
+      resizeToAvoidBottomInset: true,
+      backgroundColor: bgColor,
+      body: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton.icon(
+                        onPressed: _showLanguageSelector,
+                        icon: Icon(
+                          Icons.language,
+                          size: 18.0,
+                          color: textMutedColor,
                         ),
-                      ),
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12.0,
-                          vertical: 8.0,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 32.0),
-                Text(
-                  l10n.welcome_title,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 40.0,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -0.8,
-                    color: colorPrimaryNavy,
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                Text(
-                  l10n.welcome_subtitle,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 28.0,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: -0.28,
-                    color: colorPrimaryNavy,
-                  ),
-                ),
-                const SizedBox(height: 12.0),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    l10n.join_community_text,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w400,
-                      height: 1.5,
-                      color: colorTextMuted,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 32.0),
-                // Email TextField
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextField(
-                      controller: _emailController,
-                      focusNode: _emailFocusNode,
-                      keyboardType: TextInputType.emailAddress,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                          RegExp(r'[a-zA-Z0-9@._%+-]'),
-                        ),
-                      ],
-                      onChanged: _validateEmail,
-                      style: const TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 16.0,
-                        color: colorPrimaryNavy,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: l10n.enter_email_hint,
-                        hintStyle: const TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 16.0,
-                          color: colorTextMuted,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 16.0,
-                        ),
-                        filled: true,
-                        fillColor: colorBackground,
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16.0),
-                          borderSide: BorderSide(
-                            color: _emailError != null ? colorError : colorBorder,
-                            width: 1.0,
+                        label: Text(
+                          currentLanguage,
+                          style: AppTheme.labelMedium.copyWith(
+                            color: textMutedColor,
                           ),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16.0),
-                          borderSide: BorderSide(
-                            color: _emailError != null ? colorError : colorPrimaryNavy,
-                            width: 2.0,
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0,
+                            vertical: 8.0,
                           ),
                         ),
-                        errorText: _emailError,
-                        errorStyle: const TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 12.0,
-                          color: colorError,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16.0),
-                // Password TextField
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextField(
-                      controller: _passwordController,
-                      focusNode: _passwordFocusNode,
-                      obscureText: _obscurePassword,
-                      keyboardType: TextInputType.visiblePassword,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                          RegExp(r'[a-zA-Z0-9!@#$%^&*()_+{}|:<>?~]'),
-                        ),
-                      ],
-                      onChanged: _validatePassword,
-                      style: const TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 16.0,
-                        color: colorPrimaryNavy,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: l10n.enter_password_hint,
-                        hintStyle: const TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 16.0,
-                          color: colorTextMuted,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 16.0,
-                        ),
-                        filled: true,
-                        fillColor: colorBackground,
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16.0),
-                          borderSide: BorderSide(
-                            color: _passwordError != null ? colorError : colorBorder,
-                            width: 1.0,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16.0),
-                          borderSide: BorderSide(
-                            color: _passwordError != null ? colorError : colorPrimaryNavy,
-                            width: 2.0,
-                          ),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                            color: colorTextMuted,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _obscurePassword = !_obscurePassword;
-                            });
-                          },
-                        ),
-                        errorText: _passwordError,
-                        errorStyle: const TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 12.0,
-                          color: colorError,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 24.0),
-                // Continue Button
-                Container(
-                  height: 56.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16.0),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x14001F3F),
-                        offset: Offset(0, 12),
-                        blurRadius: 32.0,
                       ),
                     ],
                   ),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      _validateEmail(_emailController.text);
-                      _validatePassword(_passwordController.text);
-                      if (_emailError == null && _passwordError == null) {
-                        // Proceed
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colorPrimaryNavy,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16.0),
-                      ),
-                      elevation: 0,
-                      minimumSize: const Size(double.infinity, 56),
+                  const SizedBox(height: 16.0),
+                  Text(
+                    t.app_title,
+                    textAlign: TextAlign.center,
+                    style: AppTheme.headlineLarge.copyWith(
+                      color: primaryColor,
                     ),
+                  ),
+                  const SizedBox(height: 16.0),
+                  Text(
+                    t.welcome_subtitle,
+                    textAlign: TextAlign.center,
+                    style: AppTheme.headlineMedium.copyWith(
+                      color: primaryColor,
+                    ),
+                  ),
+                  const SizedBox(height: 12.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Text(
-                      l10n.sign_up_button,
-                      style: const TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600,
+                      t.join_community_text,
+                      textAlign: TextAlign.center,
+                      style: AppTheme.bodyLarge.copyWith(
+                        color: textMutedColor,
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 32.0),
-                // OR Divider
-                Row(
-                  children: [
-                    const Expanded(child: Divider(color: colorBorder, thickness: 1.0)),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  const SizedBox(height: 32.0),
+                  // Email TextField
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextField(
+                        controller: _emailController,
+                        focusNode: _emailFocusNode,
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                            RegExp(r'[a-zA-Z0-9@._%+-]'),
+                          ),
+                        ],
+                        onChanged: _validateEmail,
+                        onEditingComplete: () {
+                          FocusScope.of(context).requestFocus(_passwordFocusNode);
+                        },
+                        style: AppTheme.bodyLarge.copyWith(
+                          color: colors.onSurface,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: t.enter_email_hint,
+                          hintStyle: AppTheme.bodyMedium.copyWith(
+                            color: textMutedColor,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16.0,
+                            vertical: 16.0,
+                          ),
+                          filled: true,
+                          fillColor: surfaceColor,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16.0),
+                            borderSide: BorderSide(
+                              color: _emailError != null ? errorColor : borderColor,
+                              width: 1.0,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16.0),
+                            borderSide: BorderSide(
+                              color: _emailError != null ? errorColor : primaryColor,
+                              width: 2.0,
+                            ),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16.0),
+                            borderSide: BorderSide(
+                              color: errorColor,
+                              width: 1.0,
+                            ),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16.0),
+                            borderSide: BorderSide(
+                              color: errorColor,
+                              width: 2.0,
+                            ),
+                          ),
+                          errorText: _emailError,
+                          errorStyle: AppTheme.labelSmall.copyWith(
+                            color: errorColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16.0),
+                  // Password TextField
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextField(
+                        controller: _passwordController,
+                        focusNode: _passwordFocusNode,
+                        obscureText: _obscurePassword,
+                        keyboardType: TextInputType.visiblePassword,
+                        textInputAction: TextInputAction.done,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                            RegExp(r'[a-zA-Z0-9!@#$%^&*()_+{}|:<>?~]'),
+                          ),
+                        ],
+                        onChanged: _validatePassword,
+                        onEditingComplete: _handleSignIn,
+                        style: AppTheme.bodyLarge.copyWith(
+                          color: colors.onSurface,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: t.enter_password_hint,
+                          hintStyle: AppTheme.bodyMedium.copyWith(
+                            color: textMutedColor,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16.0,
+                            vertical: 16.0,
+                          ),
+                          filled: true,
+                          fillColor: surfaceColor,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16.0),
+                            borderSide: BorderSide(
+                              color: _passwordError != null ? errorColor : borderColor,
+                              width: 1.0,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16.0),
+                            borderSide: BorderSide(
+                              color: _passwordError != null ? errorColor : primaryColor,
+                              width: 2.0,
+                            ),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                              color: textMutedColor,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
+                          errorText: _passwordError,
+                          errorStyle: AppTheme.labelSmall.copyWith(
+                            color: errorColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24.0),
+                  // Sign in Button
+                  Container(
+                    height: 56.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16.0),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x14001F3F),
+                          offset: Offset(0, 12),
+                          blurRadius: 32.0,
+                        ),
+                      ],
+                    ),
+                    child: ElevatedButton(
+                      onPressed: _handleSignIn,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryColor,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
+                        elevation: 0,
+                        minimumSize: const Size(double.infinity, 56),
+                      ),
                       child: Text(
-                        l10n.or,
-                        style: const TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w500,
-                          color: colorTextMuted,
+                        t.sign_in_button,
+                        style: AppTheme.buttonText,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 32.0),
+                  // OR Divider
+                  Row(
+                    children: [
+                      Expanded(child: Divider(color: borderColor, thickness: 1.0)),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          t.or,
+                          style: AppTheme.labelMedium.copyWith(
+                            color: textMutedColor,
+                          ),
+                        ),
+                      ),
+                      Expanded(child: Divider(color: borderColor, thickness: 1.0)),
+                    ],
+                  ),
+                  const SizedBox(height: 32.0),
+                  // Google Button
+                  SizedBox(
+                    height: 56.0,
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: () {},
+                      icon: Image.asset(
+                        'assets/images/google_logo.png',
+                        height: 24.0,
+                        width: 24.0,
+                        fit: BoxFit.contain,
+                      ),
+                      label: Text(
+                        t.continue_with_google,
+                        style: AppTheme.buttonText,
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: secondaryColor,
+                        foregroundColor: primaryColor,
+                        side: BorderSide.none,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.0),
                         ),
                       ),
                     ),
-                    const Expanded(child: Divider(color: Color(0xFFE0E5EB), thickness: 1.0)),
-                  ],
-                ),
-                const SizedBox(height: 32.0),
-                // Google Button
-                SizedBox(
-                  height: 56.0,
-                  width: double.infinity,
-                  child: OutlinedButton.icon(
-                    onPressed: () {},
-                    icon: Image.asset(
-                      'assets/images/google_logo.png',
-                      height: 24.0,
-                      width: 24.0,
-                      fit: BoxFit.contain,
-                    ),
-                    label: Text(
-                      l10n.continue_with_google,
-                      style: const TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: colorSecondarySurface,
-                      foregroundColor: colorPrimaryNavy,
-                      side: BorderSide.none,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16.0),
-                      ),
-                    ),
                   ),
-                ),
-                const SizedBox(height: 48.0),
-                // Sign in link
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '${l10n.already_have_account} ',
-                      style: const TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 16.0,
-                        color: colorTextMuted,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {},
-                      child: Text(
-                        l10n.sign_in,
-                        style: const TextStyle(
+                  const SizedBox(height: 16.0),
+                  //Sign up links
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        t.dont_have_an_account,
+                        style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 16.0,
-                          fontWeight: FontWeight.w600,
-                          color: colorPrimaryNavy,
+                          color: textMutedColor,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16.0),
-                // Terms and Policy
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Text(
-                    l10n.terms_and_policy,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w400,
-                      height: 1.4,
-                      color: colorTextMuted,
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const SignUpScreen()),
+                          );
+                        },
+                        child: Text(
+                          t.sign_up,
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w600,
+                            color: primaryColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16.0),
+                  // Terms and Policy
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Text(
+                      t.terms_and_policy,
+                      textAlign: TextAlign.center,
+                      style: AppTheme.bodySmall.copyWith(
+                        color: textMutedColor,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 24.0),
-              ],
+                  const SizedBox(height: 24.0),
+                ],
+              ),
             ),
           ),
         ),
@@ -515,6 +513,8 @@ class _LanguageOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12.0),
@@ -524,7 +524,7 @@ class _LanguageOption extends StatelessWidget {
           color: isSelected ? const Color(0xFFE8EDF5) : Colors.transparent,
           borderRadius: BorderRadius.circular(12.0),
           border: Border.all(
-            color: isSelected ? const Color(0xFF001F3F) : Colors.transparent,
+            color: isSelected ? colors.primary : Colors.transparent,
             width: 1.5,
           ),
         ),
@@ -541,14 +541,14 @@ class _LanguageOption extends StatelessWidget {
                 fontFamily: 'Inter',
                 fontSize: 16.0,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                color: isSelected ? const Color(0xFF001F3F) : const Color(0xFF707070),
+                color: isSelected ? colors.primary : AppTheme.lightTextMuted,
               ),
             ),
             const Spacer(),
             if (isSelected)
-              const Icon(
+              Icon(
                 Icons.check_circle,
-                color: Color(0xFF001F3F),
+                color: colors.primary,
                 size: 24.0,
               ),
           ],

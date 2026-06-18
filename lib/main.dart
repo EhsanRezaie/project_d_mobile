@@ -1,8 +1,10 @@
+// lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'generated/app_localizations.dart';
-import 'config/app_constants.dart';
+import 'config/app_theme.dart';
 import 'services/api_service.dart';
 import 'providers/auth_provider.dart';
 import 'providers/onboarding_provider.dart';
@@ -16,11 +18,24 @@ void main() async {
   
   ApiService.init();
   
-  runApp(const MyApp());
+  // Load saved language before running app
+  final prefs = await SharedPreferences.getInstance();
+  final savedLanguage = prefs.getString('selected_language') ?? 'en';
+  
+  runApp(
+    MyApp(
+      initialLanguage: savedLanguage,
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final String initialLanguage;
+  
+  const MyApp({
+    super.key,
+    required this.initialLanguage,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,21 +43,17 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => OnboardingProvider()),
-        ChangeNotifierProvider(create: (_) => LanguageProvider()),
+        ChangeNotifierProvider(
+          create: (_) => LanguageProvider()..setLanguage(initialLanguage),
+        ),
       ],
       child: Consumer<LanguageProvider>(
         builder: (context, languageProvider, child) {
           return MaterialApp(
             title: 'AURA',
-            theme: ThemeData(
-              fontFamily: 'Inter',
-              primaryColor: const Color(0xFF001F3F),
-              colorScheme: const ColorScheme.light(
-                primary: Color(0xFF001F3F),
-              ),
-              scaffoldBackgroundColor: const Color(0xFFFBF9F9),
-              useMaterial3: true,
-            ),
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: ThemeMode.light,
             debugShowCheckedModeBanner: false,
             locale: languageProvider.locale,
             localizationsDelegates: AppLocalizations.localizationsDelegates,

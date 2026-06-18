@@ -2,6 +2,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:dating_app/generated/app_localizations.dart';
 import '../config/app_theme.dart';
 import '../providers/auth_provider.dart';
 import 'welcome_screen.dart';
@@ -40,10 +41,11 @@ class _SplashScreenState extends State<SplashScreen> {
     final isAuthenticated = await authProvider.initializeApp();
     
     if (!authProvider.isServerHealthy) {
+      final t = AppLocalizations.of(context)!;
       setState(() {
         _isLoading = false;
         _hasError = true;
-        _errorMessage = authProvider.serverError ?? 'Connection failed';
+        _errorMessage = t.splash_connection_failed;
       });
       return;
     }
@@ -94,6 +96,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final colors = Theme.of(context).colorScheme;
     final isDark = context.isDarkMode;
     final textMuted = isDark ? AppTheme.darkTextMuted : AppTheme.lightTextMuted;
@@ -125,14 +128,14 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'AURA',
+                  t.app_title,
                   style: AppTheme.headlineLarge.copyWith(
                     color: colors.onSurface,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Find Your Match',
+                  t.splash_subtitle,
                   style: AppTheme.bodyLarge.copyWith(
                     color: textMuted,
                   ),
@@ -154,6 +157,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Widget _buildLoadingWidget() {
+    final t = AppLocalizations.of(context)!;
     final colors = Theme.of(context).colorScheme;
     final isDark = context.isDarkMode;
     final borderColor = isDark ? AppTheme.darkBorder : AppTheme.lightBorder;
@@ -189,7 +193,7 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
         const SizedBox(height: 24),
         Text(
-          'Connecting to server...',
+          t.splash_connecting,
           style: AppTheme.bodyMedium.copyWith(
             color: textMuted,
           ),
@@ -199,6 +203,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Widget _buildErrorWidget() {
+    final t = AppLocalizations.of(context)!;
     final colors = Theme.of(context).colorScheme;
     final isDark = context.isDarkMode;
     final textMuted = isDark ? AppTheme.darkTextMuted : AppTheme.lightTextMuted;
@@ -220,7 +225,7 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
         const SizedBox(height: 8),
         Text(
-          'Please check your internet connection',
+          t.splash_check_internet,
           textAlign: TextAlign.center,
           style: AppTheme.bodyMedium.copyWith(
             color: textMuted,
@@ -234,7 +239,7 @@ class _SplashScreenState extends State<SplashScreen> {
             onPressed: _retry,
             style: AppTheme.primaryButtonSmall,
             child: Text(
-              'Retry',
+              t.splash_retry,
               style: AppTheme.buttonText,
             ),
           ),

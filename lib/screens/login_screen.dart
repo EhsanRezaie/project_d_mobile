@@ -5,7 +5,7 @@ import 'package:dating_app/generated/app_localizations.dart';
 import '../providers/auth_provider.dart';
 import 'main_screen.dart';
 import 'welcome_screen.dart';
-import 'onboarding/email_password_screen.dart'; 
+import 'auth/sign_up_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -175,7 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (_) => const EmailPasswordScreen()),
+                        MaterialPageRoute(builder: (_) => const SignUpScreen()),
                       );
                     },
                     child: Text('t.create_account_button'),
