@@ -189,9 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (authProvider.isLoading) return;
 
     setState(() => _isLoading = true);
-    print('🟢 Starting Google Sign-In...');
     final result = await _googleAuth.signIn();
-    print('🟢 Google Result: $result');
     if (result == null) {
       setState(() => _isLoading = false);
       return;
