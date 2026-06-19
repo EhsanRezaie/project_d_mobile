@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "242780799378",
+    "project_id": "bondi-f63c0",
+    "storage_bucket": "bondi-f63c0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:242780799378:android:ac59bb848b873bacf0c14b",
+        "android_client_info": {
+          "package_name": "ir.bondi.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJ8LQ535vDwLVH0affgwfBerqNrMKvfq8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -142,4 +142,91 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signup_confirm_password_hint => 'Confirm your password';
+
+  @override
+  String get verify_title => 'Verify Your Email';
+
+  @override
+  String get verify_subtitle => 'Enter the 6-digit code sent to';
+
+  @override
+  String get verify_code_hint => 'Enter 6-digit code';
+
+  @override
+  String get verify_resend => 'Resend Code';
+
+  @override
+  String get verify_button => 'Verify & Continue';
+
+  @override
+  String get verify_referral_hint => 'Referral code (optional)';
+
+  @override
+  String get verify_referral_bonus =>
+      '💡 Get 3 days of premium free with a referral code';
+
+  @override
+  String get login_email_required => 'Email is required';
+
+  @override
+  String get login_email_invalid => 'Please enter a valid email';
+
+  @override
+  String get login_password_required => 'Password is required';
+
+  @override
+  String get login_password_invalid => 'Password must be at least 8 characters';
+
+  @override
+  String get verify_resend_success =>
+      'New verification code sent to your email';
+
+  @override
+  String get verify_resend_failed => 'Failed to resend code';
+
+  @override
+  String get verify_code_required => 'Please enter the 6-digit code';
+
+  @override
+  String get error_email_exists => 'This email is already registered';
+
+  @override
+  String get error_email_invalid_format => 'Invalid email format';
+
+  @override
+  String get error_too_many_attempts =>
+      'Too many attempts. Please wait a moment';
+
+  @override
+  String get error_network => 'Connection error. Please check your internet';
+
+  @override
+  String get error_something_wrong => 'Something went wrong. Please try again';
+
+  @override
+  String get error_email_not_found => 'Email not found. Please start over';
+
+  @override
+  String get error_verification_failed => 'Verification failed';
+
+  @override
+  String get error_invalid_code => 'Invalid or expired verification code';
+
+  @override
+  String get error_profile_complete_failed => 'Profile completion failed';
+
+  @override
+  String get error_profile_already_complete => 'Profile is already complete';
+
+  @override
+  String get error_session_expired => 'Session expired. Please login again';
+
+  @override
+  String get error_invalid_data => 'Invalid data provided';
+
+  @override
+  String get error_login_failed => 'Login failed';
+
+  @override
+  String get error_wrong_credentials => 'Incorrect email or password';
 }

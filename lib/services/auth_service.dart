@@ -182,4 +182,25 @@ class AuthService {
       rethrow;
     }
   }
+
+  static Future<Response> googleLogin({
+    required String idToken,
+    String? name,
+    String? email,
+    String? picture,
+    }) async {
+    try {
+      return await ApiService.post('/auth/google', data: {
+        'id_token': idToken,
+        'name': name,
+        'email': email,
+        'picture': picture,
+      });
+    } on DioException catch (e) {
+      if (e.response != null) {
+        return e.response!;
+      }
+      rethrow;
+    }
+  }
 }

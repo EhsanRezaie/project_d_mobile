@@ -75,7 +75,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => const MainScreen(),
+        builder: (_) => const PersonalInfoScreen(),
       ),
     );
   }

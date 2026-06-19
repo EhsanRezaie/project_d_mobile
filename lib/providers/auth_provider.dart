@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:dating_app/generated/app_localizations.dart';
 import '../services/auth_service.dart';
 import '../services/storage_service.dart';
 import '../models/user.dart';
@@ -23,10 +24,7 @@ class AuthProvider extends ChangeNotifier {
   String? get serverError => _serverError;
   String? get errorMessage => _errorMessage;
 
-  AuthProvider() {
-    // Do NOT call _loadTokens() here anymore
-    // Everything will be handled in initializeApp()
-  }
+  AuthProvider();
 
   // ============================================================
   // Initialize app - check server health + auth status
@@ -39,33 +37,24 @@ class AuthProvider extends ChangeNotifier {
     _user = null;
     notifyListeners();
 
-    print('🔍 Initializing app...');
-
-    // 1. Check server health
     final isHealthy = await _checkServerHealth();
     if (!isHealthy) {
       _isLoading = false;
       _isServerHealthy = false;
       _serverError = 'Server connection failed';
       notifyListeners();
-      print('❌ Server health check failed');
       return false;
     }
-    print('✅ Server is healthy');
 
-    // 2. Check if tokens exist
     final hasTokens = await _storageService.hasTokens();
     if (!hasTokens) {
       _isLoading = false;
       _isAuthenticated = false;
       _user = null;
       notifyListeners();
-      print('❌ No tokens found');
       return false;
     }
-    print('✅ Tokens found');
 
-    // 3. Validate token
     final isValid = await _validateToken();
     if (!isValid) {
       await _storageService.clearTokens();
@@ -73,14 +62,12 @@ class AuthProvider extends ChangeNotifier {
       _user = null;
       _isLoading = false;
       notifyListeners();
-      print('❌ Token validation failed');
       return false;
     }
 
     _isAuthenticated = true;
     _isLoading = false;
     notifyListeners();
-    print('✅ User is authenticated: ${_user?.email}');
     return true;
   }
 
@@ -89,7 +76,6 @@ class AuthProvider extends ChangeNotifier {
       final response = await AuthService.healthCheck();
       return response.statusCode == 200;
     } catch (e) {
-      print('❌ Health check error: $e');
       return false;
     }
   }
@@ -99,13 +85,10 @@ class AuthProvider extends ChangeNotifier {
       final response = await AuthService.getCurrentUser();
       if (response.statusCode == 200) {
         _user = User.fromJson(response.data);
-        print('✅ User loaded: ${_user?.email}');
         return true;
       }
-      print('❌ GetCurrentUser failed: ${response.statusCode}');
       return false;
     } catch (e) {
-      print('❌ Validate token error: $e');
       return false;
     }
   }
@@ -114,7 +97,8 @@ class AuthProvider extends ChangeNotifier {
   // Step 1: Register Init - request verification code
   // POST /auth/register/init
   // ============================================================
-  Future<bool> registerInit(String email) async {
+  Future<bool> registerInit(String email, BuildContext context) async {
+    final t = AppLocalizations.of(context)!;
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
@@ -127,26 +111,26 @@ class AuthProvider extends ChangeNotifier {
         notifyListeners();
         return true;
       } else {
-        _errorMessage = response.data['detail'] ?? 'Failed to send code';
+        _errorMessage = response.data['detail'] ?? t.error_something_wrong;
         _isLoading = false;
         notifyListeners();
         return false;
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 409) {
-        _errorMessage = 'This email is already registered';
+        _errorMessage = t.error_email_exists;
       } else if (e.response?.statusCode == 422) {
-        _errorMessage = 'Invalid email format';
+        _errorMessage = t.error_email_invalid_format;
       } else if (e.response?.statusCode == 429) {
-        _errorMessage = 'Too many attempts. Please wait';
+        _errorMessage = t.error_too_many_attempts;
       } else {
-        _errorMessage = 'Network error. Please try again';
+        _errorMessage = t.error_network;
       }
       _isLoading = false;
       notifyListeners();
       return false;
     } catch (e) {
-      _errorMessage = 'Something went wrong';
+      _errorMessage = t.error_something_wrong;
       _isLoading = false;
       notifyListeners();
       return false;
@@ -161,9 +145,11 @@ class AuthProvider extends ChangeNotifier {
     required String code,
     required String password,
     String? referralCode,
+    required BuildContext context,
   }) async {
+    final t = AppLocalizations.of(context)!;
     if (_email == null) {
-      _errorMessage = 'Email not found. Please start over';
+      _errorMessage = t.error_email_not_found;
       notifyListeners();
       return false;
     }
@@ -192,24 +178,24 @@ class AuthProvider extends ChangeNotifier {
         notifyListeners();
         return true;
       } else {
-        _errorMessage = response.data['detail'] ?? 'Verification failed';
+        _errorMessage = response.data['detail'] ?? t.error_verification_failed;
         _isLoading = false;
         notifyListeners();
         return false;
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
-        _errorMessage = 'Invalid or expired verification code';
+        _errorMessage = t.error_invalid_code;
       } else if (e.response?.statusCode == 409) {
-        _errorMessage = 'This email is already registered';
+        _errorMessage = t.error_email_exists;
       } else {
-        _errorMessage = 'Network error. Please try again';
+        _errorMessage = t.error_network;
       }
       _isLoading = false;
       notifyListeners();
       return false;
     } catch (e) {
-      _errorMessage = 'Something went wrong';
+      _errorMessage = t.error_something_wrong;
       _isLoading = false;
       notifyListeners();
       return false;
@@ -220,7 +206,11 @@ class AuthProvider extends ChangeNotifier {
   // Step 3: Register Complete - complete profile
   // POST /auth/register/complete
   // ============================================================
-  Future<bool> registerComplete(Map<String, dynamic> data) async {
+  Future<bool> registerComplete(
+    Map<String, dynamic> data,
+    BuildContext context,
+  ) async {
+    final t = AppLocalizations.of(context)!;
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
@@ -243,26 +233,26 @@ class AuthProvider extends ChangeNotifier {
         notifyListeners();
         return true;
       } else {
-        _errorMessage = response.data['detail'] ?? 'Profile completion failed';
+        _errorMessage = response.data['detail'] ?? t.error_profile_complete_failed;
         _isLoading = false;
         notifyListeners();
         return false;
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 400) {
-        _errorMessage = 'Profile is already complete';
+        _errorMessage = t.error_profile_already_complete;
       } else if (e.response?.statusCode == 401) {
-        _errorMessage = 'Session expired. Please login again';
+        _errorMessage = t.error_session_expired;
       } else if (e.response?.statusCode == 422) {
-        _errorMessage = 'Invalid data provided';
+        _errorMessage = t.error_invalid_data;
       } else {
-        _errorMessage = 'Network error. Please try again';
+        _errorMessage = t.error_network;
       }
       _isLoading = false;
       notifyListeners();
       return false;
     } catch (e) {
-      _errorMessage = 'Something went wrong';
+      _errorMessage = t.error_something_wrong;
       _isLoading = false;
       notifyListeners();
       return false;
@@ -276,7 +266,9 @@ class AuthProvider extends ChangeNotifier {
   Future<bool> login({
     required String email,
     required String password,
+    required BuildContext context,
   }) async {
+    final t = AppLocalizations.of(context)!;
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
@@ -303,22 +295,22 @@ class AuthProvider extends ChangeNotifier {
         notifyListeners();
         return true;
       } else {
-        _errorMessage = response.data['detail'] ?? 'Login failed';
+        _errorMessage = response.data['detail'] ?? t.error_login_failed;
         _isLoading = false;
         notifyListeners();
         return false;
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 401) {
-        _errorMessage = 'Incorrect email or password';
+        _errorMessage = t.error_wrong_credentials;
       } else {
-        _errorMessage = 'Network error. Please try again';
+        _errorMessage = t.error_network;
       }
       _isLoading = false;
       notifyListeners();
       return false;
     } catch (e) {
-      _errorMessage = 'Something went wrong';
+      _errorMessage = t.error_something_wrong;
       _isLoading = false;
       notifyListeners();
       return false;
@@ -368,5 +360,63 @@ class AuthProvider extends ChangeNotifier {
   void clearError() {
     _errorMessage = null;
     notifyListeners();
+  }
+
+  Future<bool> googleLogin({
+    required String idToken,
+    String? name,
+    String? email,
+    String? picture,
+    required BuildContext context,
+  }) async {
+    final t = AppLocalizations.of(context)!;
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final response = await AuthService.googleLogin(
+        idToken: idToken,
+        name: name,
+        email: email,
+        picture: picture,
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        final userData = data['user'];
+
+        await _storageService.saveTokens(
+          accessToken: data['access_token'],
+          refreshToken: data['refresh_token'],
+          userId: userData['id'],
+        );
+
+        _user = User.fromJson(userData);
+        _isAuthenticated = true;
+        _isLoading = false;
+        notifyListeners();
+        return true;
+      } else {
+        _errorMessage = response.data['detail'] ?? t.error_login_failed;
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        _errorMessage = t.error_wrong_credentials;
+      } else {
+        _errorMessage = t.error_network;
+      }
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errorMessage = t.error_something_wrong;
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
   }
 }

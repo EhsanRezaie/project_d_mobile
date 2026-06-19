@@ -141,4 +141,92 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get signup_confirm_password_hint => 'رمز عبور را تکرار کنید';
+
+  @override
+  String get verify_title => 'تایید ایمیل';
+
+  @override
+  String get verify_subtitle => 'کد ۶ رقمی ارسال شده به را وارد کنید';
+
+  @override
+  String get verify_code_hint => 'کد ۶ رقمی را وارد کنید';
+
+  @override
+  String get verify_resend => 'ارسال مجدد کد';
+
+  @override
+  String get verify_button => 'تایید و ادامه';
+
+  @override
+  String get verify_referral_hint => 'کد دعوت (اختیاری)';
+
+  @override
+  String get verify_referral_bonus =>
+      '💡 با کد دعوت ۳ روز پریمیوم رایگان دریافت کنید';
+
+  @override
+  String get login_email_required => 'ایمیل الزامی است';
+
+  @override
+  String get login_email_invalid => 'لطفاً یک ایمیل معتبر وارد کنید';
+
+  @override
+  String get login_password_required => 'رمز عبور الزامی است';
+
+  @override
+  String get login_password_invalid => 'رمز عبور باید حداقل ۸ کاراکتر باشد';
+
+  @override
+  String get verify_resend_success => 'کد تایید جدید به ایمیل شما ارسال شد';
+
+  @override
+  String get verify_resend_failed => 'ارسال مجدد کد انجام نشد';
+
+  @override
+  String get verify_code_required => 'لطفاً کد ۶ رقمی را وارد کنید';
+
+  @override
+  String get error_email_exists => 'این ایمیل قبلاً ثبت نام کرده است';
+
+  @override
+  String get error_email_invalid_format => 'فرمت ایمیل نامعتبر است';
+
+  @override
+  String get error_too_many_attempts =>
+      'تعداد تلاش‌ها بیش از حد است. لطفاً کمی صبر کنید';
+
+  @override
+  String get error_network =>
+      'خطا در ارتباط با سرور. لطفاً اتصال اینترنت خود را بررسی کنید';
+
+  @override
+  String get error_something_wrong => 'خطایی رخ داد. لطفاً دوباره تلاش کنید';
+
+  @override
+  String get error_email_not_found => 'ایمیل پیدا نشد. لطفاً از اول شروع کنید';
+
+  @override
+  String get error_verification_failed => 'تایید کد انجام نشد';
+
+  @override
+  String get error_invalid_code => 'کد تایید نامعتبر یا منقضی شده است';
+
+  @override
+  String get error_profile_complete_failed => 'تکمیل پروفایل انجام نشد';
+
+  @override
+  String get error_profile_already_complete => 'پروفایل قبلاً تکمیل شده است';
+
+  @override
+  String get error_session_expired =>
+      'نشست منقضی شده است. لطفاً دوباره وارد شوید';
+
+  @override
+  String get error_invalid_data => 'داده‌های نامعتبر';
+
+  @override
+  String get error_login_failed => 'ورود انجام نشد';
+
+  @override
+  String get error_wrong_credentials => 'ایمیل یا رمز عبور اشتباه است';
 }

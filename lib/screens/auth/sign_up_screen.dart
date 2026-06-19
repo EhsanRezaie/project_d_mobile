@@ -44,12 +44,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _validateEmail(String value) {
+    final t = AppLocalizations.of(context)!;
     setState(() {
       if (value.isEmpty) {
-        _emailError = 'Email is required';
+        _emailError = t.signup_email_required;
       } else if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
           .hasMatch(value)) {
-        _emailError = 'Please enter a valid email address';
+        _emailError = t.signup_email_invalid;
       } else {
         _emailError = null;
       }
@@ -57,11 +58,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _validatePassword(String value) {
+    final t = AppLocalizations.of(context)!;
     setState(() {
       if (value.isEmpty) {
-        _passwordError = 'Password is required';
+        _passwordError = t.signup_password_required;
       } else if (value.length < 8) {
-        _passwordError = 'Password must be at least 8 characters';
+        _passwordError = t.signup_password_min_length;
       } else {
         _passwordError = null;
       }
@@ -72,11 +74,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _validateConfirmPassword(String value) {
+    final t = AppLocalizations.of(context)!;
     setState(() {
       if (value.isEmpty) {
-        _confirmPasswordError = 'Please confirm your password';
+        _confirmPasswordError = t.signup_confirm_password_required;
       } else if (value != _passwordController.text) {
-        _confirmPasswordError = 'Passwords do not match';
+        _confirmPasswordError = t.signup_passwords_do_not_match;
       } else {
         _confirmPasswordError = null;
       }
@@ -84,6 +87,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> _handleSignUp() async {
+    final t = AppLocalizations.of(context)!;
     _validateEmail(_emailController.text);
     _validatePassword(_passwordController.text);
     _validateConfirmPassword(_confirmPasswordController.text);
@@ -101,7 +105,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
-    final success = await authProvider.registerInit(email);
+    final success = await authProvider.registerInit(email, context);
 
     if (success) {
       if (mounted) {
@@ -122,7 +126,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } else {
       if (mounted) {
         final errorMessage =
-            authProvider.errorMessage ?? 'Something went wrong';
+            authProvider.errorMessage ?? t.error_something_wrong;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(errorMessage),

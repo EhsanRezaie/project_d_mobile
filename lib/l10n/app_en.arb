@@ -45,5 +45,39 @@
   "signin_button": "Sign In",
   "signup_email_hint": "Enter your email",
   "signup_password_hint": "Enter your password",
-  "signup_confirm_password_hint": "Confirm your password"
+  "signup_confirm_password_hint": "Confirm your password",
+
+  "verify_title": "Verify Your Email",
+  "verify_subtitle": "Enter the 6-digit code sent to",
+  "verify_code_hint": "Enter 6-digit code",
+  "verify_resend": "Resend Code",
+  "verify_button": "Verify & Continue",
+  "verify_referral_hint": "Referral code (optional)",
+  "verify_referral_bonus": "💡 Get 3 days of premium free with a referral code",
+
+  "login_email_required": "Email is required",
+  "login_email_invalid": "Please enter a valid email",
+  "login_password_required": "Password is required",
+  "login_password_invalid": "Password must be at least 8 characters",
+
+  "verify_resend_success": "New verification code sent to your email",
+  "verify_resend_failed": "Failed to resend code",
+  "verify_code_required": "Please enter the 6-digit code",
+
+  
+  "error_email_exists": "This email is already registered",
+  "error_email_invalid_format": "Invalid email format",
+  "error_too_many_attempts": "Too many attempts. Please wait a moment",
+  "error_network": "Connection error. Please check your internet",
+  "error_something_wrong": "Something went wrong. Please try again",
+  "error_email_not_found": "Email not found. Please start over",
+  "error_verification_failed": "Verification failed",
+  "error_invalid_code": "Invalid or expired verification code",
+  "error_profile_complete_failed": "Profile completion failed",
+  "error_profile_already_complete": "Profile is already complete",
+  "error_session_expired": "Session expired. Please login again",
+  "error_invalid_data": "Invalid data provided",
+  "error_login_failed": "Login failed",
+  "error_wrong_credentials": "Incorrect email or password"
+  
 }

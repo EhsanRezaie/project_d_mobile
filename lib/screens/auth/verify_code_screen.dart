@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:dating_app/generated/app_localizations.dart';
 import '../../config/app_theme.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/onboarding_provider.dart';
@@ -37,55 +38,103 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
   bool _isLoading = false;
   String? _errorMessage;
 
+  // Timer variables
+  int _resendTimerSeconds = 300;
+  bool _isTimerRunning = true;
+  late VoidCallback _timerCallback;
+
+  @override
+  void initState() {
+    super.initState();
+    this._startResendTimer();
+    // Focus on first field after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      this._codeFocusNodes[0].requestFocus();
+    });
+  }
+
+  void _startResendTimer() {
+    this._isTimerRunning = true;
+    this._resendTimerSeconds = 300;
+    this._timerCallback = () {
+      if (mounted) {
+        setState(() {
+          if (this._resendTimerSeconds > 0) {
+            this._resendTimerSeconds--;
+          } else {
+            this._isTimerRunning = false;
+            this._timerCallback = () {};
+          }
+        });
+      }
+    };
+    Future.doWhile(() async {
+      await Future.delayed(const Duration(seconds: 1));
+      this._timerCallback();
+      return this._isTimerRunning && mounted;
+    });
+  }
+
+  String _formatTime(int seconds) {
+    final minutes = seconds ~/ 60;
+    final remainingSeconds = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
+
   @override
   void dispose() {
-    for (var controller in _codeControllers) {
+    for (var controller in this._codeControllers) {
       controller.dispose();
     }
-    for (var node in _codeFocusNodes) {
+    for (var node in this._codeFocusNodes) {
       node.dispose();
     }
-    _referralController.dispose();
+    this._referralController.dispose();
+    this._isTimerRunning = false;
     super.dispose();
   }
 
   void _onCodeChanged(int index, String value) {
+    // Auto-advance to next field
     if (value.length == 1 && index < 5) {
-      _codeFocusNodes[index + 1].requestFocus();
+      this._codeFocusNodes[index + 1].requestFocus();
     }
+    // Auto-backspace to previous field
     if (value.isEmpty && index > 0) {
-      _codeFocusNodes[index - 1].requestFocus();
+      this._codeFocusNodes[index - 1].requestFocus();
     }
     setState(() {
-      _errorMessage = null;
+      this._errorMessage = null;
     });
   }
 
   String _getFullCode() {
-    return _codeControllers.map((c) => c.text).join();
+    return this._codeControllers.map((c) => c.text).join();
   }
 
   Future<void> _handleVerify() async {
-    final code = _getFullCode();
+    final t = AppLocalizations.of(context)!;
+    final code = this._getFullCode();
     if (code.length != 6) {
       setState(() {
-        _errorMessage = 'Please enter the 6-digit code';
+        this._errorMessage = t.verify_code_required;
       });
       return;
     }
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    _setLoading(true);
+    this._setLoading(true);
 
     final success = await authProvider.registerVerify(
       code: code,
       password: widget.password,
-      referralCode: _referralController.text.trim().isNotEmpty
-          ? _referralController.text.trim()
+      referralCode: this._referralController.text.trim().isNotEmpty
+          ? this._referralController.text.trim()
           : null,
+      context: context,
     );
 
-    _setLoading(false);
+    this._setLoading(false);
 
     if (success) {
       if (mounted) {
@@ -103,47 +152,53 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
     } else {
       if (mounted) {
         setState(() {
-          _errorMessage = authProvider.errorMessage ?? 'Verification failed';
+          this._errorMessage = authProvider.errorMessage ?? t.error_verification_failed;
         });
-        for (var controller in _codeControllers) {
+        for (var controller in this._codeControllers) {
           controller.clear();
         }
-        _codeFocusNodes[0].requestFocus();
+        this._codeFocusNodes[0].requestFocus();
       }
     }
   }
 
   void _setLoading(bool loading) {
     setState(() {
-      _isLoading = loading;
+      this._isLoading = loading;
     });
   }
 
   void _resendCode() async {
+    if (this._isTimerRunning) {
+      return;
+    }
+
+    final t = AppLocalizations.of(context)!;
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    _setLoading(true);
+    this._setLoading(true);
 
-    final success = await authProvider.registerInit(widget.email);
+    final success = await authProvider.registerInit(widget.email, context);
 
-    _setLoading(false);
+    this._setLoading(false);
 
     if (success && mounted) {
+      this._startResendTimer();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('New verification code sent to your email'),
+        SnackBar(
+          content: Text(t.verify_resend_success),
           backgroundColor: Colors.green,
-          duration: Duration(seconds: 3),
+          duration: const Duration(seconds: 3),
         ),
       );
-      for (var controller in _codeControllers) {
+      for (var controller in this._codeControllers) {
         controller.clear();
       }
-      _codeFocusNodes[0].requestFocus();
+      this._codeFocusNodes[0].requestFocus();
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            authProvider.errorMessage ?? 'Failed to resend code',
+            authProvider.errorMessage ?? t.verify_resend_failed,
           ),
           backgroundColor: Colors.red,
           duration: const Duration(seconds: 3),
@@ -154,6 +209,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
     final colors = Theme.of(context).colorScheme;
     final isDark = context.isDarkMode;
     final primaryColor = isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary;
@@ -195,14 +251,14 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                 children: [
                   const SizedBox(height: 20),
                   Text(
-                    'Verify Your Email',
+                    t.verify_title,
                     style: AppTheme.headlineMedium.copyWith(
                       color: onSurfaceColor,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Enter the 6-digit code sent to',
+                    t.verify_subtitle,
                     style: AppTheme.bodyLarge.copyWith(
                       color: textMutedColor,
                     ),
@@ -216,7 +272,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                   ),
                   const SizedBox(height: 48),
 
-                  if (_errorMessage != null)
+                  if (this._errorMessage != null)
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
@@ -230,7 +286,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              _errorMessage!,
+                              this._errorMessage!,
                               style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 14,
@@ -241,70 +297,90 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                         ],
                       ),
                     ),
-                  if (_errorMessage != null) const SizedBox(height: 24),
+                  if (this._errorMessage != null) const SizedBox(height: 24),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: List.generate(6, (index) {
-                      return SizedBox(
-                        width: 48,
-                        height: 56,
-                        child: TextFormField(
-                          controller: _codeControllers[index],
-                          focusNode: _codeFocusNodes[index],
-                          textAlign: TextAlign.center,
-                          maxLength: 1,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                          ],
-                          style: AppTheme.headlineLarge.copyWith(
-                            color: onSurfaceColor,
-                            fontSize: 24,
-                          ),
-                          onChanged: (value) => _onCodeChanged(index, value),
-                          decoration: InputDecoration(
-                            counterText: '',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: borderColor),
+                  Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: List.generate(6, (index) {
+                        return SizedBox(
+                          width: 48,
+                          height: 56,
+                          child: TextFormField(
+                            controller: this._codeControllers[index],
+                            focusNode: this._codeFocusNodes[index],
+                            textAlign: TextAlign.center,
+                            textDirection: TextDirection.ltr,
+                            maxLength: 1,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              color: onSurfaceColor,
                             ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: borderColor),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(
-                                color: primaryColor,
-                                width: 2,
+                            onChanged: (value) => this._onCodeChanged(index, value),
+                            decoration: InputDecoration(
+                              counterText: '',
+                              hintText: '—',
+                              hintStyle: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: textMutedColor.withOpacity(0.3),
                               ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(color: borderColor),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(color: borderColor),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: primaryColor,
+                                  width: 2,
+                                ),
+                              ),
+                              filled: true,
+                              fillColor: surfaceColor,
+                              contentPadding: const EdgeInsets.all(0),
                             ),
-                            filled: true,
-                            fillColor: surfaceColor,
                           ),
-                        ),
-                      );
-                    }),
+                        );
+                      }),
+                    ),
                   ),
                   const SizedBox(height: 16),
 
                   TextButton(
-                    onPressed: _isLoading ? null : _resendCode,
+                    onPressed: this._isTimerRunning || this._isLoading ? null : this._resendCode,
                     child: Text(
-                      'Resend Code',
+                      this._isTimerRunning
+                          ? '${t.verify_resend} (${this._formatTime(this._resendTimerSeconds)})'
+                          : t.verify_resend,
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 14,
-                        color: primaryColor,
-                        fontWeight: FontWeight.w600,
+                        color: this._isTimerRunning
+                            ? textMutedColor
+                            : primaryColor,
+                        fontWeight: this._isTimerRunning
+                            ? FontWeight.w400
+                            : FontWeight.w600,
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
 
                   Text(
-                    'Enter your referral code (optional)',
+                    t.verify_referral_hint,
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 14,
@@ -314,13 +390,13 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                   const SizedBox(height: 8),
 
                   TextFormField(
-                    controller: _referralController,
+                    controller: this._referralController,
                     textInputAction: TextInputAction.done,
                     style: AppTheme.bodyLarge.copyWith(
                       color: onSurfaceColor,
                     ),
                     decoration: InputDecoration(
-                      hintText: 'Referral code (e.g. ABC123XY)',
+                      hintText: t.verify_referral_hint,
                       hintStyle: AppTheme.bodyMedium.copyWith(
                         color: textMutedColor,
                       ),
@@ -348,7 +424,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '💡 Get 3 days of premium free with a referral code',
+                    t.verify_referral_bonus,
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 12,
@@ -360,7 +436,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: _isLoading ? null : _handleVerify,
+                      onPressed: this._isLoading ? null : this._handleVerify,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryColor,
                         foregroundColor: Colors.white,
@@ -370,7 +446,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                         elevation: 0,
                         minimumSize: const Size(double.infinity, 56),
                       ),
-                      child: _isLoading
+                      child: this._isLoading
                           ? SizedBox(
                               height: 24,
                               width: 24,
@@ -380,7 +456,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                               ),
                             )
                           : Text(
-                              'Verify & Continue',
+                              t.verify_button,
                               style: AppTheme.buttonText,
                             ),
                     ),

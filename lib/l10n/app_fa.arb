@@ -45,6 +45,39 @@
   "signin_button": "ورود",
   "signup_email_hint": "ایمیل خود را وارد کنید",
   "signup_password_hint": "رمز عبور خود را وارد کنید",
-  "signup_confirm_password_hint": "رمز عبور را تکرار کنید"
+  "signup_confirm_password_hint": "رمز عبور را تکرار کنید",
 
+  "verify_title": "تایید ایمیل",
+  "verify_subtitle": "کد ۶ رقمی ارسال شده به را وارد کنید",
+  "verify_code_hint": "کد ۶ رقمی را وارد کنید",
+  "verify_resend": "ارسال مجدد کد",
+  "verify_button": "تایید و ادامه",
+  "verify_referral_hint": "کد دعوت (اختیاری)",
+  "verify_referral_bonus": "💡 با کد دعوت ۳ روز پریمیوم رایگان دریافت کنید",
+
+  "login_email_required": "ایمیل الزامی است",
+  "login_email_invalid": "لطفاً یک ایمیل معتبر وارد کنید",
+  "login_password_required": "رمز عبور الزامی است",
+  "login_password_invalid": "رمز عبور باید حداقل ۸ کاراکتر باشد",
+
+
+  "verify_resend_success": "کد تایید جدید به ایمیل شما ارسال شد",
+  "verify_resend_failed": "ارسال مجدد کد انجام نشد",
+  "verify_code_required": "لطفاً کد ۶ رقمی را وارد کنید",
+
+  
+  "error_email_exists": "این ایمیل قبلاً ثبت نام کرده است",
+  "error_email_invalid_format": "فرمت ایمیل نامعتبر است",
+  "error_too_many_attempts": "تعداد تلاش‌ها بیش از حد است. لطفاً کمی صبر کنید",
+  "error_network": "خطا در ارتباط با سرور. لطفاً اتصال اینترنت خود را بررسی کنید",
+  "error_something_wrong": "خطایی رخ داد. لطفاً دوباره تلاش کنید",
+  "error_email_not_found": "ایمیل پیدا نشد. لطفاً از اول شروع کنید",
+  "error_verification_failed": "تایید کد انجام نشد",
+  "error_invalid_code": "کد تایید نامعتبر یا منقضی شده است",
+  "error_profile_complete_failed": "تکمیل پروفایل انجام نشد",
+  "error_profile_already_complete": "پروفایل قبلاً تکمیل شده است",
+  "error_session_expired": "نشست منقضی شده است. لطفاً دوباره وارد شوید",
+  "error_invalid_data": "داده‌های نامعتبر",
+  "error_login_failed": "ورود انجام نشد",
+  "error_wrong_credentials": "ایمیل یا رمز عبور اشتباه است"
 }

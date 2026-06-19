@@ -43,7 +43,8 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 | Item | Status |
 |------|--------|
 | **Session 16-17** | ✅ COMPLETED |
-| **Session 18** | ✅ IN PROGRESS |
+| **Session 18** | ✅ COMPLETED |
+| **Session 19** | ✅ IN PROGRESS |
 | Flutter project setup | ✅ |
 | Dependencies installed | ✅ |
 | Folder structure created | ✅ |
@@ -58,7 +59,7 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 | Splash Screen (with progress bar & random target) | ✅ |
 | Login Screen (combined with Welcome) | ✅ |
 | Sign Up Screen (with validation) | ✅ |
-| Verify Code Screen (6-digit + referral) | ✅ |
+| Verify Code Screen (6-digit + referral + timer) | ✅ |
 | Main Screen (bottom nav with 4 tabs) | ✅ |
 | Profile Screen (user info + logout) | ✅ |
 | Token persistence on app restart | ✅ |
@@ -66,7 +67,8 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 | Email & Password validation | ✅ |
 | Password visibility toggle | ✅ |
 | Language selection (English/Persian) | ✅ |
-| Google Sign-In button with custom icon | ✅ |
+| Google Sign-In with custom icon | ✅ |
+| Google Sign-In full implementation | ✅ |
 | Input filtering (English only) | ✅ |
 | Real-time validation with localized errors | ✅ |
 | Password min length: 8 characters | ✅ |
@@ -75,6 +77,13 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 | Token refresh interceptor | ✅ |
 | Theme-aware colors (Light/Dark ready) | ✅ |
 | Keyboard handling (resize & dismiss on tap) | ✅ |
+| OTP auto-advance on code entry | ✅ |
+| OTP backspace handling | ✅ |
+| Resend timer (5 minutes) | ✅ |
+| All error messages translated (EN/FA) | ✅ |
+| Google Sign-In with backend integration | ✅ |
+| Application ID changed to `ir.bondi.app` | ✅ |
+| `google-services.json` configured | ✅ |
 
 ---
 
@@ -93,6 +102,7 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 | **Design** | google_fonts | ^6.1.0 | Custom fonts |
 | **Animations** | flutter_staggered_animations | ^1.1.0 | Smooth animations |
 | **Env** | flutter_dotenv | ^5.1.0 | Environment variables |
+| **Google Sign-In** | google_sign_in | ^6.1.5 | Google OAuth login |
 
 ---
 
@@ -109,23 +119,24 @@ lib/
 ├── services/
 │   ├── api_service.dart         # Dio HTTP client + interceptors
 │   ├── auth_service.dart        # 3-step registration (init, verify, complete)
-│   └── storage_service.dart     # Token storage + secure storage
+│   ├── storage_service.dart     # Token storage + secure storage
+│   └── google_auth_service.dart # Google Sign-In service
 ├── providers/
-│   ├── auth_provider.dart       # Auth state management (3-step)
+│   ├── auth_provider.dart       # Auth state management (3-step + Google)
 │   ├── language_provider.dart   # Language selection
 │   └── onboarding_provider.dart # Onboarding data + API submit
 ├── screens/
 │   ├── splash_screen.dart       # Splash with progress & health check
-│   ├── login_screen.dart        # Login + Welcome combined
+│   ├── login_screen.dart        # Login + Welcome combined (with Google)
 │   ├── main_screen.dart         # Main screen (bottom nav with 4 tabs)
 │   ├── auth/
 │   │   ├── sign_up_screen.dart  # Step 1: Email + Password
-│   │   └── verify_code_screen.dart # Step 2: 6-digit code + referral
+│   │   └── verify_code_screen.dart # Step 2: 6-digit code + referral + timer
 │   └── onboarding/
 │       ├── personal_info_screen.dart  # Step 3a: Name, Birth Date, Gender
-│       ├── lifestyle_screen.dart      # Step 3b: Height, Weight, Lifestyle (TODO)
-│       ├── interests_screen.dart      # Step 3c: Interests & Prompts (TODO)
-│       └── location_screen.dart       # Step 3d: Location & Submit (TODO)
+│       ├── lifestyle_screen.dart      # Step 3b: (TODO)
+│       ├── interests_screen.dart      # Step 3c: (TODO)
+│       └── location_screen.dart       # Step 3d: (TODO)
 ├── widgets/
 │   ├── loading_widget.dart      # Loading indicator
 │   └── progress_bar.dart        # Onboarding progress bar
@@ -149,6 +160,7 @@ lib/
 ```env
 API_BASE_URL=http://10.0.2.2:8000/api/v1
 WS_BASE_URL=ws://10.0.2.2:8000/api/v1
+WEB_CLIENT_ID=your_web_client_id.apps.googleusercontent.com
 ```
 
 > **Note:** `10.0.2.2` is for Android emulator. For physical device, use your computer's IP.
@@ -158,6 +170,7 @@ WS_BASE_URL=ws://10.0.2.2:8000/api/v1
 ```env
 API_BASE_URL=http://localhost:8000/api/v1
 WS_BASE_URL=ws://localhost:8000/api/v1
+WEB_CLIENT_ID=your_web_client_id.apps.googleusercontent.com
 ```
 
 ### `pubspec.yaml` assets
@@ -192,6 +205,15 @@ class AppConstants {
 | 2 | `POST /auth/register/verify` | Verify code + create user (email + password) |
 | 3 | `POST /auth/register/complete` | Complete profile (all Badoo fields) |
 
+### Google Sign-In
+
+| Feature | Description |
+|---------|-------------|
+| Google OAuth | Sign in with Google account |
+| Backend Integration | Sends idToken to `/auth/google` |
+| Token Storage | Same as email/password login |
+| Error Handling | Localized error messages |
+
 ### App Theme System
 
 | Feature | Description |
@@ -219,7 +241,7 @@ class AppConstants {
 
 | Feature | Description |
 |---------|-------------|
-| App Logo & Title | "AURA" with subtitle |
+| App Logo & Title | "Bondi" with subtitle |
 | Community Text | Join community message |
 | Email Field | With real-time validation |
 | Password Field | With visibility toggle & real-time validation |
@@ -250,12 +272,15 @@ class AppConstants {
 | Feature | Description |
 |---------|-------------|
 | 6-digit Code Input | Auto-focus next field on entry |
+| Backspace Handling | Auto-focus previous field on backspace |
+| Resend Timer | 5 minutes countdown before resend allowed |
 | Resend Code | Button to request new code |
 | Referral Code | Optional field for referral code |
 | Loading State | Disabled button with spinner |
 | Error Handling | SnackBar with error message |
-| Navigation | Back to SignUp, forward to MainScreen |
+| Navigation | Back to SignUp, forward to PersonalInfoScreen |
 | Theme Aware | Uses AppTheme colors (Light/Dark ready) |
+| RTL Support | Fixed for Persian language |
 
 ### Main Screen
 
@@ -321,7 +346,7 @@ class AppConstants {
 │                             │
 │         ❤️ (Logo)           │
 │                             │
-│          AURA               │
+│          BONDI              │
 │     Find Your Match         │
 │                             │
 │    ████████████░░░░░░ 65%   │
@@ -336,7 +361,7 @@ class AppConstants {
 ┌─────────────────────────────┐
 │                          🌐  │
 │                             │
-│           AURA              │
+│           BONDI             │
 │      Find Your Match        │
 │   Connect with people...    │
 │                             │
@@ -407,7 +432,7 @@ class AppConstants {
 │                             │
 │     [1] [2] [3] [4] [5] [6] │
 │                             │
-│        Resend Code          │
+│        Resend Code (04:32)  │
 │                             │
 │   Enter your referral code  │
 │   ┌──────────────────────┐  │
@@ -478,8 +503,16 @@ class AppConstants {
 
 ### Registration Flow (3-Step)
 1. **SignUpScreen** → `POST /auth/register/init` → VerifyCodeScreen
-2. **VerifyCodeScreen** → `POST /auth/register/verify` → MainScreen
+2. **VerifyCodeScreen** → `POST /auth/register/verify` → PersonalInfoScreen
 3. **Onboarding screens** → `POST /auth/register/complete` → MainScreen (with profile)
+
+### Google Sign-In Flow
+1. User clicks Google button
+2. `GoogleAuthService.signIn()` opens Google account picker
+3. Gets `idToken` from Google (requires `serverClientId` = Web Client ID)
+4. Sends `idToken` to `/auth/google`
+5. Backend verifies token and creates/returns user
+6. Frontend saves tokens and navigates to MainScreen
 
 ### Navigation Guards
 - If user has tokens → auto-login on app restart
@@ -517,6 +550,7 @@ class AppConstants {
 | `/auth/register/verify` | POST | ✅ Working |
 | `/auth/register/complete` | POST | 🔜 TODO |
 | `/auth/login` | POST | ✅ Working |
+| `/auth/google` | POST | ✅ Working |
 | `/auth/refresh` | POST | ✅ Working |
 | `/auth/logout` | POST | ✅ Working |
 | `/auth/health` | GET | ✅ Working |
@@ -525,7 +559,24 @@ class AppConstants {
 
 ---
 
+## 11. Google Sign-In Setup Checklist
+
+| Task | Status |
+|------|--------|
+| Google Cloud Console Project | ✅ Created |
+| OAuth Consent Screen | ✅ Configured |
+| Android Client ID | ✅ Created |
+| Web Client ID | ✅ Created |
+| `google-services.json` | ✅ Downloaded and placed |
+| `google_sign_in` package | ✅ Added |
+| `GoogleAuthService` | ✅ Created |
+| `serverClientId` configured | ✅ With Web Client ID |
+| Backend `GOOGLE_CLIENT_ID` | ✅ Set to Web Client ID |
+| `Application ID` changed to `ir.bondi.app` | ✅ Done |
+
+---
+
 **Next: Session 19 - Complete Onboarding Flow (Lifestyle, Interests, Location)**
 
-Ready to start Session 19 when you are. 🚀
+Ready to start when you are. 🚀
 ```

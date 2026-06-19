@@ -7,6 +7,7 @@ import '../config/app_theme.dart';
 import '../providers/auth_provider.dart';
 import 'auth/sign_up_screen.dart';
 import 'main_screen.dart';
+import '../services/google_auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,6 +17,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final GoogleAuthService _googleAuth = GoogleAuthService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _emailFocusNode = FocusNode();
@@ -24,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   
   String? _emailError;
   String? _passwordError;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -115,11 +118,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _validateEmail(String value) {
+    final t = AppLocalizations.of(context)!;
     setState(() {
       if (value.isEmpty) {
-        _emailError = AppLocalizations.of(context)!.email_required;
+        _emailError = t.login_email_required;
       } else if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(value)) {
-        _emailError = AppLocalizations.of(context)!.email_invalid;
+        _emailError = t.login_email_invalid;
       } else {
         _emailError = null;
       }
@@ -127,11 +131,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _validatePassword(String value) {
+    final t = AppLocalizations.of(context)!;
     setState(() {
       if (value.isEmpty) {
-        _passwordError = AppLocalizations.of(context)!.password_required;
+        _passwordError = t.login_password_required;
       } else if (value.length < 8) {
-        _passwordError = AppLocalizations.of(context)!.password_min_length;
+        _passwordError = t.login_password_invalid;
       } else {
         _passwordError = null;
       }
@@ -139,6 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _handleLogin() async {
+    final t = AppLocalizations.of(context)!;
     _validateEmail(_emailController.text);
     _validatePassword(_passwordController.text);
     
@@ -148,10 +154,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (authProvider.isLoading) return;
 
+    setState(() => _isLoading = true);
+
     final success = await authProvider.login(
       email: _emailController.text.trim(),
       password: _passwordController.text,
+      context: context,
     );
+
+    setState(() => _isLoading = false);
 
     if (!mounted) return;
 
@@ -163,7 +174,50 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(authProvider.errorMessage ?? 'Login failed'),
+          content: Text(t.error_wrong_credentials),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    }
+  }
+
+  Future<void> _handleGoogleSignIn() async {
+    
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    
+    if (authProvider.isLoading) return;
+
+    setState(() => _isLoading = true);
+    print('🟢 Starting Google Sign-In...');
+    final result = await _googleAuth.signIn();
+    print('🟢 Google Result: $result');
+    if (result == null) {
+      setState(() => _isLoading = false);
+      return;
+    }
+
+    final success = await authProvider.googleLogin(
+      idToken: result['id_token']!,
+      name: result['name'],
+      email: result['email'],
+      picture: result['picture'],
+      context: context,
+    );
+
+    setState(() => _isLoading = false);
+
+    if (success && mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const MainScreen()),
+      );
+    } else if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            authProvider.errorMessage ?? 'Google login failed',
+          ),
           backgroundColor: Colors.red,
           duration: const Duration(seconds: 3),
         ),
@@ -255,6 +309,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 32.0),
+
                   // Email TextField
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,6 +379,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   const SizedBox(height: 16.0),
+
                   // Password TextField
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -389,6 +445,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   const SizedBox(height: 24.0),
+
                   // Sign in Button
                   Container(
                     height: 56.0,
@@ -404,7 +461,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     child: ElevatedButton(
-                      onPressed: _handleLogin,
+                      onPressed: _isLoading ? null : _handleLogin,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryColor,
                         foregroundColor: Colors.white,
@@ -414,13 +471,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         elevation: 0,
                         minimumSize: const Size(double.infinity, 56),
                       ),
-                      child: Text(
-                        t.sign_in_button,
-                        style: AppTheme.buttonText,
-                      ),
+                      child: _isLoading
+                          ? const SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : Text(
+                              t.sign_in_button,
+                              style: AppTheme.buttonText,
+                            ),
                     ),
                   ),
                   const SizedBox(height: 32.0),
+
                   // OR Divider
                   Row(
                     children: [
@@ -438,12 +505,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   const SizedBox(height: 32.0),
+
                   // Google Button
                   SizedBox(
                     height: 56.0,
                     width: double.infinity,
                     child: OutlinedButton.icon(
-                      onPressed: () {},
+                      onPressed: _isLoading ? null : _handleGoogleSignIn,
                       icon: Image.asset(
                         'assets/images/google_logo.png',
                         height: 24.0,
@@ -465,6 +533,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 16.0),
+
                   // Sign up links
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -497,6 +566,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   const SizedBox(height: 16.0),
+
                   // Terms and Policy
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24.0),

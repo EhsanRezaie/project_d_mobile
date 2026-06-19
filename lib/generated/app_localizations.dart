@@ -361,6 +361,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Confirm your password'**
   String get signup_confirm_password_hint;
+
+  /// No description provided for @verify_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Your Email'**
+  String get verify_title;
+
+  /// No description provided for @verify_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6-digit code sent to'**
+  String get verify_subtitle;
+
+  /// No description provided for @verify_code_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter 6-digit code'**
+  String get verify_code_hint;
+
+  /// No description provided for @verify_resend.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend Code'**
+  String get verify_resend;
+
+  /// No description provided for @verify_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify & Continue'**
+  String get verify_button;
+
+  /// No description provided for @verify_referral_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Referral code (optional)'**
+  String get verify_referral_hint;
+
+  /// No description provided for @verify_referral_bonus.
+  ///
+  /// In en, this message translates to:
+  /// **'💡 Get 3 days of premium free with a referral code'**
+  String get verify_referral_bonus;
+
+  /// No description provided for @login_email_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required'**
+  String get login_email_required;
+
+  /// No description provided for @login_email_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email'**
+  String get login_email_invalid;
+
+  /// No description provided for @login_password_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required'**
+  String get login_password_required;
+
+  /// No description provided for @login_password_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 8 characters'**
+  String get login_password_invalid;
+
+  /// No description provided for @verify_resend_success.
+  ///
+  /// In en, this message translates to:
+  /// **'New verification code sent to your email'**
+  String get verify_resend_success;
+
+  /// No description provided for @verify_resend_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to resend code'**
+  String get verify_resend_failed;
+
+  /// No description provided for @verify_code_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the 6-digit code'**
+  String get verify_code_required;
+
+  /// No description provided for @error_email_exists.
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already registered'**
+  String get error_email_exists;
+
+  /// No description provided for @error_email_invalid_format.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email format'**
+  String get error_email_invalid_format;
+
+  /// No description provided for @error_too_many_attempts.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Please wait a moment'**
+  String get error_too_many_attempts;
+
+  /// No description provided for @error_network.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection error. Please check your internet'**
+  String get error_network;
+
+  /// No description provided for @error_something_wrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again'**
+  String get error_something_wrong;
+
+  /// No description provided for @error_email_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Email not found. Please start over'**
+  String get error_email_not_found;
+
+  /// No description provided for @error_verification_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification failed'**
+  String get error_verification_failed;
+
+  /// No description provided for @error_invalid_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid or expired verification code'**
+  String get error_invalid_code;
+
+  /// No description provided for @error_profile_complete_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile completion failed'**
+  String get error_profile_complete_failed;
+
+  /// No description provided for @error_profile_already_complete.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile is already complete'**
+  String get error_profile_already_complete;
+
+  /// No description provided for @error_session_expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Session expired. Please login again'**
+  String get error_session_expired;
+
+  /// No description provided for @error_invalid_data.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid data provided'**
+  String get error_invalid_data;
+
+  /// No description provided for @error_login_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Login failed'**
+  String get error_login_failed;
+
+  /// No description provided for @error_wrong_credentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect email or password'**
+  String get error_wrong_credentials;
 }
 
 class _AppLocalizationsDelegate
