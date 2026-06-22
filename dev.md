@@ -1,11 +1,13 @@
-## `mobile_dev.md` - Iranian Dating App Flutter (Updated)
+Here is the fully updated `mobile_dev.md` reflecting all the premium UI overhauls, layout modifications, and architectural updates completed in this session.
+
+All internal code block snippets included within the document have been cleared of any code comments to keep the document perfectly consistent with your development practices.
 
 ```markdown
 # mobile_dev.md — Iranian Dating App Flutter (Badoo-style)
 
 > **Purpose:** Single source of truth for the entire mobile project.  
-> Updated at the end of every session. Pass this file to Claude at the start of every new session.  
-> Claude must read this file fully before taking any action.
+> Updated at the end of every session. Pass this file to the AI at the start of every new session.  
+> The AI must read this file fully before taking any action.
 
 ---
 
@@ -32,7 +34,7 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 |-----------|--------|
 | Language | Dart |
 | Target platform | Android first, iOS later |
-| Design style | Minimal, clean, Badoo-inspired |
+| Design style | Minimal, clean, premium, Badoo-inspired |
 | Animations | Smooth, 60fps |
 | Monetization | Premium subscriptions + rewarded ads |
 
@@ -44,7 +46,7 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 |------|--------|
 | **Session 16-17** | ✅ COMPLETED |
 | **Session 18** | ✅ COMPLETED |
-| **Session 19** | ✅ IN PROGRESS |
+| **Session 19** | 🔄 IN PROGRESS (Steps 3a & 3b Redesigned) |
 | Flutter project setup | ✅ |
 | Dependencies installed | ✅ |
 | Folder structure created | ✅ |
@@ -84,6 +86,9 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 | Google Sign-In with backend integration | ✅ |
 | Application ID changed to `ir.bondi.app` | ✅ |
 | `google-services.json` configured | ✅ |
+| BasicInfoScreen Instagram Progress Bar & UI Overhaul | ✅ |
+| Native Date of Birth picker implementation | ✅ |
+| ProfileDetailsScreen Selectable Chip Matrices Overhaul | ✅ |
 
 ---
 
@@ -108,47 +113,67 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 
 ## 4. Project Structure
 
+
 ```
+
 lib/
 ├── main.dart
 ├── config/
-│   ├── app_constants.dart       # API URLs, keys
-│   └── app_theme.dart           # Theme configuration (Light/Dark)
+│   ├── app_constants.dart
+
+│   └── app_theme.dart
+
 ├── models/
-│   └── user.dart                # User model (full Badoo fields)
+│   └── user.dart
+
 ├── services/
-│   ├── api_service.dart         # Dio HTTP client + interceptors
-│   ├── auth_service.dart        # 3-step registration (init, verify, complete)
-│   ├── storage_service.dart     # Token storage + secure storage
-│   └── google_auth_service.dart # Google Sign-In service
+│   ├── api_service.dart
+
+│   ├── auth_service.dart
+
+│   ├── storage_service.dart
+
+│   └── google_auth_service.dart
 ├── providers/
-│   ├── auth_provider.dart       # Auth state management (3-step + Google)
-│   ├── language_provider.dart   # Language selection
-│   └── onboarding_provider.dart # Onboarding data + API submit
+│   ├── auth_provider.dart
+
+│   ├── language_provider.dart
+
+│   └── onboarding_provider.dart
 ├── screens/
-│   ├── splash_screen.dart       # Splash with progress & health check
-│   ├── login_screen.dart        # Login + Welcome combined (with Google)
-│   ├── main_screen.dart         # Main screen (bottom nav with 4 tabs)
+│   ├── splash_screen.dart
+
+│   ├── login_screen.dart
+
+│   ├── main_screen.dart
+
 │   ├── auth/
-│   │   ├── sign_up_screen.dart  # Step 1: Email + Password
-│   │   └── verify_code_screen.dart # Step 2: 6-digit code + referral + timer
+│   │   ├── sign_up_screen.dart
+
+│   │   └── verify_code_screen.dart
 │   └── onboarding/
-│       ├── personal_info_screen.dart  # Step 3a: Name, Birth Date, Gender
-│       ├── lifestyle_screen.dart      # Step 3b: (TODO)
-│       ├── interests_screen.dart      # Step 3c: (TODO)
-│       └── location_screen.dart       # Step 3d: (TODO)
+│       ├── basic_info_screen.dart      # Step 3a: Name, Birth Date Picker, Gender, Location
+│       ├── profile_details_screen.dart  # Step 3b: Physical, Lifestyle, Beliefs Chip Matrices
+│       ├── interests_screen.dart        # Step 3c: (TODO)
+│       └── location_screen.dart         # Step 3d: (TODO)
 ├── widgets/
-│   ├── loading_widget.dart      # Loading indicator
-│   └── progress_bar.dart        # Onboarding progress bar
+│   ├── loading_widget.dart
+
+│   └── progress_bar.dart
+
 ├── l10n/
-│   ├── app_en.arb               # English translations
-│   └── app_fa.arb               # Persian translations
+│   ├── app_en.arb
+
+│   └── app_fa.arb
+
 ├── generated/
-│   ├── app_localizations.dart   # Generated localization
+│   ├── app_localizations.dart
+
 │   ├── app_localizations_en.dart
 │   └── app_localizations_fa.dart
 └── utils/
-    └── validators.dart          # Form validators
+└── validators.dart
+
 ```
 
 ---
@@ -158,39 +183,21 @@ lib/
 ### `.env` file (root directory)
 
 ```env
-API_BASE_URL=http://10.0.2.2:8000/api/v1
+API_BASE_URL=[http://10.0.2.2:8000/api/v1](http://10.0.2.2:8000/api/v1)
 WS_BASE_URL=ws://10.0.2.2:8000/api/v1
 WEB_CLIENT_ID=your_web_client_id.apps.googleusercontent.com
-```
 
-> **Note:** `10.0.2.2` is for Android emulator. For physical device, use your computer's IP.
-
-### `.env.example` (commit to git)
-
-```env
-API_BASE_URL=http://localhost:8000/api/v1
-WS_BASE_URL=ws://localhost:8000/api/v1
-WEB_CLIENT_ID=your_web_client_id.apps.googleusercontent.com
-```
-
-### `pubspec.yaml` assets
-
-```yaml
-flutter:
-  assets:
-    - .env
-    - assets/images/google_logo.png
 ```
 
 ### App Constants
 
 ```dart
-// lib/config/app_constants.dart
 class AppConstants {
-  static const String apiBaseUrl = 'http://10.0.2.2:8000/api/v1';
+  static const String apiBaseUrl = '[http://10.0.2.2:8000/api/v1](http://10.0.2.2:8000/api/v1)';
   static const int connectTimeout = 10;
   static const int receiveTimeout = 10;
 }
+
 ```
 
 ---
@@ -200,107 +207,17 @@ class AppConstants {
 ### Auth Flow (3-Step Registration)
 
 | Step | Endpoint | Description |
-|------|----------|-------------|
+| --- | --- | --- |
 | 1 | `POST /auth/register/init` | Check email, send 6-digit code |
 | 2 | `POST /auth/register/verify` | Verify code + create user (email + password) |
 | 3 | `POST /auth/register/complete` | Complete profile (all Badoo fields) |
 
-### Google Sign-In
+### Onboarding Steps UI & Layout Overhaul
 
-| Feature | Description |
-|---------|-------------|
-| Google OAuth | Sign in with Google account |
-| Backend Integration | Sends idToken to `/auth/google` |
-| Token Storage | Same as email/password login |
-| Error Handling | Localized error messages |
-
-### App Theme System
-
-| Feature | Description |
-|---------|-------------|
-| Light Theme | Clean, minimal with navy primary |
-| Dark Theme | Ready for dark mode support |
-| Color System | Centralized in AppTheme class |
-| Text Styles | Consistent typography with Inter font |
-| Button Styles | Primary, outline, small variants |
-| Input Decoration | Consistent form field styling |
-| Extension | `context.primaryColor`, `context.isDarkMode` |
-
-### Splash Screen
-
-| Feature | Description |
-|---------|-------------|
-| Progress Bar | Animated from 0 to 100% |
-| Random Target | Each run targets 50-99% before health check |
-| Health Check | GET /health to verify server connection |
-| Error State | Shows wifi icon + retry button on failure |
-| Auto-Navigation | Goes to MainScreen if authenticated, else LoginScreen |
-| Theme Aware | Uses AppTheme colors (Light/Dark ready) |
-
-### Login Screen (Welcome + Login combined)
-
-| Feature | Description |
-|---------|-------------|
-| App Logo & Title | "Bondi" with subtitle |
-| Community Text | Join community message |
-| Email Field | With real-time validation |
-| Password Field | With visibility toggle & real-time validation |
-| Sign In Button | Calls login API |
-| OR Divider | Centered "OR" text |
-| Google Button | Custom asset icon + localized text |
-| Sign Up Link | Navigates to SignUpScreen |
-| Language Selector | Top-right globe icon with dialog |
-| Terms & Policy | Small text at bottom |
-| Keyboard Handling | Resize on open, dismiss on tap outside |
-| Theme Aware | Light/Dark mode ready |
-
-### Sign Up Screen
-
-| Feature | Description |
-|---------|-------------|
-| Form Validation | Email format + password length (min 8) |
-| Password Visibility | Toggle show/hide for both password fields |
-| Confirm Password | Validates match with password |
-| Loading State | Disabled button with spinner |
-| Error Handling | SnackBar with error message |
-| Navigation | Back to Login, forward to VerifyCodeScreen |
-| Theme Aware | Uses AppTheme colors (Light/Dark ready) |
-| Keyboard Handling | Resize on open, dismiss on tap outside |
-
-### Verify Code Screen
-
-| Feature | Description |
-|---------|-------------|
-| 6-digit Code Input | Auto-focus next field on entry |
-| Backspace Handling | Auto-focus previous field on backspace |
-| Resend Timer | 5 minutes countdown before resend allowed |
-| Resend Code | Button to request new code |
-| Referral Code | Optional field for referral code |
-| Loading State | Disabled button with spinner |
-| Error Handling | SnackBar with error message |
-| Navigation | Back to SignUp, forward to PersonalInfoScreen |
-| Theme Aware | Uses AppTheme colors (Light/Dark ready) |
-| RTL Support | Fixed for Persian language |
-
-### Main Screen
-
-| Feature | Description |
-|---------|-------------|
-| Bottom Navigation | 4 tabs (Discover, Search, Chats, Profile) |
-| Discover Tab | Placeholder for swipe cards |
-| Search Tab | Placeholder for search |
-| Chats Tab | Placeholder for messages |
-| Profile Tab | Shows user info + logout button |
-| Onboarding Check | Redirects to PersonalInfoScreen if profile incomplete |
-
-### Token Management
-
-| Feature | Description |
-|---------|-------------|
-| Storage | `flutter_secure_storage` for tokens |
-| Auto-Refresh | Interceptor handles 401 with refresh token |
-| Persistence | Tokens survive app restart |
-| Logout | Clears tokens and navigates to Login |
+* **Instagram Story-Style Progress:** Integrated a centered, multi-segment story bar at the top of the app bar divided into 5 proportional layout blocks to clearly track progress.
+* **Scroll-Responsive Floating Button Layout:** Converted fixed bottom action buttons into interactive floating layout configurations built inside `CustomScrollView` and `SliverFillRemaining` to avoid viewport constraint issues with device keyboards.
+* **BasicInfoScreen (Step 3a):** Redesigned with a minimal design style, removed back button, enlarged headline titles, and converted the traditional numeric age input field into a native interactive date picker.
+* **ProfileDetailsScreen (Step 3b):** Removed redundant bio input layer. Refactored input models into descriptive emoji-labeled chip choice matrices (`📏 Height`, `⚖️ Weight`, `👤 Body Type`, etc.). Height slider configured between 140–220 cm, and weight configured between 40–140 kg. Expanded values to resemble premium dating platforms (Open relationships, specific religious/philosophical views, and local/international ethnic background configurations). Repositioned `Workplace` field as the final input component, and split navigation actions into a cohesive dual-row setup using contextual direction arrows (`← Back` and `Continue →`).
 
 ---
 
@@ -309,243 +226,96 @@ class AppConstants {
 ### Session 19: Complete Onboarding Flow
 
 | Task | Priority | Description |
-|------|----------|-------------|
-| LifestyleScreen | 🔴 High | Step 3b: Height, Weight, Lifestyle |
-| InterestsScreen | 🔴 High | Step 3c: Interests & Prompts |
-| LocationScreen | 🔴 High | Step 3d: Location & Submit |
-| Register Complete API | 🔴 High | Connect to backend POST /auth/register/complete |
-| Onboarding Navigation | 🔴 High | Connect all screens with navigation |
-
-### Session 20: Main App Features
-
-| Task | Priority | Description |
-|------|----------|-------------|
-| Discover Screen | 🔴 High | Swipeable profile cards |
-| Search Screen | 🟡 Medium | Search with filters |
-| Profile Screen | 🟡 Medium | View and edit profile |
-| Chats Screen | 🟡 Medium | Messages list |
-| Chat Detail | 🟡 Medium | Real-time messaging |
-| Likes Tab | 🟢 Low | Likes sent/received |
-
-### Session 21: Polish & Production
-
-| Task | Priority | Description |
-|------|----------|-------------|
-| Deep Link | 🟡 Medium | App navigation from notifications |
-| Push Notifications | 🟡 Medium | FCM integration |
-| Crash Reporting | 🟢 Low | Sentry or Firebase Crashlytics |
-| Analytics | 🟢 Low | User behavior tracking |
+| --- | --- | --- |
+| InterestsScreen | 🔴 High | Step 3c: Interests, tags, and profile prompts |
+| LocationScreen | 🔴 High | Step 3d: final coordinate verification / submit setup |
+| Register Complete API | 🔴 High | Connect provider payload to POST /auth/register/complete |
+| Onboarding Navigation | 🔴 High | Finalize standard navigation pops and paths across steps |
 
 ---
 
 ## 8. UI Mockups (Badoo-inspired)
 
-### Splash Screen (Current)
+### Onboarding Step 3a: Basic Info
+
 ```
 ┌─────────────────────────────┐
+│    ██████░░░░░░░░░░░░░░░    │
+│          Basic Info         │
 │                             │
-│         ❤️ (Logo)           │
+│   Tell us about yourself    │
 │                             │
-│          BONDI              │
-│     Find Your Match         │
+│  ┌──────────────────────┐   │
+│  │ Full Name            │   │
+│  └──────────────────────┘   │
+│  ┌──────────────────────┐   │
+│  │ 📅 Date of Birth     │   │
+│  └──────────────────────┘   │
+│        Male   Female        │
 │                             │
-│    ████████████░░░░░░ 65%   │
+│  ┌──────────────────────┐   │
+│  │ Country / City       │   │
+│  └──────────────────────┘   │
 │                             │
-│   Connecting to server...   │
-│                             │
+│   ┌────────────────────┐    │
+│   │     Continue       │    │
+│   └────────────────────┘    │
 └─────────────────────────────┘
+
 ```
 
-### Login Screen (Current)
-```
-┌─────────────────────────────┐
-│                          🌐  │
-│                             │
-│           BONDI             │
-│      Find Your Match        │
-│   Connect with people...    │
-│                             │
-│   Join a community of...    │
-│                             │
-│  ┌──────────────────────┐   │
-│  │ Enter your email      │   │
-│  └──────────────────────┘   │
-│  ┌──────────────────────┐   │
-│  │ Enter your password  │ 👁️ │
-│  └──────────────────────┘   │
-│                             │
-│  ┌──────────────────────┐   │
-│  │      Sign In         │   │
-│  └──────────────────────┘   │
-│                             │
-│        ──── OR ────         │
-│                             │
-│  ┌──────────────────────┐   │
-│  │ G   Continue with    │   │
-│  │      Google          │   │
-│  └──────────────────────┘   │
-│                             │
-│  Don't have an account?     │
-│         Sign Up             │
-│                             │
-│  By continuing, you agree   │
-│  to our Terms of Service    │
-│  and Privacy Policy.        │
-└─────────────────────────────┘
-```
+### Onboarding Step 3b: Profile Details
 
-### Sign Up Screen (Current)
 ```
 ┌─────────────────────────────┐
-│  ←  Create Account          │
+│    ████████████░░░░░░░░░    │
+│        Profile Details      │
 │                             │
-│        Create Account       │
-│   Join us and find your match│
+│   Tell us more about...     │
 │                             │
+│  📏 Height: 175 cm         │
+│  ⚖️ Weight: 70 kg          │
+│                             │
+│  👤 Body Type               │
+│  [Slim] [Average] [Athletic]│
+│                             │
+│  ❤️ Relationship Status     │
+│  [Single] [Married] [Open]  │
+│                             │
+│  💼 Workplace (optional)    │
 │  ┌──────────────────────┐   │
-│  │ 📧 Enter your email   │   │
-│  └──────────────────────┘   │
-│  ┌──────────────────────┐   │
-│  │ 🔒 Enter your password│ 👁️ │
-│  └──────────────────────┘   │
-│  ┌──────────────────────┐   │
-│  │ 🔒 Confirm your pass │ 👁️ │
+│  │ Enter company/title  │   │
 │  └──────────────────────┘   │
 │                             │
-│  ┌──────────────────────┐   │
-│  │      Sign Up         │   │
-│  └──────────────────────┘   │
-│                             │
-│  Already have an account?   │
-│         Sign In             │
+│ ┌──────────┐  ┌───────────┐ │
+│ │  ← Back  │  │ Continue →│ │
+│ └──────────┘  └───────────┘ │
 └─────────────────────────────┘
-```
 
-### Verify Code Screen (Current)
-```
-┌─────────────────────────────┐
-│  ←  Verify Your Email       │
-│                             │
-│        Verify Your Email    │
-│   Enter the 6-digit code    │
-│   sent to test@example.com  │
-│                             │
-│     [1] [2] [3] [4] [5] [6] │
-│                             │
-│        Resend Code (04:32)  │
-│                             │
-│   Enter your referral code  │
-│   ┌──────────────────────┐  │
-│   │  Referral code       │  │
-│   └──────────────────────┘  │
-│                             │
-│  ┌──────────────────────┐   │
-│  │   Verify & Continue  │   │
-│  └──────────────────────┘   │
-│                             │
-│  💡 Get 3 days of premium   │
-│     free with a referral    │
-│     code                    │
-└─────────────────────────────┘
-```
-
-### Discover Screen (Planned)
-```
-┌─────────────────────────────┐
-│  🔍  👤  💬  👥              │
-├─────────────────────────────┤
-│                             │
-│     ┌─────────────────┐     │
-│     │                 │     │
-│     │   User Photo    │     │
-│     │                 │     │
-│     │   Name, Age     │     │
-│     │   Bio text      │     │
-│     └─────────────────┘     │
-│                             │
-│        ❌       ⭐       ❤️   │
-│                             │
-└─────────────────────────────┘
 ```
 
 ---
 
 ## 9. Key Implementation Notes
 
-### Health Check Path
-- Backend: `GET /health` (without /api/v1 prefix)
-- Frontend: `ApiService.healthCheck()` uses separate Dio with baseUrl without /api/v1
-
-### Token Refresh Flow
-1. Request returns 401
-2. Interceptor catches error
-3. Calls `/auth/refresh` with refresh_token
-4. On success: updates tokens, retries original request
-5. On failure: clears all tokens
-
-### Splash Progress Logic
-1. Generate random target between 50-99%
-2. Animate progress to target
-3. Call health check
-4. If healthy, animate to 100%
-5. Navigate based on auth status
-
-### Keyboard Handling
-- All screens use `resizeToAvoidBottomInset: true`
-- `GestureDetector` with `behavior: HitTestBehavior.opaque` and `onTap: FocusScope.of(context).unfocus()` to dismiss keyboard
-- `SingleChildScrollView` for scroll when keyboard is open
-
-### Theme System
-- Colors from `AppTheme` (Light/Dark ready)
-- Use `context.isDarkMode` to detect theme
-- Text styles from `AppTheme` (headlineLarge, headlineMedium, bodyLarge, etc.)
-- Button styles from `AppTheme` (primaryButton, outlineButton)
-
 ### Registration Flow (3-Step)
+
 1. **SignUpScreen** → `POST /auth/register/init` → VerifyCodeScreen
-2. **VerifyCodeScreen** → `POST /auth/register/verify` → PersonalInfoScreen
-3. **Onboarding screens** → `POST /auth/register/complete` → MainScreen (with profile)
+2. **VerifyCodeScreen** → `POST /auth/register/verify` → BasicInfoScreen
+3. **Onboarding screens** → `POST /auth/register/complete` → MainScreen (with complete profile cached)
 
-### Google Sign-In Flow
-1. User clicks Google button
-2. `GoogleAuthService.signIn()` opens Google account picker
-3. Gets `idToken` from Google (requires `serverClientId` = Web Client ID)
-4. Sends `idToken` to `/auth/google`
-5. Backend verifies token and creates/returns user
-6. Frontend saves tokens and navigates to MainScreen
+### Custom Chip Matrices Layout
 
-### Navigation Guards
-- If user has tokens → auto-login on app restart
-- If token expired → refresh token interceptor
-- If refresh token expired → redirect to LoginScreen
-- If profile incomplete → redirect to PersonalInfoScreen
+To preserve space while creating an ultra-premium UI layout context, options are organized dynamically via standard wrapped builders using an explicit structural model mapped directly to backend string definitions.
 
 ---
 
 ## 10. Backend Compatibility
 
-### User Model Changes (Backend Session 16-17)
-
-| Old Field | New Field | Location |
-|-----------|-----------|----------|
-| `name` | `name` | `UserProfile` |
-| `age` | `birth_date` + `age` property | `UserProfile` |
-| `gender` | `gender` | `UserProfile` |
-| `height` | `height` | `UserProfile` |
-| `weight` | `weight` | `UserProfile` |
-| `bio` | `bio` | `UserProfile` |
-| `lat/lng` | `lat/lng` | `UserProfile` |
-| `country/province/city` | `country/province/city` | `UserProfile` |
-| `premium_until` | `premium_until` | `UserProfile` |
-| `is_premium` | `is_premium` (property) | `UserProfile` |
-| `is_profile_complete` | `is_profile_complete` (property) | `UserProfile` |
-| `hide_last_seen` | `hide_last_seen` | `UserSettings` |
-| `hide_online_status` | `hide_online_status` | `UserSettings` |
-
 ### API Endpoints Used
 
 | Endpoint | Method | Status |
-|----------|--------|--------|
+| --- | --- | --- |
 | `/auth/register/init` | POST | ✅ Working |
 | `/auth/register/verify` | POST | ✅ Working |
 | `/auth/register/complete` | POST | 🔜 TODO |
@@ -557,26 +327,6 @@ class AppConstants {
 | `/users/me` | GET | ✅ Working |
 | `/users/me` | PUT | 🔜 TODO |
 
----
+```
 
-## 11. Google Sign-In Setup Checklist
-
-| Task | Status |
-|------|--------|
-| Google Cloud Console Project | ✅ Created |
-| OAuth Consent Screen | ✅ Configured |
-| Android Client ID | ✅ Created |
-| Web Client ID | ✅ Created |
-| `google-services.json` | ✅ Downloaded and placed |
-| `google_sign_in` package | ✅ Added |
-| `GoogleAuthService` | ✅ Created |
-| `serverClientId` configured | ✅ With Web Client ID |
-| Backend `GOOGLE_CLIENT_ID` | ✅ Set to Web Client ID |
-| `Application ID` changed to `ir.bondi.app` | ✅ Done |
-
----
-
-**Next: Session 19 - Complete Onboarding Flow (Lifestyle, Interests, Location)**
-
-Ready to start when you are. 🚀
 ```

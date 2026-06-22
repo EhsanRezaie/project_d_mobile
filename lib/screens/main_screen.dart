@@ -4,7 +4,7 @@ import '../config/app_theme.dart';
 import '../providers/auth_provider.dart';
 import '../providers/onboarding_provider.dart';
 import 'auth/sign_up_screen.dart';
-import 'onboarding/personal_info_screen.dart';
+import 'onboarding/basic_info_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -44,7 +44,7 @@ class _MainScreenState extends State<MainScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (_) => const PersonalInfoScreen(),
+              builder: (_) => const BasicInfoScreen(),
             ),
           );
         }

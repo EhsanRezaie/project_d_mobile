@@ -1,3 +1,4 @@
+// lib/providers/onboarding_provider.dart
 import 'package:flutter/material.dart';
 
 class OnboardingProvider extends ChangeNotifier {
@@ -27,6 +28,9 @@ class OnboardingProvider extends ChangeNotifier {
   String? _ethnicity;
   String? _politicalOrientation;
 
+  // NEW: Languages (multi-select)
+  List<String>? _languages;
+
   // Step 4: Location
   double? _lat;
   double? _lng;
@@ -38,7 +42,12 @@ class OnboardingProvider extends ChangeNotifier {
   List<String>? _interests;
   List<Map<String, dynamic>>? _prompts;
 
+  // NEW: Photos (for PhotoUploadScreen)
+  List<String>? _photos;
+
+  // ============================================================
   // Getters
+  // ============================================================
   String? get email => _email;
   String? get password => _password;
   String? get name => _name;
@@ -59,6 +68,7 @@ class OnboardingProvider extends ChangeNotifier {
   String? get religion => _religion;
   String? get ethnicity => _ethnicity;
   String? get politicalOrientation => _politicalOrientation;
+  List<String>? get languages => _languages;
   double? get lat => _lat;
   double? get lng => _lng;
   String? get country => _country;
@@ -66,6 +76,7 @@ class OnboardingProvider extends ChangeNotifier {
   String? get city => _city;
   List<String>? get interests => _interests;
   List<Map<String, dynamic>>? get prompts => _prompts;
+  List<String>? get photos => _photos;
 
   bool get hasEmail => _email != null && _email!.isNotEmpty;
 
@@ -113,6 +124,7 @@ class OnboardingProvider extends ChangeNotifier {
     String? religion,
     String? ethnicity,
     String? politicalOrientation,
+    List<String>? languages,
   }) {
     _height = height;
     _weight = weight;
@@ -127,6 +139,7 @@ class OnboardingProvider extends ChangeNotifier {
     _religion = religion;
     _ethnicity = ethnicity;
     _politicalOrientation = politicalOrientation;
+    _languages = languages;
     notifyListeners();
   }
 
@@ -179,6 +192,29 @@ class OnboardingProvider extends ChangeNotifier {
   }
 
   // ============================================================
+  // NEW: Photos methods
+  // ============================================================
+  void setPhotos(List<String> photos) {
+    _photos = photos;
+    notifyListeners();
+  }
+
+  void addPhoto(String photoPath) {
+    if (_photos == null) {
+      _photos = [];
+    }
+    _photos!.add(photoPath);
+    notifyListeners();
+  }
+
+  void removePhoto(String photoPath) {
+    if (_photos != null) {
+      _photos!.remove(photoPath);
+      notifyListeners();
+    }
+  }
+
+  // ============================================================
   // Build complete request for /auth/register/complete
   // ============================================================
   Map<String, dynamic> buildCompleteRequest() {
@@ -201,6 +237,7 @@ class OnboardingProvider extends ChangeNotifier {
       if (_religion != null) 'religion': _religion,
       if (_ethnicity != null) 'ethnicity': _ethnicity,
       if (_politicalOrientation != null) 'political_orientation': _politicalOrientation,
+      if (_languages != null && _languages!.isNotEmpty) 'languages': _languages,
       'lat': _lat ?? 0.0,
       'lng': _lng ?? 0.0,
       if (_country != null) 'country': _country,
@@ -249,6 +286,7 @@ class OnboardingProvider extends ChangeNotifier {
     _religion = null;
     _ethnicity = null;
     _politicalOrientation = null;
+    _languages = null;
     _lat = null;
     _lng = null;
     _country = null;
@@ -256,6 +294,7 @@ class OnboardingProvider extends ChangeNotifier {
     _city = null;
     _interests = null;
     _prompts = null;
+    _photos = null;
     notifyListeners();
   }
 }
