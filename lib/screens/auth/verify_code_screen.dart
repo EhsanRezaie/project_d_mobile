@@ -5,8 +5,8 @@ import 'package:dating_app/generated/app_localizations.dart';
 import '../../config/app_theme.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/onboarding_provider.dart';
-import '../main_screen.dart';
 import 'sign_up_screen.dart';
+import '../onboarding/basic_info_screen.dart';
 
 class VerifyCodeScreen extends StatefulWidget {
   final String email;
@@ -145,7 +145,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) => const MainScreen(),
+            builder: (_) => const BasicInfoScreen(),
           ),
         );
       }

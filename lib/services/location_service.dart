@@ -1,9 +1,13 @@
 // lib/services/location_service.dart
 import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:dating_app/services/api_service.dart';
+import 'package:dating_app/models/location.dart';
 
 class LocationService {
+  // ============================================================================
+  // Permission
+  // ============================================================================
+
   static Future<bool> requestPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -13,84 +17,262 @@ class LocationService {
         permission == LocationPermission.always;
   }
 
-  static Future<Map<String, dynamic>?> getCurrentLocation() async {
+  // ============================================================================
+  // GPS Location
+  // ============================================================================
+
+  static Future<Position?> getCurrentPosition() async {
     try {
       final hasPermission = await requestPermission();
       if (!hasPermission) return null;
 
-      final position = await Geolocator.getCurrentPosition(
+      return await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best,
       );
-
-      // ✅ Get location details from API
-      final locationData = await _getLocationDetailsFromCoordinates(
-        position.latitude,
-        position.longitude,
-      );
-
-      return {
-        'lat': position.latitude,
-        'lng': position.longitude,
-        'country': locationData?['country'],
-        'province': locationData?['province'],
-        'city': locationData?['city'],
-      };
     } catch (e) {
       print('❌ Location error: $e');
       return null;
     }
   }
 
-  // ✅ Use OpenStreetMap API (no Placemark type)
-  static Future<Map<String, String>?> _getLocationDetailsFromCoordinates(
-    double lat,
-    double lng,
-  ) async {
-    try {
-      final url = Uri.parse(
-        'https://nominatim.openstreetmap.org/reverse?format=json&lat=$lat&lon=$lng&zoom=18&addressdetails=1',
-      );
-      
-      final response = await http.get(
-        url,
-        headers: {'User-Agent': 'DatingApp/1.0'},
-      );
+  // ============================================================================
+  // Reverse Geocode (GPS -> Location Text)
+  // ============================================================================
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        final address = data['address'] ?? {};
-        
-        return {
-          'country': address['country'] ?? '',
-          'province': address['state'] ?? address['province'] ?? '',
-          'city': address['city'] ?? address['town'] ?? address['village'] ?? address['county'] ?? '',
-        };
-      }
+  static Future<ReverseGeocodeResponse?> reverseGeocode({
+    required double lat,
+    required double lng,
+  }) async {
+    try {
+      final response = await ApiService.dio.get(
+        '/locations/reverse-geocode',
+        queryParameters: {
+          'lat': lat,
+          'lng': lng,
+        },
+      );
+      return ReverseGeocodeResponse.fromJson(response.data);
     } catch (e) {
       print('❌ Reverse geocoding error: $e');
+      return null;
+    }
+  }
+
+  // ============================================================================
+  // Countries
+  // ============================================================================
+
+  static Future<List<CountryResponse>> getCountries() async {
+    try {
+      final response = await ApiService.dio.get('/locations/countries');
+      return (response.data as List)
+          .map((json) => CountryResponse.fromJson(json))
+          .toList();
+    } catch (e) {
+      print('❌ Get countries error: $e');
+      return [];
+    }
+  }
+
+  // ============================================================================
+  // States/Provinces
+  // ============================================================================
+
+  static Future<List<ProvinceResponse>> getStates({
+    required String countryIso2,
+  }) async {
+    try {
+      final response = await ApiService.dio.get(
+        '/locations/states',
+        queryParameters: {'country': countryIso2},
+      );
+      return (response.data as List)
+          .map((json) => ProvinceResponse.fromJson(json))
+          .toList();
+    } catch (e) {
+      print('❌ Get states error: $e');
+      return [];
+    }
+  }
+
+  // ============================================================================
+  // Cities (with optional state_code filter)
+  // ============================================================================
+
+  static Future<List<CityResponse>> getCities({
+    required String countryIso2,
+    String? stateCode,
+    String? stateName,
+  }) async {
+    try {
+      final queryParams = {
+        'country': countryIso2,
+      };
+      
+      if (stateCode != null) {
+        queryParams['state_code'] = stateCode;
+      } else if (stateName != null) {
+        queryParams['state_name'] = stateName;
+      }
+      
+      final response = await ApiService.dio.get(
+        '/locations/cities',
+        queryParameters: queryParams,
+      );
+      return (response.data as List)
+          .map((json) => CityResponse.fromJson(json))
+          .toList();
+    } catch (e) {
+      print('❌ Get cities error: $e');
+      return [];
+    }
+  }
+
+  // ============================================================================
+  // Search Cities (autocomplete)
+  // ============================================================================
+
+  static Future<List<CityResponse>> searchCities({
+    required String countryIso2,
+    required String query,
+    String? stateCode,
+  }) async {
+    try {
+      final queryParams = {
+        'country': countryIso2,
+        'query': query,
+      };
+      
+      if (stateCode != null) {
+        queryParams['state_code'] = stateCode;
+      }
+      
+      final response = await ApiService.dio.get(
+        '/locations/cities/search',
+        queryParameters: queryParams,
+      );
+      return (response.data as List)
+          .map((json) => CityResponse.fromJson(json))
+          .toList();
+    } catch (e) {
+      print('❌ Search cities error: $e');
+      return [];
+    }
+  }
+
+  // ============================================================================
+  // City Centroid (for manual location)
+  // ============================================================================
+
+  static Future<CityResponse?> getCityCentroid({
+    required String countryIso2,
+    required String cityName,
+    String? stateCode,
+  }) async {
+    try {
+      final queryParams = {
+        'country': countryIso2,
+        'city': cityName,
+      };
+      
+      if (stateCode != null) {
+        queryParams['state_code'] = stateCode;
+      }
+      
+      final response = await ApiService.dio.get(
+        '/locations/city-centroid',
+        queryParameters: queryParams,
+      );
+      return CityResponse.fromJson(response.data);
+    } catch (e) {
+      print('❌ Get city centroid error: $e');
+      return null;
+    }
+  }
+
+  // ============================================================================
+  // Clear Cache
+  // ============================================================================
+
+  static Future<void> clearCache() async {
+    try {
+      await ApiService.dio.post('/locations/clear-cache');
+      print('✅ Location cache cleared');
+    } catch (e) {
+      print('❌ Clear cache error: $e');
+    }
+  }
+
+  // ============================================================================
+  // Update User Location (GPS)
+  // ============================================================================
+
+  static Future<Map<String, dynamic>?> updateLocationGPS({
+    required double lat,
+    required double lng,
+  }) async {
+    try {
+      final response = await ApiService.dio.patch(
+        '/locations/me/location-gps',
+        queryParameters: {
+          'lat': lat,
+          'lng': lng,
+        },
+      );
+      return response.data;
+    } catch (e) {
+      print('❌ Update location GPS error: $e');
+      return null;
+    }
+  }
+
+  // ============================================================================
+  // Update User Location (Manual)
+  // ============================================================================
+
+  static Future<Map<String, dynamic>?> updateLocationManual({
+    required String country,
+    required String province,
+    required String city,
+    required String countryIso2,
+  }) async {
+    try {
+      final response = await ApiService.dio.patch(
+        '/locations/me/location-manual',
+        queryParameters: {
+          'country': country,
+          'province': province,
+          'city': city,
+          'country_iso2': countryIso2,
+        },
+      );
+      return response.data;
+    } catch (e) {
+      print('❌ Update location manual error: $e');
+      return null;
+    }
+  }
+
+  // ============================================================================
+  // Get Country ISO2 Code by Name
+  // ============================================================================
+
+  static Future<String?> getCountryIso2ByName(String countryName) async {
+    final countries = await getCountries();
+    for (var country in countries) {
+      if (country.name == countryName) {
+        return country.iso2;
+      }
     }
     return null;
   }
 
-  static Map<String, double> estimateLatLng(String city, String province) {
-    final Map<String, Map<String, double>> cityCoordinates = {
-      'tehran': {'lat': 35.6892, 'lng': 51.3890},
-      'isfahan': {'lat': 32.6546, 'lng': 51.6680},
-      'shiraz': {'lat': 29.5918, 'lng': 52.5837},
-      'mashhad': {'lat': 36.2605, 'lng': 59.6168},
-      'tabriz': {'lat': 38.0800, 'lng': 46.2919},
-      'rasht': {'lat': 37.2808, 'lng': 49.5832},
-      'ahvaz': {'lat': 31.3183, 'lng': 48.6706},
-      'kermanshah': {'lat': 34.3277, 'lng': 47.0778},
-      'qom': {'lat': 34.6416, 'lng': 50.8748},
-      'urmia': {'lat': 37.5527, 'lng': 45.0761},
-    };
+  // ============================================================================
+  // Get Country ISO2 Code from Full Country List (for dropdown)
+  // ============================================================================
 
-    final cityKey = city.toLowerCase().trim();
-    if (cityCoordinates.containsKey(cityKey)) {
-      return cityCoordinates[cityKey]!;
-    }
-
-    return {'lat': 35.6892, 'lng': 51.3890};
+  static Future<Map<String, String>> getCountryMap() async {
+    final countries = await getCountries();
+    return {for (var c in countries) c.name: c.iso2};
   }
 }

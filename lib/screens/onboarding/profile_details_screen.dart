@@ -401,6 +401,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                               ),
                               const SizedBox(height: 20),
                             ],
+                            // ============================================================
+                            // HEIGHT
+                            // ============================================================
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -440,6 +443,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                               ],
                             ),
                             const SizedBox(height: 16),
+                            // ============================================================
+                            // WEIGHT - Fixed emoji (⚖️ is correct, but using 🏋️ for weight)
+                            // ============================================================
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -447,7 +453,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      '⚖️ Weight',
+                                      '🏋️ Weight',  // Changed from ⚖️ to 🏋️
                                       style: TextStyle(
                                         fontFamily: 'Inter',
                                         fontSize: 15,
@@ -479,13 +485,19 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                               ],
                             ),
                             const SizedBox(height: 24),
+                            // ============================================================
+                            // BODY TYPE - Fixed emoji (💪)
+                            // ============================================================
                             _buildChipSection(
-                              label: '👤 Body Type',
+                              label: '💪 Body Type',  // Changed from 👤 to 💪
                               options: _bodyTypeOptions,
                               selected: _bodyType,
                               onTap: (value) => _selectChip(value, (v) => _bodyType = v, _bodyType),
                             ),
                             const SizedBox(height: 24),
+                            // ============================================================
+                            // RELATIONSHIP STATUS
+                            // ============================================================
                             _buildChipSection(
                               label: '❤️ Relationship Status',
                               options: _relationshipOptions,
@@ -493,13 +505,19 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                               onTap: (value) => _selectChip(value, (v) => _relationshipStatus = v, _relationshipStatus),
                             ),
                             const SizedBox(height: 24),
+                            // ============================================================
+                            // LIVING SITUATION
+                            // ============================================================
                             _buildChipSection(
-                              label: '🏡 Living Situation',
+                              label: '🏠 Living Situation',  // Changed from 🏡 to 🏠
                               options: _livingSituationOptions,
                               selected: _livingSituation,
                               onTap: (value) => _selectChip(value, (v) => _livingSituation = v, _livingSituation),
                             ),
                             const SizedBox(height: 24),
+                            // ============================================================
+                            // CHILDREN STATUS
+                            // ============================================================
                             _buildChipSection(
                               label: '👶 Children Status',
                               options: _childrenOptions,
@@ -507,6 +525,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                               onTap: (value) => _selectChip(value, (v) => _childrenStatus = v, _childrenStatus),
                             ),
                             const SizedBox(height: 24),
+                            // ============================================================
+                            // SMOKING
+                            // ============================================================
                             _buildChipSection(
                               label: '🚬 Smoking',
                               options: _smokingOptions,
@@ -514,13 +535,19 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                               onTap: (value) => _selectChip(value, (v) => _smoking = v, _smoking),
                             ),
                             const SizedBox(height: 24),
+                            // ============================================================
+                            // DRINKING
+                            // ============================================================
                             _buildChipSection(
-                              label: '🍹 Drinking',
+                              label: '🍷 Drinking',  // Changed from 🍹 to 🍷
                               options: _drinkingOptions,
                               selected: _drinking,
                               onTap: (value) => _selectChip(value, (v) => _drinking = v, _drinking),
                             ),
                             const SizedBox(height: 24),
+                            // ============================================================
+                            // EDUCATION
+                            // ============================================================
                             _buildChipSection(
                               label: '🎓 Education',
                               options: _educationOptions,
@@ -528,6 +555,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                               onTap: (value) => _selectChip(value, (v) => _education = v, _education),
                             ),
                             const SizedBox(height: 24),
+                            // ============================================================
+                            // POLITICAL ORIENTATION
+                            // ============================================================
                             _buildChipSection(
                               label: '🗳️ Political Orientation',
                               options: _politicalOptions,
@@ -535,6 +565,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                               onTap: (value) => _selectChip(value, (v) => _politicalOrientation = v, _politicalOrientation),
                             ),
                             const SizedBox(height: 24),
+                            // ============================================================
+                            // RELIGION
+                            // ============================================================
                             _buildChipSection(
                               label: '🕌 Religion',
                               options: _religionOptions,
@@ -542,6 +575,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                               onTap: (value) => _selectChip(value, (v) => _religion = v, _religion),
                             ),
                             const SizedBox(height: 24),
+                            // ============================================================
+                            // ETHNICITY
+                            // ============================================================
                             _buildChipSection(
                               label: '🌍 Ethnicity',
                               options: _ethnicityOptions,
@@ -549,6 +585,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                               onTap: (value) => _selectChip(value, (v) => _ethnicity = v, _ethnicity),
                             ),
                             const SizedBox(height: 24),
+                            // ============================================================
+                            // LANGUAGES (Multi-select)
+                            // ============================================================
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -599,6 +638,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                               ],
                             ),
                             const SizedBox(height: 24),
+                            // ============================================================
+                            // WORKPLACE
+                            // ============================================================
                             TextFormField(
                               controller: _workplaceController,
                               style: AppTheme.bodyLarge.copyWith(

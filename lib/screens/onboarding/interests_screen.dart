@@ -133,168 +133,271 @@ class _InterestsScreenState extends State<InterestsScreen> {
     final onSurfaceColor = colors.onSurface;
     final errorColor = AppTheme.lightError;
 
+    final int selectedCount = _selectedInterests.length;
+    final bool isEnough = selectedCount >= 8;
+    final int remaining = 8 - selectedCount;
+
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: onSurfaceColor),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          'Interests',
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: onSurfaceColor,
+        toolbarHeight: 80,
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Progress Bar - 5 steps, filled for steps 0, 1, 2 (Basic Info, Profile Details, Interests)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(5, (index) {
+                  return Expanded(
+                    child: Container(
+                      height: 4,
+                      margin: const EdgeInsets.symmetric(horizontal: 2.0),
+                      decoration: BoxDecoration(
+                        color: index <= 2
+                            ? primaryColor
+                            : (isDark ? Colors.white12 : Colors.black12),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+              const SizedBox(height: 14),
+              Text(
+                'Interests',
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: onSurfaceColor,
+                  letterSpacing: -0.4,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
         ),
         centerTitle: true,
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Select Your Interests',
-                style: AppTheme.headlineMedium.copyWith(
-                  color: onSurfaceColor,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Pick at least 8 interests that represent you',
-                style: AppTheme.bodyLarge.copyWith(
-                  color: textMutedColor,
-                ),
-              ),
-              const SizedBox(height: 16),
+      body: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return CustomScrollView(
+                slivers: [
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    sliver: SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 16),
+                          // Header
+                          Text(
+                            'What are your interests?',
+                            style: AppTheme.headlineMedium.copyWith(
+                              color: onSurfaceColor,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Select at least 8 interests that represent you',
+                            style: AppTheme.bodyLarge.copyWith(
+                              color: textMutedColor,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Selected: ${_selectedInterests.length} / 8',
-                    style: AppTheme.labelLarge.copyWith(
-                      color: _selectedInterests.length >= 8
-                          ? Colors.green
-                          : primaryColor,
+                          // Error Message
+                          if (_errorMessage != null)
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                              decoration: BoxDecoration(
+                                color: errorColor.withOpacity(0.08),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(color: errorColor.withOpacity(0.2)),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.error_outline, color: errorColor, size: 20),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      _errorMessage!,
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 14,
+                                        color: errorColor,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          if (_errorMessage != null) const SizedBox(height: 16),
+
+                          // Progress indicator
+                          Container(
+                            width: double.infinity,
+                            height: 6,
+                            decoration: BoxDecoration(
+                              color: isDark ? Colors.white.withOpacity(0.1) : Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(3),
+                            ),
+                            child: FractionallySizedBox(
+                              widthFactor: selectedCount.clamp(0, 8) / 8,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: isEnough ? Colors.green : primaryColor,
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          // Counter text below progress bar
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Selected: $selectedCount',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                  color: isEnough ? Colors.green : textMutedColor,
+                                ),
+                              ),
+                              Text(
+                                isEnough ? '✅ Great!' : '$remaining more needed',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                  color: isEnough ? Colors.green : textMutedColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 24),
+
+                          // Interests List
+                          if (_isLoading)
+                            const Center(child: CircularProgressIndicator())
+                          else if (_groupedInterests.isEmpty)
+                            Center(
+                              child: Text(
+                                'No interests available',
+                                style: AppTheme.bodyLarge.copyWith(
+                                  color: textMutedColor,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 4,
+                  if (!_isLoading && _groupedInterests.isNotEmpty)
+                    SliverToBoxAdapter(
+                      child: Column(
+                        children: _groupedInterests.keys.map((category) {
+                          return _buildCategorySection(
+                            category,
+                            _groupedInterests[category]!,
+                            primaryColor,
+                            surfaceColor,
+                            borderColor,
+                            textMutedColor,
+                            onSurfaceColor,
+                            isDark,
+                          );
+                        }).toList(),
+                      ),
                     ),
-                    decoration: BoxDecoration(
-                      color: primaryColor,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      '${_selectedInterests.length}',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Container(
+                      alignment: Alignment.bottomCenter,
+                      padding: const EdgeInsets.only(left: 24.0, right: 24.0, bottom: 24.0),
+                      child: Row(
+                        children: [
+                          // Back Button
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () => Navigator.pop(context),
+                              style: OutlinedButton.styleFrom(
+                                side: BorderSide(color: borderColor, width: 1.5),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                minimumSize: const Size(double.infinity, 56),
+                                foregroundColor: onSurfaceColor,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.arrow_back, size: 20, color: onSurfaceColor),
+                                  const SizedBox(width: 8),
+                                  Text('Back', style: AppTheme.buttonText.copyWith(color: onSurfaceColor)),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          // Next Button
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: _isSubmitting || !isEnough ? null : _handleNext,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: isEnough ? primaryColor : Colors.grey.shade400,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                elevation: 0,
+                                minimumSize: const Size(double.infinity, 56),
+                              ),
+                              child: _isSubmitting
+                                  ? const SizedBox(
+                                      height: 24,
+                                      width: 24,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          isEnough ? 'Continue' : 'Select ${8 - selectedCount} more',
+                                          style: AppTheme.buttonText.copyWith(
+                                            color: isEnough ? Colors.white : Colors.white.withOpacity(0.7),
+                                          ),
+                                        ),
+                                        if (isEnough) ...[
+                                          const SizedBox(width: 8),
+                                          const Icon(Icons.arrow_forward, size: 20, color: Colors.white),
+                                        ],
+                                      ],
+                                    ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ],
-              ),
-              const SizedBox(height: 16),
-
-              if (_errorMessage != null)
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: errorColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: errorColor.withOpacity(0.3)),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.error_outline, color: errorColor, size: 20),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text(
-                          _errorMessage!,
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 14,
-                            color: errorColor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              if (_errorMessage != null) const SizedBox(height: 16),
-
-              Expanded(
-                child: _isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : _groupedInterests.isEmpty
-                        ? Center(
-                            child: Text(
-                              'No interests available',
-                              style: AppTheme.bodyLarge.copyWith(
-                                color: textMutedColor,
-                              ),
-                            ),
-                          )
-                        : ListView(
-                            children: _groupedInterests.keys.map((category) {
-                              return _buildCategorySection(
-                                category,
-                                _groupedInterests[category]!,
-                                primaryColor,
-                                surfaceColor,
-                                borderColor,
-                                textMutedColor,
-                                onSurfaceColor,
-                              );
-                            }).toList(),
-                          ),
-              ),
-
-              const SizedBox(height: 16),
-
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isSubmitting ? null : _handleNext,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _selectedInterests.length >= 8
-                        ? primaryColor
-                        : Colors.grey.shade400,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    elevation: 0,
-                    minimumSize: const Size(double.infinity, 56),
-                  ),
-                  child: _isSubmitting
-                      ? const SizedBox(
-                          height: 24,
-                          width: 24,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : Text(
-                          'Next',
-                          style: AppTheme.buttonText,
-                        ),
-                ),
-              ),
-            ],
+              );
+            },
           ),
         ),
       ),
@@ -309,92 +412,138 @@ class _InterestsScreenState extends State<InterestsScreen> {
     Color borderColor,
     Color textMutedColor,
     Color onSurfaceColor,
+    bool isDark,
   ) {
     final isExpanded = _expandedCategories.contains(category);
+    final selectedInCategory = interests.where((i) => _isSelected(i.name)).length;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        GestureDetector(
-          onTap: () => _toggleCategory(category),
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: borderColor,
-                  width: 1,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GestureDetector(
+            onTap: () => _toggleCategory(category),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: borderColor,
+                    width: 0.5,
+                  ),
                 ),
               ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  category,
-                  style: AppTheme.titleMedium.copyWith(
-                    color: onSurfaceColor,
-                  ),
-                ),
-                Icon(
-                  isExpanded ? Icons.expand_less : Icons.expand_more,
-                  color: textMutedColor,
-                ),
-              ],
-            ),
-          ),
-        ),
-        if (isExpanded)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: interests.map((interest) {
-                final isSelected = _isSelected(interest.name);
-                return GestureDetector(
-                  onTap: () => _toggleInterest(interest),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: isSelected ? primaryColor : surfaceColor,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: isSelected ? primaryColor : borderColor,
-                        width: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      category,
+                      style: AppTheme.titleMedium.copyWith(
+                        color: onSurfaceColor,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (interest.icon != null)
-                          Padding(
-                            padding: const EdgeInsets.only(right: 6),
-                            child: Text(
-                              interest.icon!,
-                              style: const TextStyle(fontSize: 16),
-                            ),
-                          ),
-                        Text(
-                          _formatInterestName(interest.name),
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 14,
-                            color: isSelected ? Colors.white : onSurfaceColor,
-                          ),
-                        ),
-                      ],
-                    ),
                   ),
-                );
-              }).toList(),
+                  if (selectedInCategory > 0)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      margin: const EdgeInsets.only(right: 8),
+                      decoration: BoxDecoration(
+                        color: primaryColor.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        '$selectedInCategory',
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: primaryColor,
+                        ),
+                      ),
+                    ),
+                  Icon(
+                    isExpanded ? Icons.expand_less : Icons.expand_more,
+                    color: textMutedColor,
+                  ),
+                ],
+              ),
             ),
           ),
-        const SizedBox(height: 4),
-      ],
+          if (isExpanded)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: interests.map((interest) {
+                  final isSelected = _isSelected(interest.name);
+                  return GestureDetector(
+                    onTap: () => _toggleInterest(interest),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 150),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected ? primaryColor : surfaceColor,
+                        borderRadius: BorderRadius.circular(24),
+                        border: Border.all(
+                          color: isSelected ? primaryColor : borderColor,
+                          width: isSelected ? 1.5 : 1,
+                        ),
+                        boxShadow: isSelected
+                            ? [
+                                BoxShadow(
+                                  color: primaryColor.withOpacity(0.3),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ]
+                            : null,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (interest.icon != null)
+                            Padding(
+                              padding: const EdgeInsets.only(right: 6),
+                              child: Text(
+                                interest.icon!,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          Text(
+                            _formatInterestName(interest.name),
+                            style: TextStyle(
+                              fontFamily: 'Inter',
+                              fontSize: 14,
+                              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                              color: isSelected ? Colors.white : onSurfaceColor,
+                            ),
+                          ),
+                          if (isSelected)
+                            const Padding(
+                              padding: EdgeInsets.only(left: 6),
+                              child: Icon(
+                                Icons.check_circle,
+                                color: Colors.white,
+                                size: 16,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          const SizedBox(height: 4),
+        ],
+      ),
     );
   }
 

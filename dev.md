@@ -1,6 +1,4 @@
-Here is the fully updated `mobile_dev.md` reflecting all the premium UI overhauls, layout modifications, and architectural updates completed in this session.
-
-All internal code block snippets included within the document have been cleared of any code comments to keep the document perfectly consistent with your development practices.
+Here's the updated `dev.md` with the new TODO item for translations:
 
 ```markdown
 # mobile_dev.md — Iranian Dating App Flutter (Badoo-style)
@@ -46,7 +44,7 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 |------|--------|
 | **Session 16-17** | ✅ COMPLETED |
 | **Session 18** | ✅ COMPLETED |
-| **Session 19** | 🔄 IN PROGRESS (Steps 3a & 3b Redesigned) |
+| **Session 19** | 🔄 IN PROGRESS (Onboarding Flow Completed) |
 | Flutter project setup | ✅ |
 | Dependencies installed | ✅ |
 | Folder structure created | ✅ |
@@ -89,6 +87,14 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 | BasicInfoScreen Instagram Progress Bar & UI Overhaul | ✅ |
 | Native Date of Birth picker implementation | ✅ |
 | ProfileDetailsScreen Selectable Chip Matrices Overhaul | ✅ |
+| InterestsScreen with category grouping and expandable sections | ✅ |
+| PromptsScreen with category grouping and answer fields | ✅ |
+| Backend Location APIs integrated (countries, states, cities, reverse-geocode, centroid) | ✅ |
+| LocationService with GPS and manual location selection | ✅ |
+| Searchable dropdowns for country/state/city selection | ✅ |
+| Full onboarding flow (4 steps: Basic Info → Profile Details → Interests → Prompts) | ✅ |
+| Register complete API integration (`POST /auth/register/complete`) | ✅ |
+| User registration with all profile data | ✅ |
 
 ---
 
@@ -113,67 +119,52 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 
 ## 4. Project Structure
 
-
 ```
-
 lib/
 ├── main.dart
 ├── config/
 │   ├── app_constants.dart
-
 │   └── app_theme.dart
-
 ├── models/
-│   └── user.dart
-
+│   ├── user.dart
+│   ├── interest.dart
+│   ├── prompt.dart
+│   └── location_models.dart
 ├── services/
 │   ├── api_service.dart
-
 │   ├── auth_service.dart
-
 │   ├── storage_service.dart
-
-│   └── google_auth_service.dart
+│   ├── google_auth_service.dart
+│   ├── location_service.dart
+│   └── onboarding_service.dart
 ├── providers/
 │   ├── auth_provider.dart
-
 │   ├── language_provider.dart
-
 │   └── onboarding_provider.dart
 ├── screens/
 │   ├── splash_screen.dart
-
 │   ├── login_screen.dart
-
 │   ├── main_screen.dart
-
 │   ├── auth/
 │   │   ├── sign_up_screen.dart
-
 │   │   └── verify_code_screen.dart
 │   └── onboarding/
-│       ├── basic_info_screen.dart      # Step 3a: Name, Birth Date Picker, Gender, Location
-│       ├── profile_details_screen.dart  # Step 3b: Physical, Lifestyle, Beliefs Chip Matrices
-│       ├── interests_screen.dart        # Step 3c: (TODO)
-│       └── location_screen.dart         # Step 3d: (TODO)
+│       ├── basic_info_screen.dart      # Step 1: Name, Birth Date, Gender, Location
+│       ├── profile_details_screen.dart # Step 2: Physical, Lifestyle, Beliefs
+│       ├── interests_screen.dart       # Step 3: Interests with categories
+│       └── prompts_screen.dart         # Step 4: Prompts with answers
 ├── widgets/
 │   ├── loading_widget.dart
-
 │   └── progress_bar.dart
-
 ├── l10n/
 │   ├── app_en.arb
-
 │   └── app_fa.arb
-
 ├── generated/
 │   ├── app_localizations.dart
-
 │   ├── app_localizations_en.dart
 │   └── app_localizations_fa.dart
 └── utils/
-└── validators.dart
-
+    └── validators.dart
 ```
 
 ---
@@ -183,21 +174,19 @@ lib/
 ### `.env` file (root directory)
 
 ```env
-API_BASE_URL=[http://10.0.2.2:8000/api/v1](http://10.0.2.2:8000/api/v1)
+API_BASE_URL=http://10.0.2.2:8000/api/v1
 WS_BASE_URL=ws://10.0.2.2:8000/api/v1
 WEB_CLIENT_ID=your_web_client_id.apps.googleusercontent.com
-
 ```
 
 ### App Constants
 
 ```dart
 class AppConstants {
-  static const String apiBaseUrl = '[http://10.0.2.2:8000/api/v1](http://10.0.2.2:8000/api/v1)';
+  static const String apiBaseUrl = 'http://10.0.2.2:8000/api/v1';
   static const int connectTimeout = 10;
   static const int receiveTimeout = 10;
 }
-
 ```
 
 ---
@@ -214,29 +203,45 @@ class AppConstants {
 
 ### Onboarding Steps UI & Layout Overhaul
 
-* **Instagram Story-Style Progress:** Integrated a centered, multi-segment story bar at the top of the app bar divided into 5 proportional layout blocks to clearly track progress.
-* **Scroll-Responsive Floating Button Layout:** Converted fixed bottom action buttons into interactive floating layout configurations built inside `CustomScrollView` and `SliverFillRemaining` to avoid viewport constraint issues with device keyboards.
-* **BasicInfoScreen (Step 3a):** Redesigned with a minimal design style, removed back button, enlarged headline titles, and converted the traditional numeric age input field into a native interactive date picker.
-* **ProfileDetailsScreen (Step 3b):** Removed redundant bio input layer. Refactored input models into descriptive emoji-labeled chip choice matrices (`📏 Height`, `⚖️ Weight`, `👤 Body Type`, etc.). Height slider configured between 140–220 cm, and weight configured between 40–140 kg. Expanded values to resemble premium dating platforms (Open relationships, specific religious/philosophical views, and local/international ethnic background configurations). Repositioned `Workplace` field as the final input component, and split navigation actions into a cohesive dual-row setup using contextual direction arrows (`← Back` and `Continue →`).
+- **Instagram Story-Style Progress:** Integrated a centered, multi-segment story bar at the top of the app bar divided into 5 proportional layout blocks to clearly track progress.
+- **Scroll-Responsive Floating Button Layout:** Converted fixed bottom action buttons into interactive floating layout configurations built inside `CustomScrollView` and `SliverFillRemaining` to avoid viewport constraint issues with device keyboards.
+- **BasicInfoScreen (Step 1):** Redesigned with a minimal design style, removed back button, enlarged headline titles, and converted the traditional numeric age input field into a native interactive date picker. Added searchable dropdowns for country/state/city with GPS location support.
+- **ProfileDetailsScreen (Step 2):** Removed redundant bio input layer. Refactored input models into descriptive emoji-labeled chip choice matrices (`📏 Height`, `🏋️ Weight`, `💪 Body Type`, etc.). Height slider configured between 140–220 cm, and weight configured between 40–140 kg. Expanded values to resemble premium dating platforms (Open relationships, specific religious/philosophical views, and local/international ethnic background configurations). Repositioned `Workplace` field as the final input component.
+- **InterestsScreen (Step 3):** Category-based interest selection with expandable sections, searchable, minimum 8 interests required, progress indicator showing selection status.
+- **PromptsScreen (Step 4):** Category-based prompt selection with expandable sections, up to 3 prompts can be selected, answer fields for each selected prompt, skip/continue functionality.
+
+### Location System
+
+- **Backend Location APIs integrated:**
+  - `GET /locations/countries` - Get all countries
+  - `GET /locations/states?country=IR` - Get states/provinces for a country
+  - `GET /locations/cities?country=IR&state_name=Tehran` - Get cities filtered by state
+  - `GET /locations/reverse-geocode?lat=35.68&lng=51.38` - GPS to location text
+  - `GET /locations/city-centroid?country=IR&city=Tehran` - Get lat/lng for a city
+- **GPS Location Support:** Get current location via device GPS, reverse-geocode to country/state/city
+- **Manual Location Selection:** Searchable dropdowns for country, state, and city with autocomplete
+- **Location Validation:** Ensures all required location fields are filled before proceeding
 
 ---
 
 ## 7. TODO - Next Session
 
-### Session 19: Complete Onboarding Flow
+### Session 20: Translations & UI Polish
 
 | Task | Priority | Description |
 | --- | --- | --- |
-| InterestsScreen | 🔴 High | Step 3c: Interests, tags, and profile prompts |
-| LocationScreen | 🔴 High | Step 3d: final coordinate verification / submit setup |
-| Register Complete API | 🔴 High | Connect provider payload to POST /auth/register/complete |
-| Onboarding Navigation | 🔴 High | Finalize standard navigation pops and paths across steps |
+| Add Translations for Onboarding Pages | 🔴 High | Add English and Persian translations for all onboarding screens (BasicInfo, ProfileDetails, Interests, Prompts) |
+| Add Translations for Location APIs | 🔴 High | Translate location labels, error messages, and field names |
+| Add Translations for Interests and Prompts | 🔴 High | Translate category names, interest names, prompt questions from backend |
+| Fix Any Remaining UI Issues | 🟡 Medium | Address any overflow or layout issues |
+| Photo Upload Screen | 🟡 Medium | After registration, implement photo upload flow |
+| Profile Editing | 🟢 Low | Allow users to edit their profile after registration |
 
 ---
 
 ## 8. UI Mockups (Badoo-inspired)
 
-### Onboarding Step 3a: Basic Info
+### Onboarding Step 1: Basic Info
 
 ```
 ┌─────────────────────────────┐
@@ -254,17 +259,22 @@ class AppConstants {
 │        Male   Female        │
 │                             │
 │  ┌──────────────────────┐   │
-│  │ Country / City       │   │
+│  │ 🔍 Country (search)  │   │
+│  └──────────────────────┘   │
+│  ┌──────────────────────┐   │
+│  │ 🔍 State/Province    │   │
+│  └──────────────────────┘   │
+│  ┌──────────────────────┐   │
+│  │ 🔍 City (search)     │   │
 │  └──────────────────────┘   │
 │                             │
 │   ┌────────────────────┐    │
 │   │     Continue       │    │
 │   └────────────────────┘    │
 └─────────────────────────────┘
-
 ```
 
-### Onboarding Step 3b: Profile Details
+### Onboarding Step 2: Profile Details
 
 ```
 ┌─────────────────────────────┐
@@ -274,9 +284,9 @@ class AppConstants {
 │   Tell us more about...     │
 │                             │
 │  📏 Height: 175 cm         │
-│  ⚖️ Weight: 70 kg          │
+│  🏋️ Weight: 70 kg          │
 │                             │
-│  👤 Body Type               │
+│  💪 Body Type               │
 │  [Slim] [Average] [Athletic]│
 │                             │
 │  ❤️ Relationship Status     │
@@ -291,18 +301,80 @@ class AppConstants {
 │ │  ← Back  │  │ Continue →│ │
 │ └──────────┘  └───────────┘ │
 └─────────────────────────────┘
+```
 
+### Onboarding Step 3: Interests
+
+```
+┌─────────────────────────────┐
+│    ██████████████░░░░░░░    │
+│          Interests          │
+│                             │
+│   What are your interests?  │
+│   Select 8 more to continue │
+│   ████████░░░░░░░░░░░░░░░  │
+│   Selected: 3 / 8           │
+│                             │
+│  🎯 Sports & Fitness  [2] ▼ │
+│    [⚽] Football             │
+│    [🏀] Basketball           │
+│    [🏊] Swimming             │
+│                             │
+│  🎨 Arts & Culture   [0] ▶ │
+│                             │
+│ ┌──────────┐  ┌───────────┐ │
+│ │  ← Back  │  │ Continue →│ │
+│ └──────────┘  └───────────┘ │
+└─────────────────────────────┘
+```
+
+### Onboarding Step 4: Prompts
+
+```
+┌─────────────────────────────┐
+│    █████████████████░░░░    │
+│          Your Prompts       │
+│                             │
+│   Answer up to 3 questions  │
+│   Choose prompts and write  │
+│   Selected: 2 / 3           │
+│                             │
+│  💭 Travel & Adventure [1] ▼│
+│    What's your dream trip?  │
+│    ┌──────────────────┐     │
+│    │ Write your answer │     │
+│    └──────────────────┘     │
+│                             │
+│  💕 Personal Growth  [0] ▶ │
+│                             │
+│ ┌──────────┐  ┌───────────┐ │
+│ │  ← Back  │  │  Continue │ │
+│ └──────────┘  └───────────┘ │
+└─────────────────────────────┘
 ```
 
 ---
 
 ## 9. Key Implementation Notes
 
-### Registration Flow (3-Step)
+### Registration Flow (4 Steps)
 
 1. **SignUpScreen** → `POST /auth/register/init` → VerifyCodeScreen
 2. **VerifyCodeScreen** → `POST /auth/register/verify` → BasicInfoScreen
-3. **Onboarding screens** → `POST /auth/register/complete` → MainScreen (with complete profile cached)
+3. **BasicInfoScreen** → ProfileDetailsScreen → InterestsScreen → PromptsScreen
+4. **PromptsScreen** → `POST /auth/register/complete` → MainScreen
+
+### Location Flow
+
+1. **GPS Granted:** Get lat/lng → Reverse geocode → Auto-fill country/state/city
+2. **GPS Denied:** User selects country → States load → User selects state → Cities load → User selects city → Get centroid lat/lng
+
+### Translation Architecture
+
+- All UI text should use `AppLocalizations.of(context)!`
+- Language selection persists via `StorageService.saveLanguage()`
+- API calls for prompts and interests should pass `language` parameter
+- Backend returns localized content based on the language parameter
 
 ### Custom Chip Matrices Layout
 
@@ -318,7 +390,7 @@ To preserve space while creating an ultra-premium UI layout context, options are
 | --- | --- | --- |
 | `/auth/register/init` | POST | ✅ Working |
 | `/auth/register/verify` | POST | ✅ Working |
-| `/auth/register/complete` | POST | 🔜 TODO |
+| `/auth/register/complete` | POST | ✅ Working |
 | `/auth/login` | POST | ✅ Working |
 | `/auth/google` | POST | ✅ Working |
 | `/auth/refresh` | POST | ✅ Working |
@@ -326,7 +398,28 @@ To preserve space while creating an ultra-premium UI layout context, options are
 | `/auth/health` | GET | ✅ Working |
 | `/users/me` | GET | ✅ Working |
 | `/users/me` | PUT | 🔜 TODO |
-
+| `/locations/countries` | GET | ✅ Working |
+| `/locations/states` | GET | ✅ Working |
+| `/locations/cities` | GET | ✅ Working |
+| `/locations/reverse-geocode` | GET | ✅ Working |
+| `/locations/city-centroid` | GET | ✅ Working |
+| `/interests` | GET | ✅ Working |
+| `/prompts` | GET | ✅ Working |
+| `/locations/me/location-gps` | PATCH | ✅ Working |
+| `/locations/me/location-manual` | PATCH | ✅ Working |
 ```
 
-```
+---
+
+## Summary of Updates:
+
+1. **Updated Current Status** - Added all completed onboarding features
+2. **Updated Project Structure** - Added new files (interest, prompt, location_models, onboarding_service)
+3. **Added TODO - Translations for Onboarding Pages** as 🔴 High priority
+4. **Added Translation Architecture section** - explains how translations should work
+5. **Updated UI Mockups** - Added Interests and Prompts screens
+6. **Updated Registration Flow** - Changed from 3 steps to 4 steps
+7. **Added Location Flow section** - Explains GPS and manual location selection
+8. **Updated Backend Compatibility** - Added all location and interest/prompt endpoints
+
+🚀

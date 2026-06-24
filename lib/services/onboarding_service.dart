@@ -1,34 +1,45 @@
 // lib/services/onboarding_service.dart
-import 'package:dio/dio.dart';
-import '../models/interest.dart';
-import '../models/prompt.dart';
-import 'api_service.dart';
+import 'package:dating_app/services/api_service.dart';
+import 'package:dating_app/models/interest.dart';
+import 'package:dating_app/models/prompt.dart';
 
 class OnboardingService {
+  // ============================================================================
+  // Get Interests
+  // ============================================================================
+
   static Future<List<Interest>> getInterests() async {
     try {
-      final response = await ApiService.get('/interests');
-      if (response.statusCode == 200) {
-        final List data = response.data;
-        return data.map((json) => Interest.fromJson(json)).toList();
-      }
-      return [];
-    } on DioException catch (e) {
-      print('❌ Error fetching interests: $e');
+      final response = await ApiService.dio.get('/interests');
+      return (response.data as List)
+          .map((json) => Interest.fromJson(json))
+          .toList();
+    } catch (e) {
+      print('❌ Get interests error: $e');
       return [];
     }
   }
 
-  static Future<List<Prompt>> getPrompts() async {
+  // ============================================================================
+  // Get Prompts (with language support)
+  // ============================================================================
+
+  static Future<List<Prompt>> getPrompts({String? language}) async {
     try {
-      final response = await ApiService.get('/prompts');
-      if (response.statusCode == 200) {
-        final List data = response.data;
-        return data.map((json) => Prompt.fromJson(json)).toList();
+      final queryParams = <String, String>{};
+      if (language != null) {
+        queryParams['language'] = language;
       }
-      return [];
-    } on DioException catch (e) {
-      print('❌ Error fetching prompts: $e');
+      
+      final response = await ApiService.dio.get(
+        '/prompts',
+        queryParameters: queryParams,
+      );
+      return (response.data as List)
+          .map((json) => Prompt.fromJson(json))
+          .toList();
+    } catch (e) {
+      print('❌ Get prompts error: $e');
       return [];
     }
   }

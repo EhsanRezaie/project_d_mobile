@@ -222,27 +222,33 @@ class OnboardingProvider extends ChangeNotifier {
       'name': _name,
       'birth_date': _birthDate,
       'gender': _gender,
-      if (_sexualOrientation != null) 'sexual_orientation': _sexualOrientation,
-      if (_bio != null) 'bio': _bio,
+      if (_sexualOrientation != null && _sexualOrientation!.isNotEmpty)
+        'sexual_orientation': _sexualOrientation,
+      if (_bio != null && _bio!.isNotEmpty) 'bio': _bio,
       if (_height != null) 'height': _height,
       if (_weight != null) 'weight': _weight,
-      if (_bodyType != null) 'body_type': _bodyType,
-      if (_relationshipStatus != null) 'relationship_status': _relationshipStatus,
-      if (_livingSituation != null) 'living_situation': _livingSituation,
-      if (_childrenStatus != null) 'children_status': _childrenStatus,
-      if (_smoking != null) 'smoking': _smoking,
-      if (_drinking != null) 'drinking': _drinking,
-      if (_education != null) 'education': _education,
-      if (_workplace != null) 'workplace': _workplace,
-      if (_religion != null) 'religion': _religion,
-      if (_ethnicity != null) 'ethnicity': _ethnicity,
-      if (_politicalOrientation != null) 'political_orientation': _politicalOrientation,
+      if (_bodyType != null && _bodyType!.isNotEmpty) 'body_type': _bodyType,
+      if (_relationshipStatus != null && _relationshipStatus!.isNotEmpty)
+        'relationship_status': _relationshipStatus,
+      if (_livingSituation != null && _livingSituation!.isNotEmpty)
+        'living_situation': _livingSituation,
+      if (_childrenStatus != null && _childrenStatus!.isNotEmpty)
+        'children_status': _childrenStatus,
+      if (_smoking != null && _smoking!.isNotEmpty) 'smoking': _smoking,
+      if (_drinking != null && _drinking!.isNotEmpty) 'drinking': _drinking,
+      if (_education != null && _education!.isNotEmpty) 'education': _education,
+      if (_workplace != null && _workplace!.isNotEmpty) 'workplace': _workplace,
+      if (_religion != null && _religion!.isNotEmpty) 'religion': _religion,
+      if (_ethnicity != null && _ethnicity!.isNotEmpty) 'ethnicity': _ethnicity,
+      if (_politicalOrientation != null && _politicalOrientation!.isNotEmpty)
+        'political_orientation': _politicalOrientation,
       if (_languages != null && _languages!.isNotEmpty) 'languages': _languages,
+      // Only include lat/lng if they exist, otherwise 0.0
       'lat': _lat ?? 0.0,
       'lng': _lng ?? 0.0,
-      if (_country != null) 'country': _country,
-      if (_province != null) 'province': _province,
-      if (_city != null) 'city': _city,
+      if (_country != null && _country!.isNotEmpty) 'country': _country,
+      if (_province != null && _province!.isNotEmpty) 'province': _province,
+      if (_city != null && _city!.isNotEmpty) 'city': _city,
       if (_interests != null && _interests!.isNotEmpty) 'interests': _interests,
       if (_prompts != null && _prompts!.isNotEmpty) 'prompts': _prompts,
     };
@@ -252,14 +258,13 @@ class OnboardingProvider extends ChangeNotifier {
   // Check if all required fields are filled
   // ============================================================
   bool get isComplete {
-    return _name != null &&
-        _name!.isNotEmpty &&
-        _birthDate != null &&
-        _birthDate!.isNotEmpty &&
-        _gender != null &&
-        _gender!.isNotEmpty &&
-        _lat != null &&
-        _lng != null;
+    final nameValid = _name != null && _name!.isNotEmpty;
+    final birthDateValid = _birthDate != null && _birthDate!.isNotEmpty;
+    final genderValid = _gender != null && _gender!.isNotEmpty;
+    final latValid = _lat != null;
+    final lngValid = _lng != null;
+
+    return nameValid && birthDateValid && genderValid && latValid && lngValid;
   }
 
   // ============================================================

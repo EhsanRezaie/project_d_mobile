@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:dating_app/generated/app_localizations.dart';
 import '../../config/app_theme.dart';
 import '../../providers/onboarding_provider.dart';
 import '../../services/location_service.dart';
+import '../../models/location.dart';
 import 'profile_details_screen.dart';
 
 class BasicInfoScreen extends StatefulWidget {
@@ -20,21 +20,33 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
   final TextEditingController _birthDateController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
 
+  // Search controllers
+  final SearchController _countrySearchController = SearchController();
+  final SearchController _provinceSearchController = SearchController();
+  final SearchController _citySearchController = SearchController();
+
   DateTime? _selectedBirthDate;
   String? _selectedGender;
-  String? _selectedCountry;
-  String? _selectedProvince;
-  String? _selectedCity;
+
+  // Location data
+  List<CountryResponse> _countries = [];
+  List<ProvinceResponse> _provinces = [];
+  List<CityResponse> _cities = [];
+
+  CountryResponse? _selectedCountry;
+  ProvinceResponse? _selectedProvince;
+  CityResponse? _selectedCity;
 
   double? _lat;
   double? _lng;
-  final bool _isLoading = false;
-  bool _isLoadingLocation = false;
-  String? _errorMessage;
 
-  List<String> _countries = [];
-  List<String> _provinces = [];
-  List<String> _cities = [];
+  bool _isLoading = false;
+  bool _isLoadingCountries = false;
+  bool _isLoadingProvinces = false;
+  bool _isLoadingCities = false;
+  bool _isLoadingLocation = false;
+
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -54,53 +66,353 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
         _birthDateController.text = onboarding.birthDate!;
       } catch (_) {}
     }
-    if (onboarding.country != null) {
-      _selectedCountry = onboarding.country;
-      _loadProvinces(onboarding.country!);
-    }
-    if (onboarding.province != null) {
-      _selectedProvince = onboarding.province;
-      _loadCities(onboarding.province!);
-    }
-    if (onboarding.city != null) _selectedCity = onboarding.city;
     if (onboarding.lat != null) _lat = onboarding.lat;
     if (onboarding.lng != null) _lng = onboarding.lng;
-  }
 
-  void _loadCountries() {
-    _countries = ['Iran', 'Turkey', 'UAE', 'Iraq', 'Afghanistan'];
-  }
-
-  void _loadProvinces(String country) {
-    if (country == 'Iran') {
-      _provinces = [
-        'Tehran',
-        'Isfahan',
-        'Shiraz',
-        'Mashhad',
-        'Tabriz',
-        'Rasht',
-        'Ahvaz',
-        'Kermanshah',
-        'Qom',
-        'Urmia'
-      ];
-    } else {
-      _provinces = [];
+    if (onboarding.country != null || onboarding.province != null || onboarding.city != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _loadSavedLocationData();
+      });
     }
-    _selectedProvince = null;
-    _selectedCity = null;
   }
 
-  void _loadCities(String province) {
-    final Map<String, List<String>> cityMap = {
-      'Tehran': ['Tehran', 'Karaj', 'Shahriar'],
-      'Isfahan': ['Isfahan', 'Kashan', 'Najafabad'],
-      'Shiraz': ['Shiraz', 'Marvdasht', 'Kazerun'],
-    };
-    _cities = cityMap[province] ?? [];
-    _selectedCity = null;
+  Future<void> _loadSavedLocationData() async {
+    final onboarding = Provider.of<OnboardingProvider>(context, listen: false);
+
+    if (onboarding.country != null) {
+      for (var country in _countries) {
+        if (country.name == onboarding.country) {
+          setState(() {
+            _selectedCountry = country;
+            _countrySearchController.text = country.name;
+          });
+          await _loadStates(country.iso2);
+          break;
+        }
+      }
+    }
+
+    if (onboarding.province != null && _provinces.isNotEmpty) {
+      for (var province in _provinces) {
+        if (province.name == onboarding.province) {
+          setState(() {
+            _selectedProvince = province;
+            _provinceSearchController.text = province.name;
+          });
+          if (_selectedCountry != null) {
+            await _loadCities(_selectedCountry!.iso2, province.name);
+          }
+          break;
+        }
+      }
+    }
+
+    if (onboarding.city != null && _cities.isNotEmpty) {
+      for (var city in _cities) {
+        if (city.name == onboarding.city) {
+          setState(() {
+            _selectedCity = city;
+            _citySearchController.text = city.name;
+          });
+          break;
+        }
+      }
+    }
   }
+
+  // ============================================================================
+  // Load Countries from API
+  // ============================================================================
+
+  Future<void> _loadCountries() async {
+    setState(() {
+      _isLoadingCountries = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final countries = await LocationService.getCountries();
+      setState(() {
+        _countries = countries;
+      });
+
+      if (mounted) {
+        _loadSavedLocationData();
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Failed to load countries. Please try again.';
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingCountries = false;
+        });
+      }
+    }
+  }
+
+  // ============================================================================
+  // Load States from API
+  // ============================================================================
+
+  Future<void> _loadStates(String countryIso2) async {
+    setState(() {
+      _isLoadingProvinces = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final states = await LocationService.getStates(
+        countryIso2: countryIso2,
+      );
+      setState(() {
+        _provinces = states;
+        _isLoadingProvinces = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Failed to load states. Please try again.';
+        _isLoadingProvinces = false;
+      });
+    }
+  }
+
+  // ============================================================================
+  // Load Cities from API
+  // ============================================================================
+
+  Future<void> _loadCities(String countryIso2, String stateName) async {
+    setState(() {
+      _isLoadingCities = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final cities = await LocationService.getCities(
+        countryIso2: countryIso2,
+        stateName: stateName,
+      );
+      setState(() {
+        _cities = cities;
+        _isLoadingCities = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Failed to load cities. Please try again.';
+        _isLoadingCities = false;
+      });
+    }
+  }
+
+  // ============================================================================
+  // Get Current Location (GPS)
+  // ============================================================================
+
+  Future<void> _getCurrentLocation() async {
+    setState(() {
+      _isLoadingLocation = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final position = await LocationService.getCurrentPosition();
+      if (position == null) {
+        setState(() {
+          _errorMessage = 'Could not get GPS location. Please select manually.';
+          _isLoadingLocation = false;
+        });
+        return;
+      }
+
+      final location = await LocationService.reverseGeocode(
+        lat: position.latitude,
+        lng: position.longitude,
+      );
+
+      if (location == null || location.country == null) {
+        setState(() {
+          _errorMessage = 'Could not determine your location. Please select manually.';
+          _isLoadingLocation = false;
+        });
+        return;
+      }
+
+      CountryResponse? matchedCountry;
+      for (var country in _countries) {
+        if (country.iso2 == location.countryIso2) {
+          matchedCountry = country;
+          break;
+        }
+      }
+
+      if (matchedCountry == null) {
+        setState(() {
+          _errorMessage = 'Your country is not supported. Please select manually.';
+          _isLoadingLocation = false;
+        });
+        return;
+      }
+
+      // Reset all selections first
+      _resetLocationSelections();
+
+      setState(() {
+        _lat = position.latitude;
+        _lng = position.longitude;
+        _selectedCountry = matchedCountry;
+        _countrySearchController.text = matchedCountry!.name;
+      });
+
+      await _loadStates(matchedCountry.iso2);
+
+      if (location.province != null && _provinces.isNotEmpty) {
+        for (var province in _provinces) {
+          if (province.name.toLowerCase() == location.province!.toLowerCase()) {
+            setState(() {
+              _selectedProvince = province;
+              _provinceSearchController.text = province.name;
+            });
+            await _loadCities(matchedCountry.iso2, province.name);
+            break;
+          }
+        }
+      }
+
+      if (location.city != null && _cities.isNotEmpty) {
+        for (var city in _cities) {
+          if (city.name.toLowerCase() == location.city!.toLowerCase()) {
+            setState(() {
+              _selectedCity = city;
+              _citySearchController.text = city.name;
+            });
+            break;
+          }
+        }
+      }
+
+      if (_selectedCity == null) {
+        setState(() {
+          _errorMessage = 'Could not find your city. Please select manually.';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Error getting location. Please select manually.';
+      });
+      print('❌ Get location error: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingLocation = false;
+        });
+      }
+    }
+  }
+
+  // ============================================================================
+  // Reset Location Selections (CRITICAL FIX)
+  // ============================================================================
+
+  void _resetLocationSelections() {
+    setState(() {
+      _selectedProvince = null;
+      _selectedCity = null;
+      _provinces = [];
+      _cities = [];
+      _lat = null;
+      _lng = null;
+      _errorMessage = null;
+      _provinceSearchController.clear();
+      _citySearchController.clear();
+    });
+  }
+
+  // ============================================================================
+  // Handlers
+  // ============================================================================
+
+  void _onCountryChanged(CountryResponse? country) {
+    // Reset all dependent fields
+    _resetLocationSelections();
+
+    setState(() {
+      _selectedCountry = country;
+      if (country != null) {
+        _countrySearchController.text = country.name;
+      } else {
+        _countrySearchController.clear();
+      }
+    });
+
+    if (country != null) {
+      _loadStates(country.iso2);
+    }
+  }
+
+  void _onProvinceChanged(ProvinceResponse? province) {
+    setState(() {
+      _selectedProvince = province;
+      _selectedCity = null;
+      _cities = [];
+      _lat = null;
+      _lng = null;
+      _errorMessage = null;
+      _citySearchController.clear();
+      if (province != null) {
+        _provinceSearchController.text = province.name;
+      } else {
+        _provinceSearchController.clear();
+      }
+    });
+
+    if (province != null && _selectedCountry != null) {
+      _loadCities(_selectedCountry!.iso2, province.name);
+    }
+  }
+
+  void _onCityChanged(CityResponse? city) {
+    setState(() {
+      _selectedCity = city;
+      _errorMessage = null;
+      if (city != null) {
+        _citySearchController.text = city.name;
+      } else {
+        _citySearchController.clear();
+      }
+    });
+
+    if (city != null) {
+      if (city.latitude != null && city.longitude != null) {
+        setState(() {
+          _lat = city.latitude;
+          _lng = city.longitude;
+        });
+      } else {
+        _getCityCentroid(city.name);
+      }
+    }
+  }
+
+  Future<void> _getCityCentroid(String cityName) async {
+    if (_selectedCountry == null) return;
+
+    final centroid = await LocationService.getCityCentroid(
+      countryIso2: _selectedCountry!.iso2,
+      cityName: cityName,
+    );
+
+    if (centroid != null) {
+      setState(() {
+        _lat = centroid.latitude;
+        _lng = centroid.longitude;
+      });
+    }
+  }
+
+  // ============================================================================
+  // Birth Date Picker
+  // ============================================================================
 
   Future<void> _selectBirthDate() async {
     final now = DateTime.now();
@@ -131,63 +443,9 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
     }
   }
 
-  Future<void> _getCurrentLocation() async {
-    setState(() {
-      _isLoadingLocation = true;
-      _errorMessage = null;
-    });
-
-    final location = await LocationService.getCurrentLocation();
-    if (location != null) {
-      setState(() {
-        _lat = location['lat'];
-        _lng = location['lng'];
-        _selectedCountry = location['country'];
-        if (_selectedCountry != null) {
-          _loadProvinces(_selectedCountry!);
-          _selectedProvince = location['province'];
-          if (_selectedProvince != null) {
-            _loadCities(_selectedProvince!);
-            _selectedCity = location['city'];
-          }
-        }
-      });
-    } else {
-      setState(() {
-        _errorMessage = 'Could not get location. Please select manually.';
-      });
-    }
-
-    setState(() => _isLoadingLocation = false);
-  }
-
-  void _onCountryChanged(String? value) {
-    setState(() {
-      _selectedCountry = value;
-      _selectedProvince = null;
-      _selectedCity = null;
-      if (value != null) _loadProvinces(value);
-    });
-  }
-
-  void _onProvinceChanged(String? value) {
-    setState(() {
-      _selectedProvince = value;
-      _selectedCity = null;
-      if (value != null) _loadCities(value);
-    });
-  }
-
-  void _onCityChanged(String? value) {
-    setState(() {
-      _selectedCity = value;
-      if (_selectedProvince != null && value != null) {
-        final coords = LocationService.estimateLatLng(value, _selectedProvince!);
-        _lat = coords['lat'];
-        _lng = coords['lng'];
-      }
-    });
-  }
+  // ============================================================================
+  // Handle Next
+  // ============================================================================
 
   Future<void> _handleNext() async {
     if (!_formKey.currentState!.validate()) return;
@@ -206,6 +464,14 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
       return;
     }
 
+    if (_lat == null || _lng == null) {
+      await _getCityCentroid(_selectedCity!.name);
+      if (_lat == null || _lng == null) {
+        setState(() => _errorMessage = 'Could not determine location coordinates. Please try again.');
+        return;
+      }
+    }
+
     final onboarding = Provider.of<OnboardingProvider>(context, listen: false);
 
     onboarding.setPersonalInfo(
@@ -216,11 +482,11 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
     );
 
     onboarding.setLocation(
-      lat: _lat ?? 0.0,
-      lng: _lng ?? 0.0,
-      country: _selectedCountry,
-      province: _selectedProvince,
-      city: _selectedCity,
+      lat: _lat!,
+      lng: _lng!,
+      country: _selectedCountry!.name,
+      province: _selectedProvince!.name,
+      city: _selectedCity!.name,
     );
 
     Navigator.push(
@@ -229,17 +495,217 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
     );
   }
 
+  // ============================================================================
+  // Searchable Dropdown Builder
+  // ============================================================================
+
+  Widget _buildSearchableDropdown<T>({
+    required List<T> items,
+    required T? selectedItem,
+    required String hintText,
+    required String labelText,
+    required String displayName(T item),
+    required void Function(T?) onSelected,
+    required bool isLoading,
+    required SearchController searchController,
+    Widget? leadingIcon,
+    bool isEnabled = true,
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 4.0, bottom: 8.0),
+          child: Text(
+            labelText,
+            style: TextStyle(
+              fontFamily: 'Inter',
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: isEnabled
+                  ? Theme.of(context).colorScheme.onSurface
+                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
+            ),
+          ),
+        ),
+        SearchAnchor(
+          searchController: searchController,
+          isFullScreen: false,
+          viewConstraints: const BoxConstraints(maxHeight: 300),
+          builder: (context, searchController) {
+            return SearchBar(
+              controller: searchController,
+              hintText: isEnabled ? hintText : 'Select country first',
+              enabled: isEnabled,
+              elevation: const WidgetStatePropertyAll(0),
+              backgroundColor: WidgetStatePropertyAll(
+                isEnabled
+                    ? (isDark
+                        ? Colors.white.withOpacity(0.05)
+                        : Colors.grey.shade50)
+                    : (isDark
+                        ? Colors.white.withOpacity(0.02)
+                        : Colors.grey.shade100),
+              ),
+              shape: WidgetStatePropertyAll(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  side: BorderSide(
+                    color: selectedItem != null
+                        ? primaryColor
+                        : (isDark ? AppTheme.darkBorder : AppTheme.lightBorder),
+                    width: selectedItem != null ? 2 : 1,
+                  ),
+                ),
+              ),
+              leading: leadingIcon ??
+                  Icon(
+                    Icons.search,
+                    color: isEnabled
+                        ? Theme.of(context).colorScheme.onSurface.withOpacity(0.6)
+                        : Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+                  ),
+              trailing: [
+                if (selectedItem != null && isEnabled)
+                  IconButton(
+                    icon: Icon(
+                      Icons.close,
+                      size: 18,
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                    ),
+                    onPressed: () {
+                      searchController.clear();
+                      onSelected(null);
+                    },
+                  ),
+                if (isLoading)
+                  const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+              ],
+              onTap: () {
+                if (isEnabled) {
+                  searchController.openView();
+                }
+              },
+              onChanged: (query) {
+                if (isEnabled) {
+                  searchController.openView();
+                }
+              },
+              textStyle: WidgetStatePropertyAll(
+                TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 15,
+                  color: isEnabled
+                      ? Theme.of(context).colorScheme.onSurface
+                      : Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
+                ),
+              ),
+              hintStyle: WidgetStatePropertyAll(
+                TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 15,
+                  color: isEnabled
+                      ? Theme.of(context).colorScheme.onSurface.withOpacity(0.5)
+                      : Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+                ),
+              ),
+            );
+          },
+          suggestionsBuilder: (context, searchController) {
+            if (!isEnabled) {
+              return [
+                const ListTile(
+                  title: Text(
+                    'Please select a country first',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              ];
+            }
+
+            final query = searchController.text.toLowerCase().trim();
+
+            final filteredItems = query.isEmpty
+                ? items
+                : items.where((item) {
+                    final name = displayName(item).toLowerCase();
+                    return name.contains(query);
+                  }).toList();
+
+            if (filteredItems.isEmpty) {
+              return [
+                ListTile(
+                  title: Text(
+                    'No results found',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                    ),
+                  ),
+                ),
+              ];
+            }
+
+            return filteredItems.map((item) {
+              final isSelected = item == selectedItem;
+              return ListTile(
+                selected: isSelected,
+                selectedTileColor: primaryColor.withOpacity(0.1),
+                title: Text(
+                  displayName(item),
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+                trailing: isSelected
+                    ? Icon(
+                        Icons.check,
+                        color: primaryColor,
+                        size: 20,
+                      )
+                    : null,
+                onTap: () {
+                  searchController.closeView(displayName(item));
+                  onSelected(item);
+                  searchController.text = displayName(item);
+                },
+              );
+            }).toList();
+          },
+        ),
+      ],
+    );
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
     _birthDateController.dispose();
     _bioController.dispose();
+    _countrySearchController.dispose();
+    _provinceSearchController.dispose();
+    _citySearchController.dispose();
     super.dispose();
   }
 
+  // ============================================================================
+  // Build
+  // ============================================================================
+
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;
     final colors = Theme.of(context).colorScheme;
     final isDark = context.isDarkMode;
     final primaryColor = isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary;
@@ -249,6 +715,10 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
     final textMutedColor = isDark ? AppTheme.darkTextMuted : AppTheme.lightTextMuted;
     final onSurfaceColor = colors.onSurface;
     final errorColor = AppTheme.lightError;
+
+    // Determine if province and city should be enabled
+    final bool isProvinceEnabled = _selectedCountry != null;
+    final bool isCityEnabled = _selectedProvince != null;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -459,6 +929,7 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
                               ),
                             ),
                             const SizedBox(height: 24),
+                            // Location section with searchable dropdowns
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -507,46 +978,58 @@ class _BasicInfoScreenState extends State<BasicInfoScreen> {
                                   ],
                                 ),
                                 const SizedBox(height: 12),
-                                DropdownButtonFormField<String>(
-                                  value: _selectedCountry,
-                                  isExpanded: true,
-                                  decoration: InputDecoration(
-                                    labelText: 'Country',
-                                    prefixIcon: Icon(Icons.public, color: textMutedColor, size: 22),
+                                // Country Searchable Dropdown (always enabled)
+                                _buildSearchableDropdown<CountryResponse>(
+                                  items: _countries,
+                                  selectedItem: _selectedCountry,
+                                  hintText: 'Search for a country...',
+                                  labelText: 'Country',
+                                  displayName: (country) => country.name,
+                                  onSelected: _onCountryChanged,
+                                  isLoading: _isLoadingCountries,
+                                  searchController: _countrySearchController,
+                                  leadingIcon: Icon(
+                                    Icons.public,
+                                    color: textMutedColor,
+                                    size: 22,
                                   ),
-                                  items: _countries.map((country) {
-                                    return DropdownMenuItem(value: country, child: Text(country));
-                                  }).toList(),
-                                  onChanged: _onCountryChanged,
-                                  validator: (value) => value == null ? 'Please select your country' : null,
+                                  isEnabled: true,
                                 ),
                                 const SizedBox(height: 16),
-                                DropdownButtonFormField<String>(
-                                  value: _selectedProvince,
-                                  isExpanded: true,
-                                  decoration: InputDecoration(
-                                    labelText: 'Province',
-                                    prefixIcon: Icon(Icons.map_outlined, color: textMutedColor, size: 22),
+                                // State/Province Searchable Dropdown (enabled only if country selected)
+                                _buildSearchableDropdown<ProvinceResponse>(
+                                  items: _provinces,
+                                  selectedItem: _selectedProvince,
+                                  hintText: isProvinceEnabled ? 'Search for a state/province...' : 'Select a country first',
+                                  labelText: 'State/Province',
+                                  displayName: (province) => province.name,
+                                  onSelected: _onProvinceChanged,
+                                  isLoading: _isLoadingProvinces,
+                                  searchController: _provinceSearchController,
+                                  leadingIcon: Icon(
+                                    Icons.map_outlined,
+                                    color: textMutedColor,
+                                    size: 22,
                                   ),
-                                  items: _provinces.map((province) {
-                                    return DropdownMenuItem(value: province, child: Text(province));
-                                  }).toList(),
-                                  onChanged: _onProvinceChanged,
-                                  validator: (value) => value == null ? 'Please select your province' : null,
+                                  isEnabled: isProvinceEnabled,
                                 ),
                                 const SizedBox(height: 16),
-                                DropdownButtonFormField<String>(
-                                  value: _selectedCity,
-                                  isExpanded: true,
-                                  decoration: InputDecoration(
-                                    labelText: 'City',
-                                    prefixIcon: Icon(Icons.location_city_outlined, color: textMutedColor, size: 22),
+                                // City Searchable Dropdown (enabled only if province selected)
+                                _buildSearchableDropdown<CityResponse>(
+                                  items: _cities,
+                                  selectedItem: _selectedCity,
+                                  hintText: isCityEnabled ? 'Search for a city...' : 'Select a state/province first',
+                                  labelText: 'City',
+                                  displayName: (city) => city.name,
+                                  onSelected: _onCityChanged,
+                                  isLoading: _isLoadingCities,
+                                  searchController: _citySearchController,
+                                  leadingIcon: Icon(
+                                    Icons.location_city_outlined,
+                                    color: textMutedColor,
+                                    size: 22,
                                   ),
-                                  items: _cities.map((city) {
-                                    return DropdownMenuItem(value: city, child: Text(city));
-                                  }).toList(),
-                                  onChanged: _onCityChanged,
-                                  validator: (value) => value == null ? 'Please select your city' : null,
+                                  isEnabled: isCityEnabled,
                                 ),
                               ],
                             ),
@@ -608,7 +1091,7 @@ class _GenderOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = context.isDarkMode;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary;
     final surfaceColor = isDark ? AppTheme.darkSurface : AppTheme.lightSurface;
     final borderColor = isDark ? AppTheme.darkBorder : AppTheme.lightBorder;
