@@ -27,10 +27,10 @@ class OnboardingService {
   static Future<List<Prompt>> getPrompts({String? language}) async {
     try {
       final queryParams = <String, String>{};
-      if (language != null) {
+      if (language != null && language.isNotEmpty) {
         queryParams['language'] = language;
       }
-      
+
       final response = await ApiService.dio.get(
         '/prompts',
         queryParameters: queryParams,

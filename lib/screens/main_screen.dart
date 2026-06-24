@@ -3,8 +3,10 @@ import 'package:provider/provider.dart';
 import '../config/app_theme.dart';
 import '../providers/auth_provider.dart';
 import '../providers/onboarding_provider.dart';
+import '../services/photo_service.dart';
 import 'auth/sign_up_screen.dart';
 import 'onboarding/basic_info_screen.dart';
+import 'onboarding/photo_upload_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -15,6 +17,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
+  bool _isCheckingPhotos = false;
 
   @override
   void initState() {
@@ -33,14 +36,11 @@ class _MainScreenState extends State<MainScreen> {
       final user = authProvider.user;
       if (user != null && !user.isProfileComplete) {
         if (context.mounted) {
-          // If user exists but profile is not complete, go to onboarding
-          // Check if email is set in onboarding provider
-          if (onboardingProvider.email == null || onboardingProvider.email!.isEmpty) {
-            // If onboarding provider doesn't have email, try to use user's email
+          if (onboardingProvider.email == null ||
+              onboardingProvider.email!.isEmpty) {
             onboardingProvider.setEmailAndPassword(user.email, '');
           }
-          
-          // Navigate to first onboarding screen with replacement
+
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -49,6 +49,53 @@ class _MainScreenState extends State<MainScreen> {
           );
         }
         return;
+      }
+
+      // Check if user has at least 3 photos
+      if (user != null && user.isProfileComplete) {
+        await _checkUserPhotos();
+      }
+    }
+  }
+
+  Future<void> _checkUserPhotos() async {
+    if (_isCheckingPhotos) return;
+    setState(() => _isCheckingPhotos = true);
+
+    try {
+      final photos = await PhotoService.getMyPhotos();
+      
+      if (mounted) {
+        // ✅ FIX: Count ALL photos (pending + approved)
+        // During onboarding, photos are "pending" status
+        final allPhotos = photos.where((p) => p.status == 'pending' || p.status == 'approved').toList();
+        
+        // If less than 3 photos total, navigate to photo upload
+        if (allPhotos.length < 3) {
+          final currentRoute = ModalRoute.of(context)?.settings.name;
+          if (currentRoute != '/photo-upload') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const PhotoUploadScreen(),
+              ),
+            );
+          }
+        }
+      }
+    } catch (e) {
+      // If error getting photos (e.g., no photos yet), navigate to upload
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const PhotoUploadScreen(),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isCheckingPhotos = false);
       }
     }
   }
@@ -67,7 +114,7 @@ class _MainScreenState extends State<MainScreen> {
     final primaryColor = isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary;
     final bgColor = isDark ? AppTheme.darkBackground : AppTheme.lightBackground;
 
-    if (authProvider.isLoading) {
+    if (authProvider.isLoading || _isCheckingPhotos) {
       return Scaffold(
         backgroundColor: bgColor,
         body: Center(

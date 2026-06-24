@@ -1,14 +1,14 @@
 // lib/screens/onboarding/prompts_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:dating_app/generated/app_localizations.dart';
 import '../../config/app_theme.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/onboarding_provider.dart';
 import '../../providers/language_provider.dart';
 import '../../services/onboarding_service.dart';
 import '../../models/prompt.dart';
-import '../main_screen.dart';
+import 'photo_upload_screen.dart';
+
 
 class PromptsScreen extends StatefulWidget {
   const PromptsScreen({super.key});
@@ -191,7 +191,7 @@ class _PromptsScreenState extends State<PromptsScreen> {
     if (success && mounted) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const MainScreen()),
+        MaterialPageRoute(builder: (_) => const PhotoUploadScreen()),
       );
     } else if (mounted) {
       setState(() {

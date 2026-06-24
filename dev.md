@@ -1,4 +1,4 @@
-Here's the updated `dev.md` with the new TODO item for translations:
+Here's the updated `dev.md`:
 
 ```markdown
 # mobile_dev.md — Iranian Dating App Flutter (Badoo-style)
@@ -42,9 +42,7 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 
 | Item | Status |
 |------|--------|
-| **Session 16-17** | ✅ COMPLETED |
-| **Session 18** | ✅ COMPLETED |
-| **Session 19** | 🔄 IN PROGRESS (Onboarding Flow Completed) |
+| **Session 20** | ✅ COMPLETED (Photo Upload & Main Screen Flow) |
 | Flutter project setup | ✅ |
 | Dependencies installed | ✅ |
 | Folder structure created | ✅ |
@@ -95,6 +93,11 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 | Full onboarding flow (4 steps: Basic Info → Profile Details → Interests → Prompts) | ✅ |
 | Register complete API integration (`POST /auth/register/complete`) | ✅ |
 | User registration with all profile data | ✅ |
+| **Photo Upload Screen** | ✅ |
+| **Drag & Drop photo reordering** | ✅ |
+| **PhotoService with upload, delete, set main** | ✅ |
+| **Main Screen photo check (pending + approved)** | ✅ |
+| **Complete onboarding flow (6 screens total)** | ✅ |
 
 ---
 
@@ -114,6 +117,7 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 | **Animations** | flutter_staggered_animations | ^1.1.0 | Smooth animations |
 | **Env** | flutter_dotenv | ^5.1.0 | Environment variables |
 | **Google Sign-In** | google_sign_in | ^6.1.5 | Google OAuth login |
+| **Reorderables** | reorderables | ^0.6.0 | Drag & drop reordering |
 
 ---
 
@@ -129,14 +133,16 @@ lib/
 │   ├── user.dart
 │   ├── interest.dart
 │   ├── prompt.dart
-│   └── location_models.dart
+│   ├── location_models.dart
+│   └── photo.dart              # Photo upload models
 ├── services/
 │   ├── api_service.dart
 │   ├── auth_service.dart
 │   ├── storage_service.dart
 │   ├── google_auth_service.dart
 │   ├── location_service.dart
-│   └── onboarding_service.dart
+│   ├── onboarding_service.dart
+│   └── photo_service.dart      # Photo upload service
 ├── providers/
 │   ├── auth_provider.dart
 │   ├── language_provider.dart
@@ -152,7 +158,8 @@ lib/
 │       ├── basic_info_screen.dart      # Step 1: Name, Birth Date, Gender, Location
 │       ├── profile_details_screen.dart # Step 2: Physical, Lifestyle, Beliefs
 │       ├── interests_screen.dart       # Step 3: Interests with categories
-│       └── prompts_screen.dart         # Step 4: Prompts with answers
+│       ├── prompts_screen.dart         # Step 4: Prompts with answers
+│       └── photo_upload_screen.dart    # Step 5: Upload photos (3-9)
 ├── widgets/
 │   ├── loading_widget.dart
 │   └── progress_bar.dart
@@ -209,6 +216,7 @@ class AppConstants {
 - **ProfileDetailsScreen (Step 2):** Removed redundant bio input layer. Refactored input models into descriptive emoji-labeled chip choice matrices (`📏 Height`, `🏋️ Weight`, `💪 Body Type`, etc.). Height slider configured between 140–220 cm, and weight configured between 40–140 kg. Expanded values to resemble premium dating platforms (Open relationships, specific religious/philosophical views, and local/international ethnic background configurations). Repositioned `Workplace` field as the final input component.
 - **InterestsScreen (Step 3):** Category-based interest selection with expandable sections, searchable, minimum 8 interests required, progress indicator showing selection status.
 - **PromptsScreen (Step 4):** Category-based prompt selection with expandable sections, up to 3 prompts can be selected, answer fields for each selected prompt, skip/continue functionality.
+- **PhotoUploadScreen (Step 5):** Upload 3-9 photos with drag & drop reordering. Main photo selection with star badge. Remove button on all photos. Gallery and Camera options.
 
 ### Location System
 
@@ -222,134 +230,94 @@ class AppConstants {
 - **Manual Location Selection:** Searchable dropdowns for country, state, and city with autocomplete
 - **Location Validation:** Ensures all required location fields are filled before proceeding
 
+### Photo Upload System
+
+- **PhotoService:** Upload, get, delete, set main, validate, convert to JPEG
+- **PhotoUploadScreen:** Grid layout with bigger main photo (2x area)
+- **Drag & Drop:** Long press and drag to reorder photos
+- **Photo Limits:** Minimum 3 photos, maximum 9 photos
+- **Main Photo:** Tap any photo to set as main, star badge indicator
+- **Remove Button:** Shows on ALL photos including main
+- **Validation:** File size (5MB), format (JPG, PNG, WEBP, HEIC)
+- **Auto-conversion:** Converts images to JPEG for better compatibility
+
+### Main Screen Flow
+
+- **Profile Complete Check:** Redirects to BasicInfoScreen if profile not complete
+- **Photo Check:** Redirects to PhotoUploadScreen if user has less than 3 photos (pending + approved)
+- **Photo Status:** Counts both `pending` and `approved` photos during onboarding
+- **Bottom Navigation:** Discover, Search, Chats, Profile tabs
+
 ---
 
 ## 7. TODO - Next Session
 
-### Session 20: Translations & UI Polish
+### Session 21: Translations & UI Polish
 
 | Task | Priority | Description |
 | --- | --- | --- |
-| Add Translations for Onboarding Pages | 🔴 High | Add English and Persian translations for all onboarding screens (BasicInfo, ProfileDetails, Interests, Prompts) |
+| Add Translations for Onboarding Pages | 🔴 High | Add English and Persian translations for all onboarding screens (BasicInfo, ProfileDetails, Interests, Prompts, PhotoUpload) |
+| Add Translations for PhotoUploadScreen | 🔴 High | Translate all text in PhotoUploadScreen (header, tips, buttons, validation messages) |
 | Add Translations for Location APIs | 🔴 High | Translate location labels, error messages, and field names |
 | Add Translations for Interests and Prompts | 🔴 High | Translate category names, interest names, prompt questions from backend |
-| Fix Any Remaining UI Issues | 🟡 Medium | Address any overflow or layout issues |
-| Photo Upload Screen | 🟡 Medium | After registration, implement photo upload flow |
+| Add Translations for Main Screen | 🟡 Medium | Translate bottom navigation labels and profile screen |
+| Add Translations for Validation Errors | 🟡 Medium | Translate all form validation error messages |
+| Fix Any Remaining UI Issues | 🟢 Low | Address any overflow or layout issues |
 | Profile Editing | 🟢 Low | Allow users to edit their profile after registration |
+
+### Translation Files Structure
+
+```
+lib/l10n/
+├── app_en.arb
+│   ├── "basicInfoTitle": "Basic Info"
+│   ├── "basicInfoSubtitle": "Tell us about yourself"
+│   ├── "profileDetailsTitle": "Profile Details"
+│   ├── "interestsTitle": "What are your interests?"
+│   ├── "promptsTitle": "Answer up to 3 questions"
+│   ├── "photoUploadTitle": "Add at least 3 photos"
+│   ├── "back": "Back"
+│   ├── "continue": "Continue"
+│   ├── "complete": "Complete"
+│   ├── "skip": "Skip"
+│   ├── "done": "Done"
+│   └── ... (all UI strings)
+└── app_fa.arb
+    ├── "basicInfoTitle": "اطلاعات اولیه"
+    ├── "basicInfoSubtitle": "درباره خودت بگو"
+    └── ... (Persian translations)
+```
 
 ---
 
 ## 8. UI Mockups (Badoo-inspired)
 
-### Onboarding Step 1: Basic Info
+### Onboarding Step 5: Photo Upload
 
 ```
 ┌─────────────────────────────┐
-│    ██████░░░░░░░░░░░░░░░    │
-│          Basic Info         │
+│    █████████████████████    │
+│           Photos            │
 │                             │
-│   Tell us about yourself    │
+│   Add at least 3 photos...  │
 │                             │
-│  ┌──────────────────────┐   │
-│  │ Full Name            │   │
-│  └──────────────────────┘   │
-│  ┌──────────────────────┐   │
-│  │ 📅 Date of Birth     │   │
-│  └──────────────────────┘   │
-│        Male   Female        │
+│  ┌──────────────┐ ┌──────┐ │
+│  │              │ │  +   │ │
+│  │   MAIN       │ │      │ │
+│  │   (Bigger)   │ └──────┘ │
+│  │              │ ┌──────┐ │
+│  │              │ │  +   │ │
+│  └──────────────┘ └──────┘ │
 │                             │
-│  ┌──────────────────────┐   │
-│  │ 🔍 Country (search)  │   │
-│  └──────────────────────┘   │
-│  ┌──────────────────────┐   │
-│  │ 🔍 State/Province    │   │
-│  └──────────────────────┘   │
-│  ┌──────────────────────┐   │
-│  │ 🔍 City (search)     │   │
-│  └──────────────────────┘   │
+│  ┌──────┐ ┌──────┐ ┌──────┐│
+│  │  +   │ │  +   │ │  +   ││
+│  └──────┘ └──────┘ └──────┘│
 │                             │
-│   ┌────────────────────┐    │
-│   │     Continue       │    │
-│   └────────────────────┘    │
-└─────────────────────────────┘
-```
-
-### Onboarding Step 2: Profile Details
-
-```
-┌─────────────────────────────┐
-│    ████████████░░░░░░░░░    │
-│        Profile Details      │
-│                             │
-│   Tell us more about...     │
-│                             │
-│  📏 Height: 175 cm         │
-│  🏋️ Weight: 70 kg          │
-│                             │
-│  💪 Body Type               │
-│  [Slim] [Average] [Athletic]│
-│                             │
-│  ❤️ Relationship Status     │
-│  [Single] [Married] [Open]  │
-│                             │
-│  💼 Workplace (optional)    │
-│  ┌──────────────────────┐   │
-│  │ Enter company/title  │   │
-│  └──────────────────────┘   │
-│                             │
-│ ┌──────────┐  ┌───────────┐ │
-│ │  ← Back  │  │ Continue →│ │
-│ └──────────┘  └───────────┘ │
-└─────────────────────────────┘
-```
-
-### Onboarding Step 3: Interests
-
-```
-┌─────────────────────────────┐
-│    ██████████████░░░░░░░    │
-│          Interests          │
-│                             │
-│   What are your interests?  │
-│   Select 8 more to continue │
-│   ████████░░░░░░░░░░░░░░░  │
-│   Selected: 3 / 8           │
-│                             │
-│  🎯 Sports & Fitness  [2] ▼ │
-│    [⚽] Football             │
-│    [🏀] Basketball           │
-│    [🏊] Swimming             │
-│                             │
-│  🎨 Arts & Culture   [0] ▶ │
-│                             │
-│ ┌──────────┐  ┌───────────┐ │
-│ │  ← Back  │  │ Continue →│ │
-│ └──────────┘  └───────────┘ │
-└─────────────────────────────┘
-```
-
-### Onboarding Step 4: Prompts
-
-```
-┌─────────────────────────────┐
-│    █████████████████░░░░    │
-│          Your Prompts       │
-│                             │
-│   Answer up to 3 questions  │
-│   Choose prompts and write  │
-│   Selected: 2 / 3           │
-│                             │
-│  💭 Travel & Adventure [1] ▼│
-│    What's your dream trip?  │
-│    ┌──────────────────┐     │
-│    │ Write your answer │     │
-│    └──────────────────┘     │
-│                             │
-│  💕 Personal Growth  [0] ▶ │
-│                             │
-│ ┌──────────┐  ┌───────────┐ │
-│ │  ← Back  │  │  Continue │ │
-│ └──────────┘  └───────────┘ │
+│  Tips: Clear, high-quality  │
+│  photos work best.          │
+│  ┌────────────────────┐    │
+│  │   Complete / Add X  │    │
+│  └────────────────────┘    │
 └─────────────────────────────┘
 ```
 
@@ -357,12 +325,29 @@ class AppConstants {
 
 ## 9. Key Implementation Notes
 
-### Registration Flow (4 Steps)
+### Registration Flow (5 Steps)
 
 1. **SignUpScreen** → `POST /auth/register/init` → VerifyCodeScreen
 2. **VerifyCodeScreen** → `POST /auth/register/verify` → BasicInfoScreen
 3. **BasicInfoScreen** → ProfileDetailsScreen → InterestsScreen → PromptsScreen
-4. **PromptsScreen** → `POST /auth/register/complete` → MainScreen
+4. **PromptsScreen** → `POST /auth/register/complete` → PhotoUploadScreen
+5. **PhotoUploadScreen** → Upload photos → MainScreen
+
+### Photo Upload Flow
+
+1. User selects photos (Gallery or Camera)
+2. Photos display in grid with bigger main photo
+3. Drag & drop to reorder
+4. Tap to set as main
+5. Click "Complete" → Upload all photos
+6. Set main photo via API
+7. Navigate to MainScreen
+
+### Main Screen Flow
+
+1. Check if profile is complete → if not, go to BasicInfoScreen
+2. Check if user has 3+ photos (pending + approved) → if not, go to PhotoUploadScreen
+3. Show MainScreen with tabs
 
 ### Location Flow
 
@@ -375,10 +360,6 @@ class AppConstants {
 - Language selection persists via `StorageService.saveLanguage()`
 - API calls for prompts and interests should pass `language` parameter
 - Backend returns localized content based on the language parameter
-
-### Custom Chip Matrices Layout
-
-To preserve space while creating an ultra-premium UI layout context, options are organized dynamically via standard wrapped builders using an explicit structural model mapped directly to backend string definitions.
 
 ---
 
@@ -407,19 +388,28 @@ To preserve space while creating an ultra-premium UI layout context, options are
 | `/prompts` | GET | ✅ Working |
 | `/locations/me/location-gps` | PATCH | ✅ Working |
 | `/locations/me/location-manual` | PATCH | ✅ Working |
+| `/users/me/photos` | POST | ✅ Working |
+| `/users/me/photos` | GET | ✅ Working |
+| `/users/me/photos/{photo_id}` | DELETE | ✅ Working |
+| `/users/me/photos/{photo_id}/main` | PUT | ✅ Working |
 ```
 
 ---
 
 ## Summary of Updates:
 
-1. **Updated Current Status** - Added all completed onboarding features
-2. **Updated Project Structure** - Added new files (interest, prompt, location_models, onboarding_service)
-3. **Added TODO - Translations for Onboarding Pages** as 🔴 High priority
-4. **Added Translation Architecture section** - explains how translations should work
-5. **Updated UI Mockups** - Added Interests and Prompts screens
-6. **Updated Registration Flow** - Changed from 3 steps to 4 steps
-7. **Added Location Flow section** - Explains GPS and manual location selection
-8. **Updated Backend Compatibility** - Added all location and interest/prompt endpoints
+| Section | Changes |
+|---------|---------|
+| **Current Status** | Added Photo Upload Screen, Drag & Drop, PhotoService, Main Screen photo check, Complete onboarding flow |
+| **Tech Stack** | Added `reorderables` package |
+| **Project Structure** | Added `photo.dart` and `photo_service.dart` |
+| **Completed Features** | Added Photo Upload System and Main Screen Flow sections |
+| **TODO** | Added translations for all onboarding pages, PhotoUploadScreen, Main Screen, validation errors |
+| **Translation Files Structure** | Added example of ARB file structure |
+| **UI Mockups** | Added Photo Upload screen mockup |
+| **Registration Flow** | Updated to 5 steps including PhotoUploadScreen |
+| **Photo Upload Flow** | New section documenting the flow |
+| **Main Screen Flow** | New section documenting the flow |
+| **Backend Compatibility** | Added photo endpoints |
 
 🚀
