@@ -7,17 +7,8 @@ import 'package:dating_app/models/photo.dart';
 class PhotoService {
   static final Dio _dio = ApiService.dio;
 
-  // ============================================================================
-  // Upload Photo
-  // ============================================================================
-
   static Future<PhotoUploadResponse?> uploadPhoto(File file) async {
     try {
-      // Debug: Print file info
-      print('📸 Uploading photo: ${file.path}');
-      print('📸 File size: ${file.lengthSync()} bytes');
-      print('📸 File extension: ${file.path.split('.').last}');
-
       final formData = FormData.fromMap({
         'file': await MultipartFile.fromFile(
           file.path,
@@ -35,32 +26,12 @@ class PhotoService {
         ),
       );
 
-      print('✅ Photo uploaded successfully');
       return PhotoUploadResponse.fromJson(response.data);
-    } on DioException catch (e) {
-      // Detailed error logging
-      print('❌ Upload photo error:');
-      print('   Status code: ${e.response?.statusCode}');
-      print('   Response data: ${e.response?.data}');
-      print('   Error message: ${e.message}');
-      
-      // Try to extract the actual error message from response
-      if (e.response?.data != null) {
-        final data = e.response?.data;
-        if (data is Map<String, dynamic>) {
-          print('   Detail: ${data['detail']}');
-        }
-      }
-      return null;
     } catch (e) {
       print('❌ Upload photo error: $e');
       return null;
     }
   }
-
-  // ============================================================================
-  // Get My Photos
-  // ============================================================================
 
   static Future<List<PhotoResponse>> getMyPhotos() async {
     try {
@@ -74,10 +45,6 @@ class PhotoService {
     }
   }
 
-  // ============================================================================
-  // Delete Photo
-  // ============================================================================
-
   static Future<bool> deletePhoto(String photoId) async {
     try {
       await _dio.delete('/users/me/photos/$photoId');
@@ -87,10 +54,6 @@ class PhotoService {
       return false;
     }
   }
-
-  // ============================================================================
-  // Set Main Photo
-  // ============================================================================
 
   static Future<PhotoResponse?> setMainPhoto(String photoId) async {
     try {
@@ -102,9 +65,21 @@ class PhotoService {
     }
   }
 
-  // ============================================================================
-  // Upload Multiple Photos
-  // ============================================================================
+  static Future<PhotoResponse?> updateCrop({
+    required String photoId,
+    required CropData crop,
+  }) async {
+    try {
+      final response = await _dio.patch(
+        '/users/me/photos/$photoId/crop',
+        data: {'crop': crop.toJson()},
+      );
+      return PhotoResponse.fromJson(response.data);
+    } catch (e) {
+      print('❌ Update crop error: $e');
+      return null;
+    }
+  }
 
   static Future<List<PhotoUploadResponse>> uploadMultiplePhotos(
     List<File> files,
@@ -125,10 +100,6 @@ class PhotoService {
     return results;
   }
 
-  // ============================================================================
-  // Reorder Photos
-  // ============================================================================
-
   static Future<bool> reorderPhotos(Map<String, int> orders) async {
     try {
       await _dio.patch(
@@ -142,31 +113,23 @@ class PhotoService {
     }
   }
 
-  // ============================================================================
-  // Validate Image Before Upload
-  // ============================================================================
-
   static String? validateImage(File file) {
-    // Check if file exists
     if (!file.existsSync()) {
       return 'File does not exist';
     }
 
-    // Check file size (max 5MB)
     final sizeInBytes = file.lengthSync();
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    const maxSize = 5 * 1024 * 1024;
     if (sizeInBytes > maxSize) {
       return 'Image too large. Max 5MB';
     }
 
-    // Check file extension
     final extension = file.path.split('.').last.toLowerCase();
-    const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'heic', 'heif'];
+    const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
     if (!allowedExtensions.contains(extension)) {
       return 'Invalid format. Allowed: JPG, PNG, WEBP';
     }
 
-    // Check if file is empty
     if (sizeInBytes == 0) {
       return 'File is empty';
     }
@@ -174,24 +137,15 @@ class PhotoService {
     return null;
   }
 
-  // ============================================================================
-  // Convert Image to JPEG (if needed)
-  // ============================================================================
-
   static Future<File> convertToJpeg(File file) async {
     final extension = file.path.split('.').last.toLowerCase();
     if (['jpg', 'jpeg'].contains(extension)) {
       return file;
     }
+    return file;
+  }
 
-    try {
-      // For now, just return the file as-is
-      // The backend can handle PNG/WebP/HEIC
-      print('📸 Converting $extension to JPEG...');
-      return file;
-    } catch (e) {
-      print('❌ Error converting to JPEG: $e');
-      return file;
-    }
+  static String getPhotoUrl(String key) {
+    return key;
   }
 }

@@ -1,5 +1,6 @@
 // lib/models/photo.dart
 import 'dart:io';
+import 'package:flutter/material.dart';
 
 class PhotoUpload {
   final String id;
@@ -37,6 +38,34 @@ class PhotoUpload {
   }
 }
 
+class CropData {
+  final double x;
+  final double y;
+  final double size;
+
+  CropData({
+    this.x = 0.0,
+    this.y = 0.0,
+    this.size = 120.0,
+  });
+
+  factory CropData.fromJson(Map<String, dynamic> json) {
+    return CropData(
+      x: (json['x'] ?? 0).toDouble(),
+      y: (json['y'] ?? 0).toDouble(),
+      size: (json['size'] ?? 120).toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'x': x,
+      'y': y,
+      'size': size,
+    };
+  }
+}
+
 class PhotoResponse {
   final String id;
   final String userId;
@@ -46,6 +75,7 @@ class PhotoResponse {
   final String status;
   final String? rejectReason;
   final bool faceVerified;
+  final CropData? crop;
 
   PhotoResponse({
     required this.id,
@@ -56,7 +86,32 @@ class PhotoResponse {
     required this.status,
     this.rejectReason,
     required this.faceVerified,
+    this.crop,
   });
+
+  String get displayUrl {
+    if (Platform.isAndroid) {
+      return url.replaceAll('localhost', '10.0.2.2');
+    }
+    return url;
+  }
+
+  // Calculate the offset for cropping
+  double get cropOffsetX {
+    if (crop == null) return 0.0;
+    return crop!.x;
+  }
+
+  double get cropOffsetY {
+    if (crop == null) return 0.0;
+    return crop!.y;
+  }
+
+  // The size of the crop circle (120px for avatar)
+  double get cropSize {
+    if (crop == null) return 120.0;
+    return crop!.size;
+  }
 
   factory PhotoResponse.fromJson(Map<String, dynamic> json) {
     return PhotoResponse(
@@ -68,6 +123,7 @@ class PhotoResponse {
       status: json['status'] ?? 'pending',
       rejectReason: json['reject_reason'],
       faceVerified: json['face_verified'] ?? false,
+      crop: json['crop'] != null ? CropData.fromJson(json['crop']) : null,
     );
   }
 
@@ -81,6 +137,7 @@ class PhotoResponse {
       'status': status,
       'reject_reason': rejectReason,
       'face_verified': faceVerified,
+      if (crop != null) 'crop': crop!.toJson(),
     };
   }
 }

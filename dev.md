@@ -1,4 +1,8 @@
-Here's the updated `dev.md`:
+Here's the updated `dev.md` with the new TODO items for the Profile Edit features:
+
+---
+
+## Updated `dev.md`
 
 ```markdown
 # mobile_dev.md — Iranian Dating App Flutter (Badoo-style)
@@ -42,7 +46,7 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 
 | Item | Status |
 |------|--------|
-| **Session 20** | ✅ COMPLETED (Photo Upload & Main Screen Flow) |
+| **Session 21** | 🔄 IN PROGRESS (Profile Edit & Account Settings) |
 | Flutter project setup | ✅ |
 | Dependencies installed | ✅ |
 | Folder structure created | ✅ |
@@ -87,17 +91,21 @@ A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
 | ProfileDetailsScreen Selectable Chip Matrices Overhaul | ✅ |
 | InterestsScreen with category grouping and expandable sections | ✅ |
 | PromptsScreen with category grouping and answer fields | ✅ |
-| Backend Location APIs integrated (countries, states, cities, reverse-geocode, centroid) | ✅ |
+| Backend Location APIs integrated | ✅ |
 | LocationService with GPS and manual location selection | ✅ |
 | Searchable dropdowns for country/state/city selection | ✅ |
-| Full onboarding flow (4 steps: Basic Info → Profile Details → Interests → Prompts) | ✅ |
-| Register complete API integration (`POST /auth/register/complete`) | ✅ |
+| Full onboarding flow (5 steps) | ✅ |
+| Register complete API integration | ✅ |
 | User registration with all profile data | ✅ |
-| **Photo Upload Screen** | ✅ |
-| **Drag & Drop photo reordering** | ✅ |
-| **PhotoService with upload, delete, set main** | ✅ |
-| **Main Screen photo check (pending + approved)** | ✅ |
-| **Complete onboarding flow (6 screens total)** | ✅ |
+| Photo Upload Screen | ✅ |
+| Drag & Drop photo reordering | ✅ |
+| PhotoService with upload, delete, set main | ✅ |
+| Main Screen photo check (pending + approved) | ✅ |
+| Complete onboarding flow (6 screens total) | ✅ |
+| Profile Avatar Crop | ✅ |
+| Photo verification status display | 🔜 TODO |
+| Profile Edit Screens | 🔜 TODO |
+| Account Settings Menu (6 items) | 🔜 TODO |
 
 ---
 
@@ -134,7 +142,7 @@ lib/
 │   ├── interest.dart
 │   ├── prompt.dart
 │   ├── location_models.dart
-│   └── photo.dart              # Photo upload models
+│   └── photo.dart
 ├── services/
 │   ├── api_service.dart
 │   ├── auth_service.dart
@@ -142,7 +150,7 @@ lib/
 │   ├── google_auth_service.dart
 │   ├── location_service.dart
 │   ├── onboarding_service.dart
-│   └── photo_service.dart      # Photo upload service
+│   └── photo_service.dart
 ├── providers/
 │   ├── auth_provider.dart
 │   ├── language_provider.dart
@@ -154,12 +162,19 @@ lib/
 │   ├── auth/
 │   │   ├── sign_up_screen.dart
 │   │   └── verify_code_screen.dart
-│   └── onboarding/
-│       ├── basic_info_screen.dart      # Step 1: Name, Birth Date, Gender, Location
-│       ├── profile_details_screen.dart # Step 2: Physical, Lifestyle, Beliefs
-│       ├── interests_screen.dart       # Step 3: Interests with categories
-│       ├── prompts_screen.dart         # Step 4: Prompts with answers
-│       └── photo_upload_screen.dart    # Step 5: Upload photos (3-9)
+│   ├── onboarding/
+│   │   ├── basic_info_screen.dart
+│   │   ├── profile_details_screen.dart
+│   │   ├── interests_screen.dart
+│   │   ├── prompts_screen.dart
+│   │   └── photo_upload_screen.dart
+│   └── profile/
+│       ├── profile_screen.dart
+│       ├── avatar_crop_screen.dart
+│       ├── edit_basic_info_screen.dart      # NEW
+│       ├── edit_profile_details_screen.dart # NEW
+│       ├── edit_interests_screen.dart       # NEW
+│       └── edit_prompts_screen.dart         # NEW
 ├── widgets/
 │   ├── loading_widget.dart
 │   └── progress_bar.dart
@@ -186,16 +201,6 @@ WS_BASE_URL=ws://10.0.2.2:8000/api/v1
 WEB_CLIENT_ID=your_web_client_id.apps.googleusercontent.com
 ```
 
-### App Constants
-
-```dart
-class AppConstants {
-  static const String apiBaseUrl = 'http://10.0.2.2:8000/api/v1';
-  static const int connectTimeout = 10;
-  static const int receiveTimeout = 10;
-}
-```
-
 ---
 
 ## 6. Completed Features
@@ -208,117 +213,137 @@ class AppConstants {
 | 2 | `POST /auth/register/verify` | Verify code + create user (email + password) |
 | 3 | `POST /auth/register/complete` | Complete profile (all Badoo fields) |
 
-### Onboarding Steps UI & Layout Overhaul
+### Onboarding Steps
 
-- **Instagram Story-Style Progress:** Integrated a centered, multi-segment story bar at the top of the app bar divided into 5 proportional layout blocks to clearly track progress.
-- **Scroll-Responsive Floating Button Layout:** Converted fixed bottom action buttons into interactive floating layout configurations built inside `CustomScrollView` and `SliverFillRemaining` to avoid viewport constraint issues with device keyboards.
-- **BasicInfoScreen (Step 1):** Redesigned with a minimal design style, removed back button, enlarged headline titles, and converted the traditional numeric age input field into a native interactive date picker. Added searchable dropdowns for country/state/city with GPS location support.
-- **ProfileDetailsScreen (Step 2):** Removed redundant bio input layer. Refactored input models into descriptive emoji-labeled chip choice matrices (`📏 Height`, `🏋️ Weight`, `💪 Body Type`, etc.). Height slider configured between 140–220 cm, and weight configured between 40–140 kg. Expanded values to resemble premium dating platforms (Open relationships, specific religious/philosophical views, and local/international ethnic background configurations). Repositioned `Workplace` field as the final input component.
-- **InterestsScreen (Step 3):** Category-based interest selection with expandable sections, searchable, minimum 8 interests required, progress indicator showing selection status.
-- **PromptsScreen (Step 4):** Category-based prompt selection with expandable sections, up to 3 prompts can be selected, answer fields for each selected prompt, skip/continue functionality.
-- **PhotoUploadScreen (Step 5):** Upload 3-9 photos with drag & drop reordering. Main photo selection with star badge. Remove button on all photos. Gallery and Camera options.
+- **Instagram Story-Style Progress:** 5-step progress bar
+- **BasicInfoScreen:** Name, DOB, Gender, Location with searchable dropdowns
+- **ProfileDetailsScreen:** Height, Weight, Body Type, Relationship Status, etc.
+- **InterestsScreen:** Category-based interest selection (min 8)
+- **PromptsScreen:** Category-based prompt selection (max 3)
+- **PhotoUploadScreen:** 3-9 photos with drag & drop reordering
 
 ### Location System
 
 - **Backend Location APIs integrated:**
-  - `GET /locations/countries` - Get all countries
-  - `GET /locations/states?country=IR` - Get states/provinces for a country
-  - `GET /locations/cities?country=IR&state_name=Tehran` - Get cities filtered by state
-  - `GET /locations/reverse-geocode?lat=35.68&lng=51.38` - GPS to location text
-  - `GET /locations/city-centroid?country=IR&city=Tehran` - Get lat/lng for a city
-- **GPS Location Support:** Get current location via device GPS, reverse-geocode to country/state/city
-- **Manual Location Selection:** Searchable dropdowns for country, state, and city with autocomplete
-- **Location Validation:** Ensures all required location fields are filled before proceeding
+  - `GET /locations/countries`
+  - `GET /locations/states?country=IR`
+  - `GET /locations/cities?country=IR&state_name=Tehran`
+  - `GET /locations/reverse-geocode`
+  - `GET /locations/city-centroid`
+- **GPS Location Support:** Auto-fill from device location
+- **Manual Location Selection:** Searchable dropdowns with autocomplete
 
 ### Photo Upload System
 
 - **PhotoService:** Upload, get, delete, set main, validate, convert to JPEG
-- **PhotoUploadScreen:** Grid layout with bigger main photo (2x area)
 - **Drag & Drop:** Long press and drag to reorder photos
 - **Photo Limits:** Minimum 3 photos, maximum 9 photos
 - **Main Photo:** Tap any photo to set as main, star badge indicator
 - **Remove Button:** Shows on ALL photos including main
-- **Validation:** File size (5MB), format (JPG, PNG, WEBP, HEIC)
-- **Auto-conversion:** Converts images to JPEG for better compatibility
+- **Avatar Crop:** User can drag to adjust profile picture crop
 
 ### Main Screen Flow
 
-- **Profile Complete Check:** Redirects to BasicInfoScreen if profile not complete
-- **Photo Check:** Redirects to PhotoUploadScreen if user has less than 3 photos (pending + approved)
-- **Photo Status:** Counts both `pending` and `approved` photos during onboarding
-- **Bottom Navigation:** Discover, Search, Chats, Profile tabs
+- **Profile Complete Check:** Redirects to onboarding if profile not complete
+- **Photo Check:** Redirects to PhotoUploadScreen if less than 3 photos
+- **Photo Status:** Counts both `pending` and `approved` photos
+- **Bottom Navigation:** Discover, Search, Chats, Profile
 
 ---
 
 ## 7. TODO - Next Session
 
-### Session 21: Translations & UI Polish
+### Session 21: Profile Edit & Account Settings
 
 | Task | Priority | Description |
 | --- | --- | --- |
-| Add Translations for Onboarding Pages | 🔴 High | Add English and Persian translations for all onboarding screens (BasicInfo, ProfileDetails, Interests, Prompts, PhotoUpload) |
-| Add Translations for PhotoUploadScreen | 🔴 High | Translate all text in PhotoUploadScreen (header, tips, buttons, validation messages) |
-| Add Translations for Location APIs | 🔴 High | Translate location labels, error messages, and field names |
-| Add Translations for Interests and Prompts | 🔴 High | Translate category names, interest names, prompt questions from backend |
-| Add Translations for Main Screen | 🟡 Medium | Translate bottom navigation labels and profile screen |
-| Add Translations for Validation Errors | 🟡 Medium | Translate all form validation error messages |
-| Fix Any Remaining UI Issues | 🟢 Low | Address any overflow or layout issues |
-| Profile Editing | 🟢 Low | Allow users to edit their profile after registration |
+| Update Account Section (6 items) | 🔴 High | Replace 3 menu items with 6: Verify Picture, Basic Info, Profile Details, Interests, Prompts, Edit Photos |
+| Remove Logout Button | 🔴 High | Remove logout button from profile page (keep only in settings) |
+| Edit Basic Info Screen | 🔴 High | Reuse BasicInfoScreen UI with back button, pre-filled data, save → PUT /users/me |
+| Edit Profile Details Screen | 🔴 High | Reuse ProfileDetailsScreen UI with back button, pre-filled data, save → PUT /users/me |
+| Edit Interests Screen | 🔴 High | Reuse InterestsScreen UI with back button, pre-filled data, save → PUT /users/me |
+| Edit Prompts Screen | 🔴 High | Reuse PromptsScreen UI with back button, pre-filled data, save → PUT /users/me |
+| Verify Picture Status | 🔴 High | Show verification status using `face_verified` from PhotoResponse |
+| Edit Photos Screen | 🟡 Medium | Manage photos (upload, delete, reorder, set main) - details later |
+| Add Translations for Edit Screens | 🟡 Medium | Translate all edit screen UI text |
+| Add Loading States | 🟢 Low | Show loading indicators during save operations |
+| Add Success/Error Messages | 🟢 Low | Show snackbars after save/cancel actions |
 
-### Translation Files Structure
+### Account Section Menu Items:
 
 ```
-lib/l10n/
-├── app_en.arb
-│   ├── "basicInfoTitle": "Basic Info"
-│   ├── "basicInfoSubtitle": "Tell us about yourself"
-│   ├── "profileDetailsTitle": "Profile Details"
-│   ├── "interestsTitle": "What are your interests?"
-│   ├── "promptsTitle": "Answer up to 3 questions"
-│   ├── "photoUploadTitle": "Add at least 3 photos"
-│   ├── "back": "Back"
-│   ├── "continue": "Continue"
-│   ├── "complete": "Complete"
-│   ├── "skip": "Skip"
-│   ├── "done": "Done"
-│   └── ... (all UI strings)
-└── app_fa.arb
-    ├── "basicInfoTitle": "اطلاعات اولیه"
-    ├── "basicInfoSubtitle": "درباره خودت بگو"
-    └── ... (Persian translations)
+┌────────────────────────────────────────────┐
+│  ACCOUNT                                    │
+│  ┌────────────────────────────────────────┐ │
+│  │  ✅ Verify Picture              →    │ │
+│  │  (Verified / Clickable if not)        │ │
+│  ├────────────────────────────────────────┤ │
+│  │  ✏️ Basic Info                  →    │ │
+│  ├────────────────────────────────────────┤ │
+│  │  📝 Profile Details             →    │ │
+│  ├────────────────────────────────────────┤ │
+│  │  🎯 Interests                   →    │ │
+│  ├────────────────────────────────────────┤ │
+│  │  💬 Prompts                     →    │ │
+│  ├────────────────────────────────────────┤ │
+│  │  📸 Edit Photos                 →    │ │
+│  └────────────────────────────────────────┘ │
+└────────────────────────────────────────────┘
+```
+
+### Edit Screen Design:
+
+```
+┌────────────────────────────────────────────┐
+│  ← Back                                    │
+│                                             │
+│  [Same content as onboarding screen]        │
+│  (pre-filled with user data)               │
+│                                             │
+│  ┌────────────────────────────────────────┐ │
+│  │              Save                     │ │
+│  └────────────────────────────────────────┘ │
+└────────────────────────────────────────────┘
 ```
 
 ---
 
-## 8. UI Mockups (Badoo-inspired)
+## 8. UI Mockups
 
-### Onboarding Step 5: Photo Upload
+### Account Section:
 
 ```
-┌─────────────────────────────┐
-│    █████████████████████    │
-│           Photos            │
-│                             │
-│   Add at least 3 photos...  │
-│                             │
-│  ┌──────────────┐ ┌──────┐ │
-│  │              │ │  +   │ │
-│  │   MAIN       │ │      │ │
-│  │   (Bigger)   │ └──────┘ │
-│  │              │ ┌──────┐ │
-│  │              │ │  +   │ │
-│  └──────────────┘ └──────┘ │
-│                             │
-│  ┌──────┐ ┌──────┐ ┌──────┐│
-│  │  +   │ │  +   │ │  +   ││
-│  └──────┘ └──────┘ └──────┘│
-│                             │
-│  Tips: Clear, high-quality  │
-│  photos work best.          │
-│  ┌────────────────────┐    │
-│  │   Complete / Add X  │    │
-│  └────────────────────┘    │
-└─────────────────────────────┘
+┌────────────────────────────────────────────┐
+│  Profile                                    │
+│  ┌──────────┐                              │
+│  │  Avatar  │  Alex, 28                    │
+│  │  (edit)  │  New York, NY                │
+│  └──────────┘                              │
+│                                             │
+│  ❤️  Likes   💑  Matches   💬  Messages   │
+│  145          12           89              │
+│                                             │
+│  ┌────────────────────────────────────────┐ │
+│  │  ⭐ BONDI PREMIUM               →    │ │
+│  │  Unlock Exclusive Connections         │ │
+│  │  Get Premium                          │ │
+│  └────────────────────────────────────────┘ │
+│                                             │
+│  ACCOUNT                                    │
+│  ┌────────────────────────────────────────┐ │
+│  │  ✅ Verify Picture              →    │ │
+│  ├────────────────────────────────────────┤ │
+│  │  ✏️ Basic Info                  →    │ │
+│  ├────────────────────────────────────────┤ │
+│  │  📝 Profile Details             →    │ │
+│  ├────────────────────────────────────────┤ │
+│  │  🎯 Interests                   →    │ │
+│  ├────────────────────────────────────────┤ │
+│  │  💬 Prompts                     →    │ │
+│  ├────────────────────────────────────────┤ │
+│  │  📸 Edit Photos                 →    │ │
+│  └────────────────────────────────────────┘ │
+└────────────────────────────────────────────┘
 ```
 
 ---
@@ -333,33 +358,26 @@ lib/l10n/
 4. **PromptsScreen** → `POST /auth/register/complete` → PhotoUploadScreen
 5. **PhotoUploadScreen** → Upload photos → MainScreen
 
-### Photo Upload Flow
+### Edit Profile Flow
 
-1. User selects photos (Gallery or Camera)
-2. Photos display in grid with bigger main photo
-3. Drag & drop to reorder
-4. Tap to set as main
-5. Click "Complete" → Upload all photos
-6. Set main photo via API
-7. Navigate to MainScreen
+1. User taps menu item in Account section
+2. Opens edit screen with pre-filled data from `AuthProvider.user`
+3. User modifies fields
+4. Taps "Save" → `PUT /users/me` with updated data
+5. Show success/error message
+6. Return to Profile screen
 
-### Main Screen Flow
+### Photo Verification
 
-1. Check if profile is complete → if not, go to BasicInfoScreen
-2. Check if user has 3+ photos (pending + approved) → if not, go to PhotoUploadScreen
-3. Show MainScreen with tabs
-
-### Location Flow
-
-1. **GPS Granted:** Get lat/lng → Reverse geocode → Auto-fill country/state/city
-2. **GPS Denied:** User selects country → States load → User selects state → Cities load → User selects city → Get centroid lat/lng
+- Check `mainPhoto?.faceVerified` to show verification status
+- If `true`: Show ✅ Verified badge
+- If `false`: Show clickable "Verify" item
 
 ### Translation Architecture
 
-- All UI text should use `AppLocalizations.of(context)!`
+- All UI text uses `AppLocalizations.of(context)!`
 - Language selection persists via `StorageService.saveLanguage()`
-- API calls for prompts and interests should pass `language` parameter
-- Backend returns localized content based on the language parameter
+- API calls for prompts and interests pass `language` parameter
 
 ---
 
@@ -378,7 +396,7 @@ lib/l10n/
 | `/auth/logout` | POST | ✅ Working |
 | `/auth/health` | GET | ✅ Working |
 | `/users/me` | GET | ✅ Working |
-| `/users/me` | PUT | 🔜 TODO |
+| `/users/me` | PUT | 🔜 TODO (Profile Edit) |
 | `/locations/countries` | GET | ✅ Working |
 | `/locations/states` | GET | ✅ Working |
 | `/locations/cities` | GET | ✅ Working |
@@ -400,16 +418,11 @@ lib/l10n/
 
 | Section | Changes |
 |---------|---------|
-| **Current Status** | Added Photo Upload Screen, Drag & Drop, PhotoService, Main Screen photo check, Complete onboarding flow |
-| **Tech Stack** | Added `reorderables` package |
-| **Project Structure** | Added `photo.dart` and `photo_service.dart` |
-| **Completed Features** | Added Photo Upload System and Main Screen Flow sections |
-| **TODO** | Added translations for all onboarding pages, PhotoUploadScreen, Main Screen, validation errors |
-| **Translation Files Structure** | Added example of ARB file structure |
-| **UI Mockups** | Added Photo Upload screen mockup |
-| **Registration Flow** | Updated to 5 steps including PhotoUploadScreen |
-| **Photo Upload Flow** | New section documenting the flow |
-| **Main Screen Flow** | New section documenting the flow |
-| **Backend Compatibility** | Added photo endpoints |
+| **Current Status** | Added Session 21 in progress, new TODO items |
+| **TODO** | Added Profile Edit & Account Settings tasks (6 menu items) |
+| **UI Mockups** | Added Account Section and Edit Screen mockups |
+| **Project Structure** | Added new edit screens in `profile/` folder |
+| **Key Implementation Notes** | Added Edit Profile Flow and Photo Verification sections |
+| **Backend Compatibility** | Added `PUT /users/me` as 🔜 TODO |
 
 🚀
