@@ -1,199 +1,66 @@
-Here's the updated `dev.md` with the new TODO items for the Profile Edit features:
-
----
-
-## Updated `dev.md`
+## Updated `README.md` - Added Translation Tasks
 
 ```markdown
-# mobile_dev.md — Iranian Dating App Flutter (Badoo-style)
+# Iranian Dating App - Flutter Mobile Client
 
-> **Purpose:** Single source of truth for the entire mobile project.  
-> Updated at the end of every session. Pass this file to the AI at the start of every new session.  
-> The AI must read this file fully before taking any action.
+Flutter mobile client for Iranian dating app (Badoo-style).
 
----
+## Features
 
-## Table of Contents
+- ✅ User Authentication (Register, Login)
+- ✅ Secure token storage with flutter_secure_storage
+- ✅ Environment configuration via .env
+- ✅ Clean architecture with Provider state management
+- ✅ Profile Edit & Account Settings (Session 21)
+- ✅ Google Sign-In Integration
+- ✅ Photo Upload with Drag & Drop
+- ✅ Location Services with GPS and Manual Selection
+- 🔄 Localization & Translation (In Progress)
+- ⬜ Discover card swiping (Coming in Session 22)
+- ⬜ Search with filters (Coming in Session 22)
+- ⬜ Real-time chat with WebSocket (Coming in Session 23)
+- ⬜ Likes & matches system (Coming in Session 23)
 
-1. [Project Overview](#1-project-overview)
-2. [Current Status](#2-current-status)
-3. [Tech Stack](#3-tech-stack)
-4. [Project Structure](#4-project-structure)
-5. [Environment & Configuration](#5-environment--configuration)
-6. [Completed Features](#6-completed-features)
-7. [TODO - Next Session](#7-todo---next-session)
-8. [UI Mockups](#8-ui-mockups-badoo-inspired)
-9. [Key Implementation Notes](#9-key-implementation-notes)
-10. [Backend Compatibility](#10-backend-compatibility)
+## Tech Stack
 
----
+| Category | Package |
+|----------|---------|
+| Framework | Flutter 3.x |
+| State Management | Provider |
+| HTTP Client | Dio |
+| WebSocket | web_socket_channel |
+| Secure Storage | flutter_secure_storage |
+| Local Storage | shared_preferences |
+| Image Picker | image_picker |
+| Image Caching | cached_network_image |
+| Environment | flutter_dotenv |
+| Google Sign-In | google_sign_in |
+| Geolocator | geolocator |
 
-## 1. Project Overview
+## Requirements
 
-A **Flutter mobile app** for the Iranian dating app, inspired by Badoo design.
+- Flutter SDK 3.0+
+- Dart 3.0+
+- Backend server running on port 8000
 
-| Attribute | Detail |
-|-----------|--------|
-| Language | Dart |
-| Target platform | Android first, iOS later |
-| Design style | Minimal, clean, premium, Badoo-inspired |
-| Animations | Smooth, 60fps |
-| Monetization | Premium subscriptions + rewarded ads |
+## Installation
 
----
+### 1. Clone the repository
 
-## 2. Current Status
-
-| Item | Status |
-|------|--------|
-| **Session 21** | 🔄 IN PROGRESS (Profile Edit & Account Settings) |
-| Flutter project setup | ✅ |
-| Dependencies installed | ✅ |
-| Folder structure created | ✅ |
-| Environment variables (.env) | ✅ |
-| API Service (Dio) with interceptors | ✅ |
-| Auth Service (3-step registration) | ✅ |
-| Storage Service (secure token storage) | ✅ |
-| Auth Provider (state management) | ✅ |
-| Onboarding Provider | ✅ |
-| Language Provider | ✅ |
-| App Theme (Light/Dark mode ready) | ✅ |
-| Splash Screen (with progress bar & random target) | ✅ |
-| Login Screen (combined with Welcome) | ✅ |
-| Sign Up Screen (with validation) | ✅ |
-| Verify Code Screen (6-digit + referral + timer) | ✅ |
-| Main Screen (bottom nav with 4 tabs) | ✅ |
-| Profile Screen (user info + logout) | ✅ |
-| Token persistence on app restart | ✅ |
-| Backend UserProfileResponse compatibility | ✅ |
-| Email & Password validation | ✅ |
-| Password visibility toggle | ✅ |
-| Language selection (English/Persian) | ✅ |
-| Google Sign-In with custom icon | ✅ |
-| Google Sign-In full implementation | ✅ |
-| Input filtering (English only) | ✅ |
-| Real-time validation with localized errors | ✅ |
-| Password min length: 8 characters | ✅ |
-| Health Check on Splash | ✅ |
-| Retry button on connection error | ✅ |
-| Token refresh interceptor | ✅ |
-| Theme-aware colors (Light/Dark ready) | ✅ |
-| Keyboard handling (resize & dismiss on tap) | ✅ |
-| OTP auto-advance on code entry | ✅ |
-| OTP backspace handling | ✅ |
-| Resend timer (5 minutes) | ✅ |
-| All error messages translated (EN/FA) | ✅ |
-| Google Sign-In with backend integration | ✅ |
-| Application ID changed to `ir.bondi.app` | ✅ |
-| `google-services.json` configured | ✅ |
-| BasicInfoScreen Instagram Progress Bar & UI Overhaul | ✅ |
-| Native Date of Birth picker implementation | ✅ |
-| ProfileDetailsScreen Selectable Chip Matrices Overhaul | ✅ |
-| InterestsScreen with category grouping and expandable sections | ✅ |
-| PromptsScreen with category grouping and answer fields | ✅ |
-| Backend Location APIs integrated | ✅ |
-| LocationService with GPS and manual location selection | ✅ |
-| Searchable dropdowns for country/state/city selection | ✅ |
-| Full onboarding flow (5 steps) | ✅ |
-| Register complete API integration | ✅ |
-| User registration with all profile data | ✅ |
-| Photo Upload Screen | ✅ |
-| Drag & Drop photo reordering | ✅ |
-| PhotoService with upload, delete, set main | ✅ |
-| Main Screen photo check (pending + approved) | ✅ |
-| Complete onboarding flow (6 screens total) | ✅ |
-| Profile Avatar Crop | ✅ |
-| Photo verification status display | 🔜 TODO |
-| Profile Edit Screens | 🔜 TODO |
-| Account Settings Menu (6 items) | 🔜 TODO |
-
----
-
-## 3. Tech Stack
-
-| Category | Package | Version | Purpose |
-|----------|---------|---------|---------|
-| **Core** | flutter | 3.x | UI framework |
-| **Networking** | dio | ^5.3.0 | HTTP requests |
-| **WebSocket** | web_socket_channel | ^2.4.0 | Real-time chat |
-| **State Management** | provider | ^6.0.5 | Simple and effective |
-| **Storage** | shared_preferences | ^2.2.0 | User preferences |
-| **Secure Storage** | flutter_secure_storage | ^9.0.0 | Token storage |
-| **Image** | image_picker | ^1.0.4 | Select photos |
-| **Image Cache** | cached_network_image | ^3.3.0 | Profile images |
-| **Design** | google_fonts | ^6.1.0 | Custom fonts |
-| **Animations** | flutter_staggered_animations | ^1.1.0 | Smooth animations |
-| **Env** | flutter_dotenv | ^5.1.0 | Environment variables |
-| **Google Sign-In** | google_sign_in | ^6.1.5 | Google OAuth login |
-| **Reorderables** | reorderables | ^0.6.0 | Drag & drop reordering |
-
----
-
-## 4. Project Structure
-
-```
-lib/
-├── main.dart
-├── config/
-│   ├── app_constants.dart
-│   └── app_theme.dart
-├── models/
-│   ├── user.dart
-│   ├── interest.dart
-│   ├── prompt.dart
-│   ├── location_models.dart
-│   └── photo.dart
-├── services/
-│   ├── api_service.dart
-│   ├── auth_service.dart
-│   ├── storage_service.dart
-│   ├── google_auth_service.dart
-│   ├── location_service.dart
-│   ├── onboarding_service.dart
-│   └── photo_service.dart
-├── providers/
-│   ├── auth_provider.dart
-│   ├── language_provider.dart
-│   └── onboarding_provider.dart
-├── screens/
-│   ├── splash_screen.dart
-│   ├── login_screen.dart
-│   ├── main_screen.dart
-│   ├── auth/
-│   │   ├── sign_up_screen.dart
-│   │   └── verify_code_screen.dart
-│   ├── onboarding/
-│   │   ├── basic_info_screen.dart
-│   │   ├── profile_details_screen.dart
-│   │   ├── interests_screen.dart
-│   │   ├── prompts_screen.dart
-│   │   └── photo_upload_screen.dart
-│   └── profile/
-│       ├── profile_screen.dart
-│       ├── avatar_crop_screen.dart
-│       ├── edit_basic_info_screen.dart      # NEW
-│       ├── edit_profile_details_screen.dart # NEW
-│       ├── edit_interests_screen.dart       # NEW
-│       └── edit_prompts_screen.dart         # NEW
-├── widgets/
-│   ├── loading_widget.dart
-│   └── progress_bar.dart
-├── l10n/
-│   ├── app_en.arb
-│   └── app_fa.arb
-├── generated/
-│   ├── app_localizations.dart
-│   ├── app_localizations_en.dart
-│   └── app_localizations_fa.dart
-└── utils/
-    └── validators.dart
+```bash
+git clone https://github.com/yourusername/iranian-dating-app.git
+cd iranian-dating-app/mobile
 ```
 
----
+### 2. Get dependencies
 
-## 5. Environment & Configuration
+```bash
+flutter pub get
+```
 
-### `.env` file (root directory)
+### 3. Configure environment
+
+Create `.env` file in the project root:
 
 ```env
 API_BASE_URL=http://10.0.2.2:8000/api/v1
@@ -201,228 +68,311 @@ WS_BASE_URL=ws://10.0.2.2:8000/api/v1
 WEB_CLIENT_ID=your_web_client_id.apps.googleusercontent.com
 ```
 
+> **Note:** Use `10.0.2.2` for Android emulator. For physical device, use your computer's IP address.
+
+### 4. Run the app
+
+```bash
+flutter run
+```
+
+## Project Structure
+
+```
+lib/
+├── main.dart                 # App entry point
+├── config/                   # Configuration files
+│   ├── app_constants.dart    # API URLs, keys
+│   └── app_theme.dart        # Theme configuration (Light/Dark)
+├── models/                   # Data models
+│   ├── user.dart             # User model
+│   ├── interest.dart         # Interest model
+│   ├── prompt.dart           # Prompt model
+│   ├── photo.dart            # Photo model
+│   └── location_models.dart  # Location models
+├── services/                 # API services
+│   ├── api_service.dart      # Dio HTTP client with interceptors
+│   ├── auth_service.dart     # Auth API calls
+│   ├── storage_service.dart  # Secure token storage
+│   ├── google_auth_service.dart # Google Sign-In
+│   ├── location_service.dart # GPS & Location APIs
+│   ├── onboarding_service.dart # Onboarding API calls
+│   └── photo_service.dart    # Photo upload & management
+├── providers/                # State management
+│   ├── auth_provider.dart    # Auth state
+│   ├── language_provider.dart # Language selection
+│   ├── onboarding_provider.dart # Onboarding state
+│   └── profile_provider.dart # Profile state
+├── screens/                  # UI screens
+│   ├── splash_screen.dart    # Splash screen with progress
+│   ├── login_screen.dart     # Login screen
+│   ├── main_screen.dart      # Main screen with bottom nav
+│   ├── auth/                 # Auth screens
+│   │   ├── sign_up_screen.dart
+│   │   └── verify_code_screen.dart
+│   ├── onboarding/           # Onboarding flow (6 steps)
+│   │   ├── basic_info_screen.dart
+│   │   ├── profile_details_screen.dart
+│   │   ├── interests_screen.dart
+│   │   ├── prompts_screen.dart
+│   │   └── photo_upload_screen.dart
+│   └── profile/              # Profile screens
+│       ├── profile_screen.dart
+│       ├── avatar_crop_screen.dart
+│       ├── edit_basic_info_screen.dart
+│       ├── edit_profile_details_screen.dart
+│       ├── edit_interests_screen.dart
+│       └── edit_prompts_screen.dart
+├── widgets/                  # Reusable widgets
+│   ├── loading_widget.dart
+│   └── progress_bar.dart
+├── l10n/                     # Localization
+│   ├── app_en.arb            # English translations
+│   └── app_fa.arb            # Persian translations
+├── generated/                # Generated localization files
+└── utils/                    # Utilities
+    └── validators.dart       # Form validators
+```
+
+## Localization & Translation
+
+The app supports English and Persian (Farsi) languages.
+
+### Translation Files
+
+| File | Language | Status |
+|------|----------|--------|
+| `app_en.arb` | English | ✅ Complete |
+| `app_fa.arb` | Persian | 🔄 In Progress |
+
+### How to Add Translations
+
+1. Add new keys to both `app_en.arb` and `app_fa.arb`
+2. Run `flutter gen-l10n` to generate localization files
+3. Use `AppLocalizations.of(context)!` in widgets
+
+### Current Translation Coverage
+
+| Feature | English | Persian |
+|---------|---------|---------|
+| Auth Screens | ✅ | 🔄 |
+| Onboarding | ✅ | 🔄 |
+| Profile Edit | ✅ | 🔄 |
+| Edit Screens | 🔄 | 🔄 |
+| Error Messages | ✅ | 🔄 |
+| Settings | ✅ | 🔄 |
+
+## API Integration
+
+The app connects to a FastAPI backend with the following endpoints:
+
+| Endpoint | Method | Description | Status |
+|----------|--------|-------------|--------|
+| `/auth/register/init` | POST | Request verification code | ✅ |
+| `/auth/register/verify` | POST | Verify code & create user | ✅ |
+| `/auth/register/complete` | POST | Complete profile | ✅ |
+| `/auth/login` | POST | User login | ✅ |
+| `/auth/google` | POST | Google Sign-In | ✅ |
+| `/auth/refresh` | POST | Refresh access token | ✅ |
+| `/auth/logout` | POST | User logout | ✅ |
+| `/auth/health` | GET | Health check | ✅ |
+| `/users/me` | GET | Get current user | ✅ |
+| `/users/me` | PUT | Update profile | ✅ |
+| `/users/me/interests` | PUT | Update interests | ✅ |
+| `/users/me/prompts` | PUT | Update prompts | ✅ |
+| `/users/me/photos` | GET/POST | Photo management | ✅ |
+| `/users/me/photos/{id}` | DELETE | Delete photo | ✅ |
+| `/users/me/photos/{id}/main` | PUT | Set main photo | ✅ |
+| `/users/me/location` | POST | Update GPS location | ✅ |
+| `/users/me/location-text` | PATCH | Update text location | ✅ |
+| `/locations/countries` | GET | Get countries | ✅ |
+| `/locations/states` | GET | Get states/provinces | ✅ |
+| `/locations/cities` | GET | Get cities | ✅ |
+| `/locations/reverse-geocode` | GET | Reverse geocode | ✅ |
+| `/locations/city-centroid` | GET | Get city centroid | ✅ |
+| `/interests` | GET | Get interests | ✅ |
+| `/prompts` | GET | Get prompts | ✅ |
+| `/discover` | GET | Get card stack | ⬜ |
+| `/swipes` | POST | Send like/pass | ⬜ |
+| `/matches` | GET | Get matches | ⬜ |
+| `/messages` | GET/POST | Chat system | ⬜ |
+
+## Todo List
+
+### High Priority (Session 22)
+
+- [ ] **Complete Persian translations** for all screens
+  - [ ] `app_fa.arb` - Auth screens
+  - [ ] `app_fa.arb` - Onboarding screens
+  - [ ] `app_fa.arb` - Profile screens
+  - [ ] `app_fa.arb` - Edit screens
+  - [ ] `app_fa.arb` - Error messages
+  - [ ] `app_fa.arb` - Settings
+
+### Medium Priority
+
+- [ ] **Discover Screen** - Card swiping UI
+- [ ] **Search Screen** - Advanced filters
+- [ ] **Edit Photos Screen** - Photo management
+- [ ] **Face Verification** - Profile picture verification
+- [ ] **Premium Subscription** - Purchase flow
+
+### Low Priority
+
+- [ ] **Chat System** - Real-time messaging with WebSocket
+- [ ] **Likes & Matches** - Match management
+- [ ] **Block User** - Safety features
+- [ ] **Push Notifications** - Firebase setup
+- [ ] **Dark Mode** - Full theme support
+
+## Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `API_BASE_URL` | Backend API URL | `http://10.0.2.2:8000/api/v1` |
+| `WS_BASE_URL` | WebSocket URL for chat | `ws://10.0.2.2:8000/api/v1` |
+| `WEB_CLIENT_ID` | Google OAuth Client ID | Required for Google Sign-In |
+
+## Error Handling
+
+The app provides user-friendly error messages for common scenarios:
+
+| HTTP Status | User Message |
+|-------------|--------------|
+| 401 | "Incorrect email or password. Please try again." |
+| 404 | "User not found. Please check your email." |
+| 409 | "Account already exists. Please login." |
+| 422 | "Please check your information and try again." |
+| 429 | "Too many attempts. Please wait a moment." |
+| Network | "Cannot connect to server. Make sure backend is running." |
+
+## Backend Requirements
+
+Make sure the backend server is running:
+
+```bash
+cd backend
+uvicorn app.main:app --reload --port 8000
+```
+
+Verify connection:
+
+```bash
+curl http://localhost:8000/api/v1/auth/health
+```
+
+Expected response: `{"status":"healthy","redis":"connected"}`
+
+## Session Progress
+
+| Session | Focus | Status |
+|---------|-------|--------|
+| 16 | Project Setup & Auth Screens | ✅ |
+| 17 | Onboarding Flow (6 Steps) | ✅ |
+| 18 | Photo Upload & Profile | ✅ |
+| 19 | Location Services | ✅ |
+| 20 | Google Sign-In | ✅ |
+| 21 | Profile Edit & Account Settings | ✅ |
+| 22 | Localization & Polish | 🔄 |
+| 23 | Discover & Swiping | ⬜ |
+| 24 | Chat System (Messages + WebSocket) | ⬜ |
+| 25 | Likes, Matches & Production | ⬜ |
+
+## Translation Status (Session 22)
+
+| Screen/Messages | English | Persian |
+|-----------------|---------|---------|
+| Splash Screen | ✅ | 🔄 |
+| Login Screen | ✅ | 🔄 |
+| Sign Up Screen | ✅ | 🔄 |
+| Verify Code Screen | ✅ | 🔄 |
+| Basic Info Screen | ✅ | 🔄 |
+| Profile Details Screen | ✅ | 🔄 |
+| Interests Screen | ✅ | 🔄 |
+| Prompts Screen | ✅ | 🔄 |
+| Photo Upload Screen | ✅ | 🔄 |
+| Profile Screen | ✅ | 🔄 |
+| Edit Basic Info Screen | 🔄 | 🔄 |
+| Edit Profile Details Screen | 🔄 | 🔄 |
+| Edit Interests Screen | 🔄 | 🔄 |
+| Edit Prompts Screen | 🔄 | 🔄 |
+| Error Messages | ✅ | 🔄 |
+| Validation Messages | ✅ | 🔄 |
+
+## Development
+
+### Run in debug mode
+
+```bash
+flutter run
+```
+
+### Run with specific flavor
+
+```bash
+flutter run --flavor dev
+```
+
+### Build APK
+
+```bash
+flutter build apk --release
+```
+
+### Build App Bundle
+
+```bash
+flutter build appbundle --release
+```
+
+## Troubleshooting
+
+### Connection refused
+
+Make sure backend is running and `API_BASE_URL` is correct.
+
+### Google Sign-In not working
+
+Make sure `WEB_CLIENT_ID` is set correctly in `.env` and `google-services.json` is configured.
+
+### Packages not downloading
+
+If you have network issues, try:
+
+```bash
+flutter pub get --offline
+```
+
+### Emulator can't connect to localhost
+
+Use `10.0.2.2` instead of `localhost` in `.env` file.
+
+### Location not working
+
+Make sure location permissions are enabled and GPS is on.
+
+## Contributing
+
+This project is developed by Ehsan (solo developer).
+
+## License
+
+All rights reserved.
+
+## Contact
+
+For questions or support, please open an issue on GitHub.
+```
+
 ---
 
-## 6. Completed Features
+## Summary of Changes:
 
-### Auth Flow (3-Step Registration)
-
-| Step | Endpoint | Description |
-| --- | --- | --- |
-| 1 | `POST /auth/register/init` | Check email, send 6-digit code |
-| 2 | `POST /auth/register/verify` | Verify code + create user (email + password) |
-| 3 | `POST /auth/register/complete` | Complete profile (all Badoo fields) |
-
-### Onboarding Steps
-
-- **Instagram Story-Style Progress:** 5-step progress bar
-- **BasicInfoScreen:** Name, DOB, Gender, Location with searchable dropdowns
-- **ProfileDetailsScreen:** Height, Weight, Body Type, Relationship Status, etc.
-- **InterestsScreen:** Category-based interest selection (min 8)
-- **PromptsScreen:** Category-based prompt selection (max 3)
-- **PhotoUploadScreen:** 3-9 photos with drag & drop reordering
-
-### Location System
-
-- **Backend Location APIs integrated:**
-  - `GET /locations/countries`
-  - `GET /locations/states?country=IR`
-  - `GET /locations/cities?country=IR&state_name=Tehran`
-  - `GET /locations/reverse-geocode`
-  - `GET /locations/city-centroid`
-- **GPS Location Support:** Auto-fill from device location
-- **Manual Location Selection:** Searchable dropdowns with autocomplete
-
-### Photo Upload System
-
-- **PhotoService:** Upload, get, delete, set main, validate, convert to JPEG
-- **Drag & Drop:** Long press and drag to reorder photos
-- **Photo Limits:** Minimum 3 photos, maximum 9 photos
-- **Main Photo:** Tap any photo to set as main, star badge indicator
-- **Remove Button:** Shows on ALL photos including main
-- **Avatar Crop:** User can drag to adjust profile picture crop
-
-### Main Screen Flow
-
-- **Profile Complete Check:** Redirects to onboarding if profile not complete
-- **Photo Check:** Redirects to PhotoUploadScreen if less than 3 photos
-- **Photo Status:** Counts both `pending` and `approved` photos
-- **Bottom Navigation:** Discover, Search, Chats, Profile
-
----
-
-## 7. TODO - Next Session
-
-### Session 21: Profile Edit & Account Settings
-
-| Task | Priority | Description |
-| --- | --- | --- |
-| Update Account Section (6 items) | 🔴 High | Replace 3 menu items with 6: Verify Picture, Basic Info, Profile Details, Interests, Prompts, Edit Photos |
-| Remove Logout Button | 🔴 High | Remove logout button from profile page (keep only in settings) |
-| Edit Basic Info Screen | 🔴 High | Reuse BasicInfoScreen UI with back button, pre-filled data, save → PUT /users/me |
-| Edit Profile Details Screen | 🔴 High | Reuse ProfileDetailsScreen UI with back button, pre-filled data, save → PUT /users/me |
-| Edit Interests Screen | 🔴 High | Reuse InterestsScreen UI with back button, pre-filled data, save → PUT /users/me |
-| Edit Prompts Screen | 🔴 High | Reuse PromptsScreen UI with back button, pre-filled data, save → PUT /users/me |
-| Verify Picture Status | 🔴 High | Show verification status using `face_verified` from PhotoResponse |
-| Edit Photos Screen | 🟡 Medium | Manage photos (upload, delete, reorder, set main) - details later |
-| Add Translations for Edit Screens | 🟡 Medium | Translate all edit screen UI text |
-| Add Loading States | 🟢 Low | Show loading indicators during save operations |
-| Add Success/Error Messages | 🟢 Low | Show snackbars after save/cancel actions |
-
-### Account Section Menu Items:
-
-```
-┌────────────────────────────────────────────┐
-│  ACCOUNT                                    │
-│  ┌────────────────────────────────────────┐ │
-│  │  ✅ Verify Picture              →    │ │
-│  │  (Verified / Clickable if not)        │ │
-│  ├────────────────────────────────────────┤ │
-│  │  ✏️ Basic Info                  →    │ │
-│  ├────────────────────────────────────────┤ │
-│  │  📝 Profile Details             →    │ │
-│  ├────────────────────────────────────────┤ │
-│  │  🎯 Interests                   →    │ │
-│  ├────────────────────────────────────────┤ │
-│  │  💬 Prompts                     →    │ │
-│  ├────────────────────────────────────────┤ │
-│  │  📸 Edit Photos                 →    │ │
-│  └────────────────────────────────────────┘ │
-└────────────────────────────────────────────┘
-```
-
-### Edit Screen Design:
-
-```
-┌────────────────────────────────────────────┐
-│  ← Back                                    │
-│                                             │
-│  [Same content as onboarding screen]        │
-│  (pre-filled with user data)               │
-│                                             │
-│  ┌────────────────────────────────────────┐ │
-│  │              Save                     │ │
-│  └────────────────────────────────────────┘ │
-└────────────────────────────────────────────┘
-```
-
----
-
-## 8. UI Mockups
-
-### Account Section:
-
-```
-┌────────────────────────────────────────────┐
-│  Profile                                    │
-│  ┌──────────┐                              │
-│  │  Avatar  │  Alex, 28                    │
-│  │  (edit)  │  New York, NY                │
-│  └──────────┘                              │
-│                                             │
-│  ❤️  Likes   💑  Matches   💬  Messages   │
-│  145          12           89              │
-│                                             │
-│  ┌────────────────────────────────────────┐ │
-│  │  ⭐ BONDI PREMIUM               →    │ │
-│  │  Unlock Exclusive Connections         │ │
-│  │  Get Premium                          │ │
-│  └────────────────────────────────────────┘ │
-│                                             │
-│  ACCOUNT                                    │
-│  ┌────────────────────────────────────────┐ │
-│  │  ✅ Verify Picture              →    │ │
-│  ├────────────────────────────────────────┤ │
-│  │  ✏️ Basic Info                  →    │ │
-│  ├────────────────────────────────────────┤ │
-│  │  📝 Profile Details             →    │ │
-│  ├────────────────────────────────────────┤ │
-│  │  🎯 Interests                   →    │ │
-│  ├────────────────────────────────────────┤ │
-│  │  💬 Prompts                     →    │ │
-│  ├────────────────────────────────────────┤ │
-│  │  📸 Edit Photos                 →    │ │
-│  └────────────────────────────────────────┘ │
-└────────────────────────────────────────────┘
-```
-
----
-
-## 9. Key Implementation Notes
-
-### Registration Flow (5 Steps)
-
-1. **SignUpScreen** → `POST /auth/register/init` → VerifyCodeScreen
-2. **VerifyCodeScreen** → `POST /auth/register/verify` → BasicInfoScreen
-3. **BasicInfoScreen** → ProfileDetailsScreen → InterestsScreen → PromptsScreen
-4. **PromptsScreen** → `POST /auth/register/complete` → PhotoUploadScreen
-5. **PhotoUploadScreen** → Upload photos → MainScreen
-
-### Edit Profile Flow
-
-1. User taps menu item in Account section
-2. Opens edit screen with pre-filled data from `AuthProvider.user`
-3. User modifies fields
-4. Taps "Save" → `PUT /users/me` with updated data
-5. Show success/error message
-6. Return to Profile screen
-
-### Photo Verification
-
-- Check `mainPhoto?.faceVerified` to show verification status
-- If `true`: Show ✅ Verified badge
-- If `false`: Show clickable "Verify" item
-
-### Translation Architecture
-
-- All UI text uses `AppLocalizations.of(context)!`
-- Language selection persists via `StorageService.saveLanguage()`
-- API calls for prompts and interests pass `language` parameter
-
----
-
-## 10. Backend Compatibility
-
-### API Endpoints Used
-
-| Endpoint | Method | Status |
-| --- | --- | --- |
-| `/auth/register/init` | POST | ✅ Working |
-| `/auth/register/verify` | POST | ✅ Working |
-| `/auth/register/complete` | POST | ✅ Working |
-| `/auth/login` | POST | ✅ Working |
-| `/auth/google` | POST | ✅ Working |
-| `/auth/refresh` | POST | ✅ Working |
-| `/auth/logout` | POST | ✅ Working |
-| `/auth/health` | GET | ✅ Working |
-| `/users/me` | GET | ✅ Working |
-| `/users/me` | PUT | 🔜 TODO (Profile Edit) |
-| `/locations/countries` | GET | ✅ Working |
-| `/locations/states` | GET | ✅ Working |
-| `/locations/cities` | GET | ✅ Working |
-| `/locations/reverse-geocode` | GET | ✅ Working |
-| `/locations/city-centroid` | GET | ✅ Working |
-| `/interests` | GET | ✅ Working |
-| `/prompts` | GET | ✅ Working |
-| `/locations/me/location-gps` | PATCH | ✅ Working |
-| `/locations/me/location-manual` | PATCH | ✅ Working |
-| `/users/me/photos` | POST | ✅ Working |
-| `/users/me/photos` | GET | ✅ Working |
-| `/users/me/photos/{photo_id}` | DELETE | ✅ Working |
-| `/users/me/photos/{photo_id}/main` | PUT | ✅ Working |
-```
-
----
-
-## Summary of Updates:
-
-| Section | Changes |
-|---------|---------|
-| **Current Status** | Added Session 21 in progress, new TODO items |
-| **TODO** | Added Profile Edit & Account Settings tasks (6 menu items) |
-| **UI Mockups** | Added Account Section and Edit Screen mockups |
-| **Project Structure** | Added new edit screens in `profile/` folder |
-| **Key Implementation Notes** | Added Edit Profile Flow and Photo Verification sections |
-| **Backend Compatibility** | Added `PUT /users/me` as 🔜 TODO |
-
-🚀
+1. **Added Translation Section** - Details localization files and status
+2. **Added Todo List** - Including translation tasks
+3. **Updated Session Progress** - Added Session 21 (Profile Edit) and Session 22 (Localization)
+4. **Added Translation Status Table** - Shows what's translated and what's not
+5. **Updated Features** - Added completed features
+6. **Updated Tech Stack** - Added Google Sign-In and Geolocator
+7. **Updated Project Structure** - Added all new screens
+8. **Added Todo List** - Clear priorities for next sessions

@@ -4,6 +4,7 @@ class User {
   final String email;
   final String? name;
   final int? age;
+  final String? birthDate; // Added
   final String? gender;
   final String? sexualOrientation;
   final String? bio;
@@ -36,12 +37,15 @@ class User {
   final DateTime? lastSeenAt;
   final bool hideLastSeen;
   final bool hideOnlineStatus;
+  final List<String>? interests; // Added
+  final List<Map<String, dynamic>>? prompts; // Added
 
   User({
     required this.id,
     required this.email,
     this.name,
     this.age,
+    this.birthDate, // Added
     this.gender,
     this.sexualOrientation,
     this.bio,
@@ -74,14 +78,23 @@ class User {
     this.lastSeenAt,
     this.hideLastSeen = false,
     this.hideOnlineStatus = false,
+    this.interests, // Added
+    this.prompts, // Added
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
+    // Parse prompts from the response
+    List<Map<String, dynamic>>? parsedPrompts;
+    if (json['prompts'] != null) {
+      parsedPrompts = List<Map<String, dynamic>>.from(json['prompts']);
+    }
+
     return User(
       id: json['id'],
       email: json['email'],
       name: json['name'],
       age: json['age'],
+      birthDate: json['birth_date'], // Added
       gender: json['gender'],
       sexualOrientation: json['sexual_orientation'],
       bio: json['bio'],
@@ -118,6 +131,8 @@ class User {
           : null,
       hideLastSeen: json['hide_last_seen'] ?? false,
       hideOnlineStatus: json['hide_online_status'] ?? false,
+      interests: json['interests'] != null ? List<String>.from(json['interests']) : null, // Added
+      prompts: parsedPrompts, // Added
     );
   }
 
@@ -127,6 +142,7 @@ class User {
       'email': email,
       'name': name,
       'age': age,
+      'birth_date': birthDate, // Added
       'gender': gender,
       'sexual_orientation': sexualOrientation,
       'bio': bio,
@@ -159,6 +175,25 @@ class User {
       'last_seen_at': lastSeenAt?.toIso8601String(),
       'hide_last_seen': hideLastSeen,
       'hide_online_status': hideOnlineStatus,
+      'interests': interests, // Added
+      'prompts': prompts, // Added
     };
+  }
+
+  // Helper method to get age from birthDate if not provided
+  int? getAgeFromBirthDate() {
+    if (birthDate == null) return age;
+    try {
+      final birth = DateTime.parse(birthDate!);
+      final now = DateTime.now();
+      int calculatedAge = now.year - birth.year;
+      if (now.month < birth.month || 
+          (now.month == birth.month && now.day < birth.day)) {
+        calculatedAge--;
+      }
+      return calculatedAge;
+    } catch (_) {
+      return age;
+    }
   }
 }

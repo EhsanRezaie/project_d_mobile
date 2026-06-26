@@ -204,32 +204,60 @@ class LocationService {
   }
 
   // ============================================================================
-  // Update User Location (GPS)
+  // Update User Location (GPS) - POST /users/me/location
   // ============================================================================
 
-  static Future<Map<String, dynamic>?> updateLocationGPS({
+  static Future<bool> updateLocationGPS({
     required double lat,
     required double lng,
   }) async {
     try {
-      final response = await ApiService.dio.patch(
-        '/locations/me/location-gps',
+      final response = await ApiService.dio.post(
+        '/users/me/location',
         queryParameters: {
           'lat': lat,
           'lng': lng,
         },
       );
-      return response.data;
+      print('✅ GPS location updated: ${response.statusCode}');
+      return true;
     } catch (e) {
       print('❌ Update location GPS error: $e');
-      return null;
+      return false;
     }
   }
 
   // ============================================================================
-  // Update User Location (Manual)
+  // Update User Location Text - PATCH /users/me/location-text
   // ============================================================================
 
+  static Future<bool> updateLocationText({
+    required String country,
+    required String province,
+    required String city,
+  }) async {
+    try {
+      final response = await ApiService.dio.patch(
+        '/users/me/location-text',
+        data: {
+          'country': country,
+          'province': province,
+          'city': city,
+        },
+      );
+      print('✅ Location text updated: ${response.data}');
+      return true;
+    } catch (e) {
+      print('❌ Update location text error: $e');
+      return false;
+    }
+  }
+
+  // ============================================================================
+  // Update User Location (Manual) - DEPRECATED use updateLocationText instead
+  // ============================================================================
+
+  @Deprecated('Use updateLocationText instead')
   static Future<Map<String, dynamic>?> updateLocationManual({
     required String country,
     required String province,

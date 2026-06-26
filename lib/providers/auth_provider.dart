@@ -1,3 +1,4 @@
+// lib/providers/auth_provider.dart
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:dating_app/generated/app_localizations.dart';
@@ -351,6 +352,48 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  // ============================================================
+  // Update user profile
+  // PUT /users/me
+  // ============================================================
+  Future<bool> updateProfile(Map<String, dynamic> data) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final response = await AuthService.updateProfile(data);
+      
+      if (response.statusCode == 200) {
+        _user = User.fromJson(response.data);
+        _isLoading = false;
+        notifyListeners();
+        return true;
+      } else {
+        _errorMessage = response.data['detail'] ?? 'Failed to update profile';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        _errorMessage = 'Session expired. Please login again.';
+      } else if (e.response?.statusCode == 422) {
+        _errorMessage = 'Invalid data. Please check your inputs.';
+      } else {
+        _errorMessage = 'Failed to update profile. Please try again.';
+      }
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errorMessage = 'An error occurred. Please try again.';
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
   void resetServerError() {
     _serverError = null;
     _isServerHealthy = true;
@@ -419,4 +462,83 @@ class AuthProvider extends ChangeNotifier {
       return false;
     }
   }
+
+   /// Update user interests
+  Future<bool> updateInterests(List<String> interests) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final response = await AuthService.updateInterests(interests);
+      
+      if (response.statusCode == 200) {
+        _user = User.fromJson(response.data);
+        _isLoading = false;
+        notifyListeners();
+        return true;
+      } else {
+        _errorMessage = response.data['detail'] ?? 'Failed to update interests';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        _errorMessage = 'Session expired. Please login again.';
+      } else if (e.response?.statusCode == 400) {
+        _errorMessage = e.response?.data['detail'] ?? 'Invalid interests';
+      } else {
+        _errorMessage = 'Failed to update interests. Please try again.';
+      }
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errorMessage = 'An error occurred. Please try again.';
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+  
+  /// Update user prompts
+  Future<bool> updatePrompts(List<Map<String, dynamic>> prompts) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final response = await AuthService.updatePrompts(prompts);
+      
+      if (response.statusCode == 200) {
+        _user = User.fromJson(response.data);
+        _isLoading = false;
+        notifyListeners();
+        return true;
+      } else {
+        _errorMessage = response.data['detail'] ?? 'Failed to update prompts';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+      }
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        _errorMessage = 'Session expired. Please login again.';
+      } else if (e.response?.statusCode == 400) {
+        _errorMessage = e.response?.data['detail'] ?? 'Invalid prompts';
+      } else {
+        _errorMessage = 'Failed to update prompts. Please try again.';
+      }
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errorMessage = 'An error occurred. Please try again.';
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
 }

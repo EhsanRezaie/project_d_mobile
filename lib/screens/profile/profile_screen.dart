@@ -7,8 +7,11 @@ import 'package:dating_app/models/photo.dart';
 import 'package:dating_app/models/profile_stats.dart';
 import 'package:dating_app/providers/auth_provider.dart';
 import 'package:dating_app/providers/profile_provider.dart';
-import 'package:dating_app/screens/auth/sign_up_screen.dart';
 import 'package:dating_app/screens/profile/avatar_crop_screen.dart';
+import 'package:dating_app/screens/profile/edit_basic_info_screen.dart';
+import 'package:dating_app/screens/profile/edit_profile_details_screen.dart';
+import 'package:dating_app/screens/profile/edit_interests_screen.dart';
+import 'package:dating_app/screens/profile/edit_prompts_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -37,8 +40,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _onRefresh() async {
+    if (!mounted) return;
     final provider = Provider.of<ProfileProvider>(context, listen: false);
     await provider.refreshData();
+    if (mounted) {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      await authProvider.refreshUser();
+    }
   }
 
   String _getPremiumDaysLeft(DateTime? premiumUntil) {
@@ -85,7 +93,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.settings_outlined, color: onSurfaceColor),
-            onPressed: () {},
+            onPressed: () {
+              // TODO: Navigate to Settings screen
+            },
           ),
         ],
       ),
@@ -115,9 +125,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(height: 32),
               _buildPremiumSection(user, primaryColor, isDark),
               const SizedBox(height: 32),
-              _buildAccountSection(onSurfaceColor, textMutedColor, isDark),
+              _buildAccountSection(user, profileProvider.mainPhoto, onSurfaceColor, textMutedColor, isDark),
               const SizedBox(height: 20),
-              _buildLogoutButton(authProvider, isDark),
             ],
           ),
         ),
@@ -478,7 +487,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildAccountSection(Color onSurfaceColor, Color textMutedColor, bool isDark) {
+  Widget _buildAccountSection(
+    user,
+    PhotoResponse? mainPhoto,
+    Color onSurfaceColor,
+    Color textMutedColor,
+    bool isDark,
+  ) {
+    // Check if main photo is face verified
+    final bool isFaceVerified = mainPhoto?.faceVerified ?? false;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -503,29 +521,126 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           child: Column(
             children: [
+              // 1. Verify Picture
               _buildAccountTile(
-                Icons.tune,
-                'Preferences',
-                onSurfaceColor,
-                textMutedColor,
-                isDark,
-                onTap: () {},
+                icon: isFaceVerified ? Icons.verified : Icons.verified_outlined,
+                title: 'Verify Picture',
+                status: isFaceVerified ? '✅ Verified' : '',
+                onSurfaceColor: onSurfaceColor,
+                textMutedColor: textMutedColor,
+                isDark: isDark,
+                onTap: () {
+                  if (!isFaceVerified) {
+                    // TODO: Navigate to face verification screen
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Face verification coming soon!'),
+                      ),
+                    );
+                  }
+                },
+                showChevron: !isFaceVerified,
               ),
+              // 2. Basic Info
               _buildAccountTile(
-                Icons.edit,
-                'Edit Info',
-                onSurfaceColor,
-                textMutedColor,
-                isDark,
-                onTap: () {},
+                icon: Icons.person_outline,
+                title: 'Basic Info',
+                onSurfaceColor: onSurfaceColor,
+                textMutedColor: textMutedColor,
+                isDark: isDark,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const EditBasicInfoScreen(),
+                    ),
+                  ).then((_) {
+                    if (mounted) {
+                      _onRefresh();
+                    }
+                  });
+                },
+                showChevron: true,
               ),
+              // 3. Profile Details
               _buildAccountTile(
-                Icons.security,
-                'Safety Center',
-                onSurfaceColor,
-                textMutedColor,
-                isDark,
-                onTap: () {},
+                icon: Icons.note_outlined,
+                title: 'Profile Details',
+                onSurfaceColor: onSurfaceColor,
+                textMutedColor: textMutedColor,
+                isDark: isDark,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const EditProfileDetailsScreen(),
+                    ),
+                  ).then((_) {
+                    if (mounted) {
+                      _onRefresh();
+                    }
+                  });
+                },
+                showChevron: true,
+              ),
+              // 4. Interests
+              _buildAccountTile(
+                icon: Icons.favorite_outline,
+                title: 'Interests',
+                onSurfaceColor: onSurfaceColor,
+                textMutedColor: textMutedColor,
+                isDark: isDark,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const EditInterestsScreen(),
+                    ),
+                  ).then((_) {
+                    if (mounted) {
+                      _onRefresh();
+                    }
+                  });
+                },
+                showChevron: true,
+              ),
+              // 5. Prompts
+              _buildAccountTile(
+                icon: Icons.question_answer_outlined,
+                title: 'Prompts',
+                onSurfaceColor: onSurfaceColor,
+                textMutedColor: textMutedColor,
+                isDark: isDark,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const EditPromptsScreen(),
+                    ),
+                  ).then((_) {
+                    if (mounted) {
+                      _onRefresh();
+                    }
+                  });
+                },
+                showChevron: true,
+              ),
+              // 6. Edit Photos
+              _buildAccountTile(
+                icon: Icons.photo_library_outlined,
+                title: 'Edit Photos',
+                onSurfaceColor: onSurfaceColor,
+                textMutedColor: textMutedColor,
+                isDark: isDark,
+                onTap: () {
+                  // TODO: Navigate to Edit Photos screen
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Edit Photos coming soon!'),
+                    ),
+                  );
+                },
+                showChevron: true,
                 isLast: true,
               ),
             ],
@@ -535,13 +650,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildAccountTile(
-    IconData icon,
-    String title,
-    Color onSurfaceColor,
-    Color textMutedColor,
-    bool isDark, {
+  Widget _buildAccountTile({
+    required IconData icon,
+    required String title,
+    String status = '',
+    required Color onSurfaceColor,
+    required Color textMutedColor,
+    required bool isDark,
     required VoidCallback onTap,
+    bool showChevron = true,
     bool isLast = false,
   }) {
     return InkWell(
@@ -574,54 +691,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: onSurfaceColor,
-                ),
+              child: Row(
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: onSurfaceColor,
+                    ),
+                  ),
+                  if (status.isNotEmpty) ...[
+                    const SizedBox(width: 8),
+                    Text(
+                      status,
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: status.contains('Verified') ? Colors.green : textMutedColor,
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
-            Icon(
-              Icons.chevron_right,
-              color: textMutedColor,
-            ),
+            if (showChevron)
+              Icon(
+                Icons.chevron_right,
+                color: textMutedColor,
+              ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLogoutButton(AuthProvider authProvider, bool isDark) {
-    return SizedBox(
-      width: double.infinity,
-      child: OutlinedButton(
-        onPressed: () async {
-          await authProvider.logout();
-          if (context.mounted) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const SignUpScreen()),
-            );
-          }
-        },
-        style: OutlinedButton.styleFrom(
-          foregroundColor: Colors.red,
-          side: const BorderSide(color: Colors.red),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          minimumSize: const Size(double.infinity, 50),
-        ),
-        child: const Text(
-          'Logout',
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
         ),
       ),
     );

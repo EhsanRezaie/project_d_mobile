@@ -1,20 +1,20 @@
-// lib/screens/onboarding/profile_details_screen.dart
+// lib/screens/profile/edit_profile_details_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:dating_app/generated/app_localizations.dart';
 import '../../config/app_theme.dart';
-import '../../providers/onboarding_provider.dart';
-import 'interests_screen.dart';
+import '../../providers/auth_provider.dart';
 
-class ProfileDetailsScreen extends StatefulWidget {
-  const ProfileDetailsScreen({super.key});
+class EditProfileDetailsScreen extends StatefulWidget {
+  const EditProfileDetailsScreen({super.key});
 
   @override
-  State<ProfileDetailsScreen> createState() => _ProfileDetailsScreenState();
+  State<EditProfileDetailsScreen> createState() => _EditProfileDetailsScreenState();
 }
 
-class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
+class _EditProfileDetailsScreenState extends State<EditProfileDetailsScreen> {
   final _formKey = GlobalKey<FormState>();
+  bool _isSaving = false;
+  String? _errorMessage;
 
   final TextEditingController _workplaceController = TextEditingController();
 
@@ -32,9 +32,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
   String? _religion;
   String? _ethnicity;
   List<String> _selectedLanguages = [];
-
-  bool _isLoading = false;
-  String? _errorMessage;
 
   final List<String> _languageOptions = [
     'English',
@@ -119,10 +116,10 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
   // EDUCATION - Matches backend: high_school, bachelor, master, phd
   // ============================================================
   final List<String> _educationOptions = [
-    'High School',
-    'Undergraduate Degree',  // maps to 'bachelor'
-    'Postgraduate Degree',   // maps to 'master'
-    'PhD / Doctorate',       // maps to 'phd'
+    'High School',          // maps to 'high_school'
+    'Undergraduate Degree', // maps to 'bachelor'
+    'Postgraduate Degree',  // maps to 'master'
+    'PhD / Doctorate',      // maps to 'phd'
   ];
 
   // ============================================================
@@ -175,45 +172,37 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    _loadSavedData();
+    _loadUserData();
   }
 
-  void _loadSavedData() {
-    final onboarding = Provider.of<OnboardingProvider>(context, listen: false);
-    if (onboarding.height != null) _height = onboarding.height!.toDouble();
-    if (onboarding.weight != null) _weight = onboarding.weight!.toDouble();
-    if (onboarding.bodyType != null) {
-      _bodyType = _capitalize(onboarding.bodyType!);
+  void _loadUserData() {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final user = authProvider.user;
+
+    if (user != null) {
+      if (user.height != null) _height = user.height!.toDouble();
+      if (user.weight != null) _weight = user.weight!.toDouble();
+      if (user.bodyType != null) _bodyType = _capitalize(user.bodyType!);
+      if (user.relationshipStatus != null) {
+        _relationshipStatus = _capitalize(user.relationshipStatus!);
+      }
+      if (user.livingSituation != null) {
+        _livingSituation = _capitalize(user.livingSituation!);
+      }
+      if (user.childrenStatus != null) {
+        _childrenStatus = _capitalize(user.childrenStatus!);
+      }
+      if (user.smoking != null) _smoking = _capitalize(user.smoking!);
+      if (user.drinking != null) _drinking = _capitalize(user.drinking!);
+      if (user.education != null) _education = _capitalize(user.education!);
+      if (user.workplace != null) _workplaceController.text = user.workplace!;
+      if (user.religion != null) _religion = _capitalize(user.religion!);
+      if (user.ethnicity != null) _ethnicity = _capitalize(user.ethnicity!);
+      if (user.politicalOrientation != null) {
+        _politicalOrientation = _capitalize(user.politicalOrientation!);
+      }
+      if (user.languages != null) _selectedLanguages = List.from(user.languages!);
     }
-    if (onboarding.relationshipStatus != null) {
-      _relationshipStatus = _capitalize(onboarding.relationshipStatus!);
-    }
-    if (onboarding.livingSituation != null) {
-      _livingSituation = _capitalize(onboarding.livingSituation!);
-    }
-    if (onboarding.childrenStatus != null) {
-      _childrenStatus = _capitalize(onboarding.childrenStatus!);
-    }
-    if (onboarding.smoking != null) {
-      _smoking = _capitalize(onboarding.smoking!);
-    }
-    if (onboarding.drinking != null) {
-      _drinking = _capitalize(onboarding.drinking!);
-    }
-    if (onboarding.education != null) {
-      _education = _capitalize(onboarding.education!);
-    }
-    if (onboarding.workplace != null) _workplaceController.text = onboarding.workplace!;
-    if (onboarding.religion != null) {
-      _religion = _capitalize(onboarding.religion!);
-    }
-    if (onboarding.ethnicity != null) {
-      _ethnicity = _capitalize(onboarding.ethnicity!);
-    }
-    if (onboarding.politicalOrientation != null) {
-      _politicalOrientation = _capitalize(onboarding.politicalOrientation!);
-    }
-    if (onboarding.languages != null) _selectedLanguages = List.from(onboarding.languages!);
   }
 
   String _capitalize(String str) {
@@ -295,30 +284,140 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     });
   }
 
-  Future<void> _handleNext() async {
-    final onboarding = Provider.of<OnboardingProvider>(context, listen: false);
+  Future<void> _handleSave() async {
+    setState(() {
+      _isSaving = true;
+      _errorMessage = null;
+    });
 
-    onboarding.setPhysicalAndLifestyle(
-      height: _height.toInt(),
-      weight: _weight.toInt(),
-      bodyType: _bodyType != null ? _getBackendValue(_bodyType!) : null,
-      relationshipStatus: _relationshipStatus != null ? _getBackendValue(_relationshipStatus!) : null,
-      livingSituation: _livingSituation != null ? _getBackendValue(_livingSituation!) : null,
-      childrenStatus: _childrenStatus != null ? _getBackendValue(_childrenStatus!) : null,
-      smoking: _smoking != null ? _getBackendValue(_smoking!) : null,
-      drinking: _drinking != null ? _getBackendValue(_drinking!) : null,
-      education: _education != null ? _getBackendValue(_education!) : null,
-      workplace: _workplaceController.text.trim().isNotEmpty ? _workplaceController.text.trim() : null,
-      religion: _religion != null ? _getBackendValue(_religion!) : null,
-      ethnicity: _ethnicity != null ? _getBackendValue(_ethnicity!) : null,
-      politicalOrientation: _politicalOrientation != null ? _getBackendValue(_politicalOrientation!) : null,
-      languages: _selectedLanguages.isNotEmpty ? _selectedLanguages : null,
-    );
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const InterestsScreen()),
-    );
+      final Map<String, dynamic> updateData = {};
+
+      // Height
+      if (_height != 0) updateData['height'] = _height.toInt();
+
+      // Weight
+      if (_weight != 0) updateData['weight'] = _weight.toInt();
+
+      // Body Type
+      if (_bodyType != null) {
+        final backendValue = _getBackendValue(_bodyType!);
+        if (backendValue != null) {
+          updateData['body_type'] = backendValue;
+        }
+      }
+
+      // Relationship Status
+      if (_relationshipStatus != null) {
+        final backendValue = _getBackendValue(_relationshipStatus!);
+        if (backendValue != null) {
+          updateData['relationship_status'] = backendValue;
+        }
+      }
+
+      // Living Situation
+      if (_livingSituation != null) {
+        final backendValue = _getBackendValue(_livingSituation!);
+        if (backendValue != null) {
+          updateData['living_situation'] = backendValue;
+        }
+      }
+
+      // Children Status
+      if (_childrenStatus != null) {
+        final backendValue = _getBackendValue(_childrenStatus!);
+        if (backendValue != null) {
+          updateData['children_status'] = backendValue;
+        }
+      }
+
+      // Smoking
+      if (_smoking != null) {
+        final backendValue = _getBackendValue(_smoking!);
+        if (backendValue != null) {
+          updateData['smoking'] = backendValue;
+        }
+      }
+
+      // Drinking
+      if (_drinking != null) {
+        final backendValue = _getBackendValue(_drinking!);
+        if (backendValue != null) {
+          updateData['drinking'] = backendValue;
+        }
+      }
+
+      // Education
+      if (_education != null) {
+        final backendValue = _getBackendValue(_education!);
+        if (backendValue != null) {
+          updateData['education'] = backendValue;
+        }
+      }
+
+      // Workplace - send null if empty
+      updateData['workplace'] = _workplaceController.text.trim().isNotEmpty
+          ? _workplaceController.text.trim()
+          : null;
+
+      // Religion
+      if (_religion != null) {
+        final backendValue = _getBackendValue(_religion!);
+        if (backendValue != null) {
+          updateData['religion'] = backendValue;
+        }
+      }
+
+      // Ethnicity
+      if (_ethnicity != null) {
+        final backendValue = _getBackendValue(_ethnicity!);
+        if (backendValue != null) {
+          updateData['ethnicity'] = backendValue;
+        }
+      }
+
+      // Political Orientation
+      if (_politicalOrientation != null) {
+        final backendValue = _getBackendValue(_politicalOrientation!);
+        if (backendValue != null) {
+          updateData['political_orientation'] = backendValue;
+        }
+      }
+
+      // Languages - send null if empty
+      if (_selectedLanguages.isNotEmpty) {
+        updateData['languages'] = _selectedLanguages;
+      }
+
+      print('📤 Sending update data: $updateData');
+
+      final success = await authProvider.updateProfile(updateData);
+
+      if (success && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Profile updated successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.pop(context);
+      } else if (mounted) {
+        setState(() {
+          _errorMessage = authProvider.errorMessage ?? 'Failed to update profile';
+          _isSaving = false;
+        });
+      }
+    } catch (e) {
+      print('❌ Save error: $e');
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'An error occurred. Please try again.';
+          _isSaving = false;
+        });
+      }
+    }
   }
 
   @override
@@ -329,7 +428,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;
     final colors = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary;
@@ -343,47 +441,22 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        toolbarHeight: 80,
-        automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(5, (index) {
-                  return Expanded(
-                    child: Container(
-                      height: 4,
-                      margin: const EdgeInsets.symmetric(horizontal: 2.0),
-                      decoration: BoxDecoration(
-                        color: index <= 1
-                            ? primaryColor
-                            : (isDark ? Colors.white12 : Colors.black12),
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                  );
-                }),
-              ),
-              const SizedBox(height: 14),
-              Text(
-                'Profile Details',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  color: onSurfaceColor,
-                  letterSpacing: -0.4,
-                ),
-              ),
-            ],
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: onSurfaceColor, size: 20),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          'Edit Profile Details',
+          style: TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: onSurfaceColor,
+            letterSpacing: -0.4,
           ),
         ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         centerTitle: true,
       ),
       body: GestureDetector(
@@ -402,21 +475,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Tell us more about yourself',
-                              style: AppTheme.headlineMedium.copyWith(
-                                color: onSurfaceColor,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'All fields are optional. Fill what you want to share.',
-                              style: AppTheme.bodyLarge.copyWith(
-                                color: textMutedColor,
-                              ),
-                            ),
-                            const SizedBox(height: 28),
                             if (_errorMessage != null) ...[
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -463,7 +521,10 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                                     ),
                                     Text(
                                       '${_height.toInt()} cm',
-                                      style: AppTheme.labelLarge.copyWith(
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
                                         color: primaryColor,
                                       ),
                                     ),
@@ -503,7 +564,10 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                                     ),
                                     Text(
                                       '${_weight.toInt()} kg',
-                                      style: AppTheme.labelLarge.copyWith(
+                                      style: TextStyle(
+                                        fontFamily: 'Inter',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
                                         color: primaryColor,
                                       ),
                                     ),
@@ -659,7 +723,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                             // WORKPLACE
                             TextFormField(
                               controller: _workplaceController,
-                              style: AppTheme.bodyLarge.copyWith(
+                              style: TextStyle(
+                                fontFamily: 'Inter',
+                                fontSize: 16,
                                 color: onSurfaceColor,
                               ),
                               decoration: InputDecoration(
@@ -679,55 +745,35 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                     child: Container(
                       alignment: Alignment.bottomCenter,
                       padding: const EdgeInsets.only(left: 24.0, right: 24.0, bottom: 24.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed: () => Navigator.pop(context),
-                              style: OutlinedButton.styleFrom(
-                                side: BorderSide(color: borderColor, width: 1.5),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                                minimumSize: const Size(double.infinity, 56),
-                                foregroundColor: onSurfaceColor,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.arrow_back, size: 20, color: onSurfaceColor),
-                                  const SizedBox(width: 8),
-                                  Text('Back', style: AppTheme.buttonText.copyWith(color: onSurfaceColor)),
-                                ],
-                              ),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _isSaving ? null : _handleSave,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: primaryColor,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
                             ),
+                            elevation: 0,
+                            minimumSize: const Size(double.infinity, 56),
                           ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: _isLoading ? null : _handleNext,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: primaryColor,
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                                elevation: 0,
-                                minimumSize: const Size(double.infinity, 56),
-                              ),
-                              child: _isLoading
-                                  ? const SizedBox(
-                                      height: 24,
-                                      width: 24,
-                                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                                    )
-                                  : Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text('Continue', style: AppTheme.buttonText),
-                                        const SizedBox(width: 8),
-                                        const Icon(Icons.arrow_forward, size: 20, color: Colors.white),
-                                      ],
-                                    ),
-                            ),
-                          ),
-                        ],
+                          child: _isSaving
+                              ? const SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                )
+                              : Text(
+                                  'Save',
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                        ),
                       ),
                     ),
                   ),
