@@ -208,6 +208,7 @@ The app connects to a FastAPI backend with the following endpoints:
   - [ ] `app_fa.arb` - Onboarding screens
   - [ ] `app_fa.arb` - Profile screens
   - [ ] `app_fa.arb` - Edit screens
+  - [ ] `app_fa.arb` - Photo editing screens
   - [ ] `app_fa.arb` - Error messages
   - [ ] `app_fa.arb` - Settings
 
@@ -215,7 +216,7 @@ The app connects to a FastAPI backend with the following endpoints:
 
 - [ ] **Discover Screen** - Card swiping UI
 - [ ] **Search Screen** - Advanced filters
-- [ ] **Edit Photos Screen** - Photo management
+- [x] **Edit Photos Screen** - Photo management
 - [ ] **Face Verification** - Profile picture verification
 - [ ] **Premium Subscription** - Purchase flow
 
@@ -298,6 +299,8 @@ Expected response: `{"status":"healthy","redis":"connected"}`
 | Edit Profile Details Screen | 🔄 | 🔄 |
 | Edit Interests Screen | 🔄 | 🔄 |
 | Edit Prompts Screen | 🔄 | 🔄 |
+| Edit Photos Screen | 🔄 | 🔄 |
+| Avatar Crop Screen | 🔄 | 🔄 |
 | Error Messages | ✅ | 🔄 |
 | Validation Messages | ✅ | 🔄 |
 
