@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dating_app/config/app_theme.dart';
 import 'package:dating_app/models/photo.dart';
 import 'package:dating_app/models/profile_stats.dart';
+import 'package:dating_app/models/user.dart';
 import 'package:dating_app/providers/auth_provider.dart';
 import 'package:dating_app/providers/profile_provider.dart';
 import 'package:dating_app/screens/profile/avatar_crop_screen.dart';
@@ -12,6 +13,7 @@ import 'package:dating_app/screens/profile/edit_basic_info_screen.dart';
 import 'package:dating_app/screens/profile/edit_profile_details_screen.dart';
 import 'package:dating_app/screens/profile/edit_interests_screen.dart';
 import 'package:dating_app/screens/profile/edit_prompts_screen.dart';
+import 'package:dating_app/widgets/shimmer_avatar.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -58,79 +60,95 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
-    final profileProvider = Provider.of<ProfileProvider>(context);
-    final user = authProvider.user;
     final isDark = context.isDarkMode;
     final bgColor = isDark ? AppTheme.darkBackground : AppTheme.lightBackground;
     final primaryColor = isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary;
     final onSurfaceColor = Theme.of(context).colorScheme.onSurface;
     final textMutedColor = isDark ? AppTheme.darkTextMuted : AppTheme.lightTextMuted;
 
-    if (profileProvider.isLoading && profileProvider.photos.isEmpty) {
-      return Scaffold(
-        backgroundColor: bgColor,
-        body: const Center(child: CircularProgressIndicator()),
-      );
-    }
+    return Selector<ProfileProvider, bool>(
+      selector: (_, p) => p.isLoading && p.photos.isEmpty,
+      builder: (context, showLoading, _) {
+        if (showLoading) {
+          return Scaffold(
+            backgroundColor: bgColor,
+            body: const Center(child: CircularProgressIndicator()),
+          );
+        }
 
-    return Scaffold(
-      backgroundColor: bgColor,
-      appBar: AppBar(
-        title: Text(
-          'Profile',
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-            color: onSurfaceColor,
-            letterSpacing: 2,
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.settings_outlined, color: onSurfaceColor),
-            onPressed: () {
-              // TODO: Navigate to Settings screen
-            },
-          ),
-        ],
-      ),
-      body: RefreshIndicator(
-        onRefresh: _onRefresh,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              _buildProfileHeader(
-                user,
-                profileProvider.mainPhoto,
-                primaryColor,
-                onSurfaceColor,
-                textMutedColor,
+        return Scaffold(
+          backgroundColor: bgColor,
+          appBar: AppBar(
+            title: Text(
+              'Profile',
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                color: onSurfaceColor,
+                letterSpacing: 2,
               ),
-              const SizedBox(height: 32),
-              _buildStatsSection(
-                profileProvider.stats,
-                primaryColor,
-                onSurfaceColor,
-                textMutedColor,
-                isDark,
+            ),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            centerTitle: true,
+            actions: [
+              IconButton(
+                icon: Icon(Icons.settings_outlined, color: onSurfaceColor),
+                onPressed: () {
+                  // TODO: Navigate to Settings screen
+                },
               ),
-              const SizedBox(height: 32),
-              _buildPremiumSection(user, primaryColor, isDark),
-              const SizedBox(height: 32),
-              _buildAccountSection(user, profileProvider.mainPhoto, onSurfaceColor, textMutedColor, isDark),
-              const SizedBox(height: 20),
             ],
           ),
-        ),
-      ),
+          body: RefreshIndicator(
+            onRefresh: _onRefresh,
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  Selector<AuthProvider, User?>(
+                    selector: (_, a) => a.user,
+                    builder: (context, user, _) {
+                      return Selector<ProfileProvider, PhotoResponse?>(
+                        selector: (_, p) => p.mainPhoto,
+                        builder: (context, mainPhoto, _) {
+                          return _buildProfileHeader(user, mainPhoto, primaryColor, onSurfaceColor, textMutedColor);
+                        },
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 32),
+                  Selector<ProfileProvider, ProfileStats?>(
+                    selector: (_, p) => p.stats,
+                    builder: (context, stats, _) => _buildStatsSection(stats, primaryColor, onSurfaceColor, textMutedColor, isDark),
+                  ),
+                  const SizedBox(height: 32),
+                  Selector<AuthProvider, User?>(
+                    selector: (_, a) => a.user,
+                    builder: (context, user, _) => _buildPremiumSection(user, primaryColor, isDark),
+                  ),
+                  const SizedBox(height: 32),
+                  Selector<AuthProvider, User?>(
+                    selector: (_, a) => a.user,
+                    builder: (context, user, _) {
+                      return Selector<ProfileProvider, PhotoResponse?>(
+                        selector: (_, p) => p.mainPhoto,
+                        builder: (context, mainPhoto, _) {
+                          return _buildAccountSection(user, mainPhoto, onSurfaceColor, textMutedColor, isDark);
+                        },
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -172,12 +190,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               fit: BoxFit.cover,
                               width: 120,
                               height: 120,
-                              placeholder: (context, url) => Container(
-                                color: Colors.grey.shade200,
-                                child: const Center(
-                                  child: CircularProgressIndicator(strokeWidth: 2),
-                                ),
-                              ),
+                              memCacheWidth: 400,
+                              memCacheHeight: 400,
+                              maxWidthDiskCache: 800,
+                              maxHeightDiskCache: 800,
+                              placeholder: (context, url) => const ShimmerAvatar(),
                               errorWidget: (context, url, error) => Container(
                                 color: Colors.grey.shade200,
                                 child: const Icon(Icons.person, color: Colors.grey, size: 50),

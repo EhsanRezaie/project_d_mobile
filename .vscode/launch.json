@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "project_d_mobile",
+      "request": "launch",
+      "type": "dart",
+      "env": {
+        "PUB_HOSTED_URL": "https://pub.flutter-io.cn"
+      }
+    },
+    {
+      "name": "project_d_mobile (profile mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "env": {
+        "PUB_HOSTED_URL": "https://pub.flutter-io.cn"
+      }
+    },
+    {
+      "name": "project_d_mobile (release mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "env": {
+        "PUB_HOSTED_URL": "https://pub.flutter-io.cn"
+      }
+    }
+  ]
+}

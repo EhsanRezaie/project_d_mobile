@@ -15,9 +15,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   await dotenv.load();
-  
-  ApiService.init();
-  
+
+  await ApiService.init();
+
   // Load saved language before running app
   final prefs = await SharedPreferences.getInstance();
   final savedLanguage = prefs.getString('selected_language') ?? 'en';
@@ -47,15 +47,16 @@ class MyApp extends StatelessWidget {
           create: (_) => LanguageProvider()..setLanguage(initialLanguage),
         ),
       ],
-      child: Consumer<LanguageProvider>(
-        builder: (context, languageProvider, child) {
+      child: Selector<LanguageProvider, Locale>(
+        selector: (_, provider) => provider.locale,
+        builder: (context, locale, _) {
           return MaterialApp(
             title: 'AURA',
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
             themeMode: ThemeMode.light,
             debugShowCheckedModeBanner: false,
-            locale: languageProvider.locale,
+            locale: locale,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const SplashScreen(),

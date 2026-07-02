@@ -38,7 +38,14 @@ class AuthProvider extends ChangeNotifier {
     _user = null;
     notifyListeners();
 
-    final isHealthy = await _checkServerHealth();
+    final results = await Future.wait([
+      _checkServerHealth(),
+      _storageService.hasTokens(),
+    ]);
+
+    final isHealthy = results[0];
+    final hasTokens = results[1];
+
     if (!isHealthy) {
       _isLoading = false;
       _isServerHealthy = false;
@@ -47,7 +54,6 @@ class AuthProvider extends ChangeNotifier {
       return false;
     }
 
-    final hasTokens = await _storageService.hasTokens();
     if (!hasTokens) {
       _isLoading = false;
       _isAuthenticated = false;

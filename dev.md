@@ -28,11 +28,12 @@ Flutter mobile client for Iranian dating app (Badoo-style).
 | Framework | Flutter 3.x |
 | State Management | Provider |
 | HTTP Client | Dio |
+| HTTP Caching | dio_cache_interceptor + Hive |
 | WebSocket | web_socket_channel |
 | Secure Storage | flutter_secure_storage |
 | Local Storage | shared_preferences |
 | Image Picker | image_picker |
-| Image Caching | cached_network_image |
+| Image Caching | cached_network_image + shimmer |
 | Environment | flutter_dotenv |
 | Google Sign-In | google_sign_in |
 | Geolocator | geolocator |
@@ -91,7 +92,7 @@ lib/
 │   ├── photo.dart            # Photo model
 │   └── location_models.dart  # Location models
 ├── services/                 # API services
-│   ├── api_service.dart      # Dio HTTP client with interceptors
+│   ├── api_service.dart      # Dio HTTP client with interceptors + Hive cache
 │   ├── auth_service.dart     # Auth API calls
 │   ├── storage_service.dart  # Secure token storage
 │   ├── google_auth_service.dart # Google Sign-In
@@ -125,7 +126,8 @@ lib/
 │       └── edit_prompts_screen.dart
 ├── widgets/                  # Reusable widgets
 │   ├── loading_widget.dart
-│   └── progress_bar.dart
+│   ├── progress_bar.dart
+│   └── shimmer_avatar.dart   # Shimmer loading placeholder
 ├── l10n/                     # Localization
 │   ├── app_en.arb            # English translations
 │   └── app_fa.arb            # Persian translations
