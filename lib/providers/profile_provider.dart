@@ -66,6 +66,28 @@ class ProfileProvider extends ChangeNotifier {
     }
   }
 
+  void addPhotoFromUpload(PhotoResponse photo) {
+    _photos.add(photo);
+    notifyListeners();
+  }
+
+  void removePhotoById(String id) {
+    _photos.removeWhere((p) => p.id == id);
+    notifyListeners();
+  }
+
+  void setMainPhotoById(String id) {
+    for (var photo in _photos) {
+      photo.isMain = (photo.id == id);
+    }
+    notifyListeners();
+  }
+
+  void updatePhotoOrder(List<PhotoResponse> reordered) {
+    _photos = reordered;
+    notifyListeners();
+  }
+
   // Refresh all data
   Future<void> refreshData() async {
     print('🔄 Refreshing profile data...');

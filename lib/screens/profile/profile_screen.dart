@@ -13,6 +13,7 @@ import 'package:dating_app/screens/profile/edit_basic_info_screen.dart';
 import 'package:dating_app/screens/profile/edit_profile_details_screen.dart';
 import 'package:dating_app/screens/profile/edit_interests_screen.dart';
 import 'package:dating_app/screens/profile/edit_prompts_screen.dart';
+import 'package:dating_app/screens/profile/edit_photos_screen.dart';
 import 'package:dating_app/widgets/shimmer_avatar.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -650,11 +651,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 textMutedColor: textMutedColor,
                 isDark: isDark,
                 onTap: () {
-                  // TODO: Navigate to Edit Photos screen
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Edit Photos coming soon!'),
-                    ),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => EditPhotosScreen(
+                    profileProvider: Provider.of<ProfileProvider>(context, listen: false),
+                  )),
                   );
                 },
                 showChevron: true,

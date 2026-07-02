@@ -71,7 +71,7 @@ class PhotoResponse {
   final String userId;
   final String url;
   final int order;
-  final bool isMain;
+  bool isMain;
   final String status;
   final String? rejectReason;
   final bool faceVerified;
