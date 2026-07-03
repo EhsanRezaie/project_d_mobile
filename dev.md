@@ -15,11 +15,13 @@ Flutter mobile client for Iranian dating app (Badoo-style).
 - ✅ Google Sign-In Integration
 - ✅ Photo Upload with Drag & Drop
 - ✅ Location Services with GPS and Manual Selection
+- ✅ Settings Screen (Dark Mode, Privacy, Notifications, Language)
+- ✅ Dark Mode - Full theme support
 - 🔄 Localization & Translation (In Progress)
-- ⬜ Discover card swiping (Coming in Session 22)
-- ⬜ Search with filters (Coming in Session 22)
-- ⬜ Real-time chat with WebSocket (Coming in Session 23)
-- ⬜ Likes & matches system (Coming in Session 23)
+- ⬜ Discover card swiping (Coming in Session 23)
+- ⬜ Search with filters (Coming in Session 23)
+- ⬜ Real-time chat with WebSocket (Coming in Session 24)
+- ⬜ Likes & matches system (Coming in Session 24)
 
 ## Tech Stack
 
@@ -103,7 +105,8 @@ lib/
 │   ├── auth_provider.dart    # Auth state
 │   ├── language_provider.dart # Language selection
 │   ├── onboarding_provider.dart # Onboarding state
-│   └── profile_provider.dart # Profile state
+│   ├── profile_provider.dart # Profile state
+│   └── settings_provider.dart # Settings state (dark mode, privacy, notifications)
 ├── screens/                  # UI screens
 │   ├── splash_screen.dart    # Splash screen with progress
 │   ├── login_screen.dart     # Login screen
@@ -123,7 +126,8 @@ lib/
 │       ├── edit_basic_info_screen.dart
 │       ├── edit_profile_details_screen.dart
 │       ├── edit_interests_screen.dart
-│       └── edit_prompts_screen.dart
+│       ├── edit_prompts_screen.dart
+│       └── settings_screen.dart    # Settings (dark mode, privacy, notifications, language)
 ├── widgets/                  # Reusable widgets
 │   ├── loading_widget.dart
 │   ├── progress_bar.dart
@@ -162,7 +166,7 @@ The app supports English and Persian (Farsi) languages.
 | Profile Edit | ✅ | 🔄 |
 | Edit Screens | 🔄 | 🔄 |
 | Error Messages | ✅ | 🔄 |
-| Settings | ✅ | 🔄 |
+| Settings | ✅ | ✅ |
 
 ## API Integration
 
@@ -185,6 +189,7 @@ The app connects to a FastAPI backend with the following endpoints:
 | `/users/me/photos` | GET/POST | Photo management | ✅ |
 | `/users/me/photos/{id}` | DELETE | Delete photo | ✅ |
 | `/users/me/photos/{id}/main` | PUT | Set main photo | ✅ |
+| `/users/me/settings` | PUT | Update settings (dark mode, privacy, notifications) | ✅ |
 | `/users/me/location` | POST | Update GPS location | ✅ |
 | `/users/me/location-text` | PATCH | Update text location | ✅ |
 | `/locations/countries` | GET | Get countries | ✅ |
@@ -226,7 +231,6 @@ The app connects to a FastAPI backend with the following endpoints:
 - [ ] **Likes & Matches** - Match management
 - [ ] **Block User** - Safety features
 - [ ] **Push Notifications** - Firebase setup
-- [ ] **Dark Mode** - Full theme support
 
 ## Environment Variables
 
@@ -276,10 +280,11 @@ Expected response: `{"status":"healthy","redis":"connected"}`
 | 19 | Location Services | ✅ |
 | 20 | Google Sign-In | ✅ |
 | 21 | Profile Edit & Account Settings | ✅ |
-| 22 | Localization & Polish | 🔄 |
-| 23 | Discover & Swiping | ⬜ |
-| 24 | Chat System (Messages + WebSocket) | ⬜ |
-| 25 | Likes, Matches & Production | ⬜ |
+| 22 | Settings Screen & Dark Mode | ✅ |
+| 23 | Localization & Polish | 🔄 |
+| 24 | Discover & Swiping | ⬜ |
+| 25 | Chat System (Messages + WebSocket) | ⬜ |
+| 26 | Likes, Matches & Production | ⬜ |
 
 ## Translation Status (Session 22)
 
@@ -381,3 +386,7 @@ For questions or support, please open an issue on GitHub.
 6. **Updated Tech Stack** - Added Google Sign-In and Geolocator
 7. **Updated Project Structure** - Added all new screens
 8. **Added Todo List** - Clear priorities for next sessions
+9. **Added Settings Screen** - Dark mode, privacy, notifications, language picker
+10. **Added SettingsProvider** - State management with API sync + local persistence
+11. **Wired Dark Mode** - Dynamic theme switching via MaterialApp themeMode
+12. **Updated Translations** - Added 16 new settings-related keys in both EN and FA
