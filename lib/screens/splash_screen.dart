@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:dating_app/generated/app_localizations.dart';
 import '../config/app_theme.dart';
 import '../providers/auth_provider.dart';
+import '../providers/settings_provider.dart';
 import 'login_screen.dart';
 import 'main_screen.dart';
 
@@ -39,6 +40,11 @@ class _SplashScreenState extends State<SplashScreen> {
     await _animateProgress(0.0, targetDouble, duration: const Duration(milliseconds: 800));
     
     final isAuthenticated = await authProvider.initializeApp();
+
+    if (authProvider.user != null) {
+      final settingsProvider = Provider.of<SettingsProvider>(context, listen: false);
+      settingsProvider.loadFromUser(authProvider.user);
+    }
     
     if (!authProvider.isServerHealthy) {
       final t = AppLocalizations.of(context)!;

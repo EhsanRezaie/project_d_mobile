@@ -9,6 +9,7 @@ import 'services/api_service.dart';
 import 'providers/auth_provider.dart';
 import 'providers/onboarding_provider.dart';
 import 'providers/language_provider.dart';
+import 'providers/settings_provider.dart';
 import 'screens/splash_screen.dart';
 
 void main() async {
@@ -46,17 +47,17 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => LanguageProvider()..setLanguage(initialLanguage),
         ),
+        ChangeNotifierProvider(create: (_) => SettingsProvider()),
       ],
-      child: Selector<LanguageProvider, Locale>(
-        selector: (_, provider) => provider.locale,
-        builder: (context, locale, _) {
+      child: Consumer2<LanguageProvider, SettingsProvider>(
+        builder: (context, langProv, settingsProv, _) {
           return MaterialApp(
             title: 'AURA',
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
-            themeMode: ThemeMode.light,
+            themeMode: settingsProv.darkMode ? ThemeMode.dark : ThemeMode.light,
             debugShowCheckedModeBanner: false,
-            locale: locale,
+            locale: langProv.locale,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: const SplashScreen(),

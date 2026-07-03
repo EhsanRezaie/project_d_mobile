@@ -60,12 +60,31 @@
   "login_password_required": "رمز عبور الزامی است",
   "login_password_invalid": "رمز عبور باید حداقل ۸ کاراکتر باشد",
 
-
   "verify_resend_success": "کد تایید جدید به ایمیل شما ارسال شد",
   "verify_resend_failed": "ارسال مجدد کد انجام نشد",
   "verify_code_required": "لطفاً کد ۶ رقمی را وارد کنید",
 
-  
+  "settings_title": "تنظیمات",
+  "settings_appearance": "ظاهر",
+  "settings_dark_mode": "حالت تاریک",
+  "settings_dark_mode_desc": "استفاده از تم تیره در سراسر برنامه",
+  "settings_privacy": "حریم خصوصی",
+  "settings_hide_last_seen": "مخفی کردن آخرین بازدید",
+  "settings_hide_last_seen_desc": "آخرین زمان فعالیت شما نشان داده نشود",
+  "settings_hide_online_status": "مخفی کردن وضعیت آنلاین",
+  "settings_hide_online_status_desc": "وضعیت آنلاین بودن شما نشان داده نشود",
+  "settings_notifications": "اعلان‌ها",
+  "settings_push_notifications": "اعلان‌های فشاری",
+  "settings_push_notifications_desc": "دریافت اعلان‌های فشاری",
+  "settings_like_notifications": "اعلان لایک",
+  "settings_like_notifications_desc": "وقتی کسی شما را لایک کرد مطلع شوید",
+  "settings_match_notifications": "اعلان تطابق",
+  "settings_match_notifications_desc": "وقتی یک تطابق جدید دارید مطلع شوید",
+  "settings_message_notifications": "اعلان پیام",
+  "settings_message_notifications_desc": "وقتی پیام جدیدی دریافت می‌کنید مطلع شوید",
+  "settings_language": "زبان",
+  "settings_language_desc": "زبان مورد نظر خود را انتخاب کنید",
+
   "error_email_exists": "این ایمیل قبلاً ثبت نام کرده است",
   "error_email_invalid_format": "فرمت ایمیل نامعتبر است",
   "error_too_many_attempts": "تعداد تلاش‌ها بیش از حد است. لطفاً کمی صبر کنید",

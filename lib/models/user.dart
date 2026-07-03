@@ -1,10 +1,58 @@
 // lib/models/user.dart
+class UserSettings {
+  final bool hideLastSeen;
+  final bool hideOnlineStatus;
+  final bool pushEnabled;
+  final bool likeNotifications;
+  final bool matchNotifications;
+  final bool messageNotifications;
+  final String language;
+  final bool darkMode;
+
+  const UserSettings({
+    this.hideLastSeen = false,
+    this.hideOnlineStatus = false,
+    this.pushEnabled = true,
+    this.likeNotifications = true,
+    this.matchNotifications = true,
+    this.messageNotifications = true,
+    this.language = 'fa',
+    this.darkMode = false,
+  });
+
+  factory UserSettings.fromJson(Map<String, dynamic> json) {
+    return UserSettings(
+      hideLastSeen: json['hide_last_seen'] ?? false,
+      hideOnlineStatus: json['hide_online_status'] ?? false,
+      pushEnabled: json['push_enabled'] ?? true,
+      likeNotifications: json['like_notifications'] ?? true,
+      matchNotifications: json['match_notifications'] ?? true,
+      messageNotifications: json['message_notifications'] ?? true,
+      language: json['language'] ?? 'fa',
+      darkMode: json['dark_mode'] ?? false,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'hide_last_seen': hideLastSeen,
+      'hide_online_status': hideOnlineStatus,
+      'push_enabled': pushEnabled,
+      'like_notifications': likeNotifications,
+      'match_notifications': matchNotifications,
+      'message_notifications': messageNotifications,
+      'language': language,
+      'dark_mode': darkMode,
+    };
+  }
+}
+
 class User {
   final String id;
   final String email;
   final String? name;
   final int? age;
-  final String? birthDate; // Added
+  final String? birthDate;
   final String? gender;
   final String? sexualOrientation;
   final String? bio;
@@ -37,15 +85,16 @@ class User {
   final DateTime? lastSeenAt;
   final bool hideLastSeen;
   final bool hideOnlineStatus;
-  final List<String>? interests; // Added
-  final List<Map<String, dynamic>>? prompts; // Added
+  final List<String>? interests;
+  final List<Map<String, dynamic>>? prompts;
+  final UserSettings? settings;
 
   User({
     required this.id,
     required this.email,
     this.name,
     this.age,
-    this.birthDate, // Added
+    this.birthDate,
     this.gender,
     this.sexualOrientation,
     this.bio,
@@ -78,15 +127,20 @@ class User {
     this.lastSeenAt,
     this.hideLastSeen = false,
     this.hideOnlineStatus = false,
-    this.interests, // Added
-    this.prompts, // Added
+    this.interests,
+    this.prompts,
+    this.settings,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
-    // Parse prompts from the response
     List<Map<String, dynamic>>? parsedPrompts;
     if (json['prompts'] != null) {
       parsedPrompts = List<Map<String, dynamic>>.from(json['prompts']);
+    }
+
+    UserSettings? parsedSettings;
+    if (json['settings'] != null) {
+      parsedSettings = UserSettings.fromJson(json['settings']);
     }
 
     return User(
@@ -94,7 +148,7 @@ class User {
       email: json['email'],
       name: json['name'],
       age: json['age'],
-      birthDate: json['birth_date'], // Added
+      birthDate: json['birth_date'],
       gender: json['gender'],
       sexualOrientation: json['sexual_orientation'],
       bio: json['bio'],
@@ -129,10 +183,11 @@ class User {
       lastSeenAt: json['last_seen_at'] != null 
           ? DateTime.parse(json['last_seen_at']) 
           : null,
-      hideLastSeen: json['hide_last_seen'] ?? false,
-      hideOnlineStatus: json['hide_online_status'] ?? false,
-      interests: json['interests'] != null ? List<String>.from(json['interests']) : null, // Added
-      prompts: parsedPrompts, // Added
+      hideLastSeen: json['hide_last_seen'] ?? parsedSettings?.hideLastSeen ?? false,
+      hideOnlineStatus: json['hide_online_status'] ?? parsedSettings?.hideOnlineStatus ?? false,
+      interests: json['interests'] != null ? List<String>.from(json['interests']) : null,
+      prompts: parsedPrompts,
+      settings: parsedSettings,
     );
   }
 
@@ -142,7 +197,7 @@ class User {
       'email': email,
       'name': name,
       'age': age,
-      'birth_date': birthDate, // Added
+      'birth_date': birthDate,
       'gender': gender,
       'sexual_orientation': sexualOrientation,
       'bio': bio,
@@ -175,12 +230,11 @@ class User {
       'last_seen_at': lastSeenAt?.toIso8601String(),
       'hide_last_seen': hideLastSeen,
       'hide_online_status': hideOnlineStatus,
-      'interests': interests, // Added
-      'prompts': prompts, // Added
+      'interests': interests,
+      'prompts': prompts,
     };
   }
 
-  // Helper method to get age from birthDate if not provided
   int? getAgeFromBirthDate() {
     if (birthDate == null) return age;
     try {

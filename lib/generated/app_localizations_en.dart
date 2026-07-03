@@ -188,6 +188,71 @@ class AppLocalizationsEn extends AppLocalizations {
   String get verify_code_required => 'Please enter the 6-digit code';
 
   @override
+  String get settings_title => 'Settings';
+
+  @override
+  String get settings_appearance => 'Appearance';
+
+  @override
+  String get settings_dark_mode => 'Dark Mode';
+
+  @override
+  String get settings_dark_mode_desc => 'Use dark theme throughout the app';
+
+  @override
+  String get settings_privacy => 'Privacy';
+
+  @override
+  String get settings_hide_last_seen => 'Hide Last Seen';
+
+  @override
+  String get settings_hide_last_seen_desc =>
+      'Don\'t show when you were last active';
+
+  @override
+  String get settings_hide_online_status => 'Hide Online Status';
+
+  @override
+  String get settings_hide_online_status_desc =>
+      'Don\'t show when you\'re online';
+
+  @override
+  String get settings_notifications => 'Notifications';
+
+  @override
+  String get settings_push_notifications => 'Push Notifications';
+
+  @override
+  String get settings_push_notifications_desc => 'Receive push notifications';
+
+  @override
+  String get settings_like_notifications => 'Like Notifications';
+
+  @override
+  String get settings_like_notifications_desc =>
+      'Get notified when someone likes you';
+
+  @override
+  String get settings_match_notifications => 'Match Notifications';
+
+  @override
+  String get settings_match_notifications_desc =>
+      'Get notified when you get a match';
+
+  @override
+  String get settings_message_notifications => 'Message Notifications';
+
+  @override
+  String get settings_message_notifications_desc =>
+      'Get notified when you receive a message';
+
+  @override
+  String get settings_language => 'Language';
+
+  @override
+  String get settings_language_desc => 'Choose your preferred language';
+
+  @override
   String get error_email_exists => 'This email is already registered';
 
   @override

@@ -446,6 +446,126 @@ abstract class AppLocalizations {
   /// **'Please enter the 6-digit code'**
   String get verify_code_required;
 
+  /// No description provided for @settings_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings_title;
+
+  /// No description provided for @settings_appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get settings_appearance;
+
+  /// No description provided for @settings_dark_mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get settings_dark_mode;
+
+  /// No description provided for @settings_dark_mode_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Use dark theme throughout the app'**
+  String get settings_dark_mode_desc;
+
+  /// No description provided for @settings_privacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get settings_privacy;
+
+  /// No description provided for @settings_hide_last_seen.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide Last Seen'**
+  String get settings_hide_last_seen;
+
+  /// No description provided for @settings_hide_last_seen_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t show when you were last active'**
+  String get settings_hide_last_seen_desc;
+
+  /// No description provided for @settings_hide_online_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide Online Status'**
+  String get settings_hide_online_status;
+
+  /// No description provided for @settings_hide_online_status_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t show when you\'re online'**
+  String get settings_hide_online_status_desc;
+
+  /// No description provided for @settings_notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get settings_notifications;
+
+  /// No description provided for @settings_push_notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Push Notifications'**
+  String get settings_push_notifications;
+
+  /// No description provided for @settings_push_notifications_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive push notifications'**
+  String get settings_push_notifications_desc;
+
+  /// No description provided for @settings_like_notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Like Notifications'**
+  String get settings_like_notifications;
+
+  /// No description provided for @settings_like_notifications_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Get notified when someone likes you'**
+  String get settings_like_notifications_desc;
+
+  /// No description provided for @settings_match_notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Match Notifications'**
+  String get settings_match_notifications;
+
+  /// No description provided for @settings_match_notifications_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Get notified when you get a match'**
+  String get settings_match_notifications_desc;
+
+  /// No description provided for @settings_message_notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Message Notifications'**
+  String get settings_message_notifications;
+
+  /// No description provided for @settings_message_notifications_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Get notified when you receive a message'**
+  String get settings_message_notifications_desc;
+
+  /// No description provided for @settings_language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settings_language;
+
+  /// No description provided for @settings_language_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your preferred language'**
+  String get settings_language_desc;
+
   /// No description provided for @error_email_exists.
   ///
   /// In en, this message translates to:

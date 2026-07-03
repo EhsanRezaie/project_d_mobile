@@ -186,6 +186,71 @@ class AppLocalizationsFa extends AppLocalizations {
   String get verify_code_required => 'لطفاً کد ۶ رقمی را وارد کنید';
 
   @override
+  String get settings_title => 'تنظیمات';
+
+  @override
+  String get settings_appearance => 'ظاهر';
+
+  @override
+  String get settings_dark_mode => 'حالت تاریک';
+
+  @override
+  String get settings_dark_mode_desc => 'استفاده از تم تیره در سراسر برنامه';
+
+  @override
+  String get settings_privacy => 'حریم خصوصی';
+
+  @override
+  String get settings_hide_last_seen => 'مخفی کردن آخرین بازدید';
+
+  @override
+  String get settings_hide_last_seen_desc =>
+      'آخرین زمان فعالیت شما نشان داده نشود';
+
+  @override
+  String get settings_hide_online_status => 'مخفی کردن وضعیت آنلاین';
+
+  @override
+  String get settings_hide_online_status_desc =>
+      'وضعیت آنلاین بودن شما نشان داده نشود';
+
+  @override
+  String get settings_notifications => 'اعلان‌ها';
+
+  @override
+  String get settings_push_notifications => 'اعلان‌های فشاری';
+
+  @override
+  String get settings_push_notifications_desc => 'دریافت اعلان‌های فشاری';
+
+  @override
+  String get settings_like_notifications => 'اعلان لایک';
+
+  @override
+  String get settings_like_notifications_desc =>
+      'وقتی کسی شما را لایک کرد مطلع شوید';
+
+  @override
+  String get settings_match_notifications => 'اعلان تطابق';
+
+  @override
+  String get settings_match_notifications_desc =>
+      'وقتی یک تطابق جدید دارید مطلع شوید';
+
+  @override
+  String get settings_message_notifications => 'اعلان پیام';
+
+  @override
+  String get settings_message_notifications_desc =>
+      'وقتی پیام جدیدی دریافت می‌کنید مطلع شوید';
+
+  @override
+  String get settings_language => 'زبان';
+
+  @override
+  String get settings_language_desc => 'زبان مورد نظر خود را انتخاب کنید';
+
+  @override
   String get error_email_exists => 'این ایمیل قبلاً ثبت نام کرده است';
 
   @override

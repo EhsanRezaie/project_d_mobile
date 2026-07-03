@@ -278,6 +278,19 @@ class AuthService {
     }
   }
 
+  /// Update user settings
+  /// PUT /users/me/settings
+  static Future<Response> updateSettings(Map<String, dynamic> data) async {
+    try {
+      return await ApiService.put('/users/me/settings', data: data);
+    } on DioException catch (e) {
+      if (e.response != null) {
+        return e.response!;
+      }
+      rethrow;
+    }
+  }
+
   /// Update user prompts
   /// PUT /users/me/prompts
   static Future<Response> updatePrompts(List<Map<String, dynamic>> prompts) async {

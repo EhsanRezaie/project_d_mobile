@@ -14,6 +14,7 @@ import 'package:dating_app/screens/profile/edit_profile_details_screen.dart';
 import 'package:dating_app/screens/profile/edit_interests_screen.dart';
 import 'package:dating_app/screens/profile/edit_prompts_screen.dart';
 import 'package:dating_app/screens/profile/edit_photos_screen.dart';
+import 'package:dating_app/screens/profile/settings_screen.dart';
 import 'package:dating_app/widgets/shimmer_avatar.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -97,7 +98,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               IconButton(
                 icon: Icon(Icons.settings_outlined, color: onSurfaceColor),
                 onPressed: () {
-                  // TODO: Navigate to Settings screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const SettingsScreen(),
+                    ),
+                  );
                 },
               ),
             ],
