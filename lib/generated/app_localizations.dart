@@ -649,6 +649,282 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Incorrect email or password'**
   String get error_wrong_credentials;
+
+  /// No description provided for @discover_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover'**
+  String get discover_title;
+
+  /// No description provided for @discover_loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding people near you...'**
+  String get discover_loading;
+
+  /// No description provided for @discover_no_profiles.
+  ///
+  /// In en, this message translates to:
+  /// **'No more profiles'**
+  String get discover_no_profiles;
+
+  /// No description provided for @discover_no_profiles_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Try adjusting your filters'**
+  String get discover_no_profiles_hint;
+
+  /// No description provided for @discover_try_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get discover_try_again;
+
+  /// No description provided for @discover_refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get discover_refresh;
+
+  /// No description provided for @discover_say_something.
+  ///
+  /// In en, this message translates to:
+  /// **'Say something...'**
+  String get discover_say_something;
+
+  /// No description provided for @discover_send_message_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a message with your like...'**
+  String get discover_send_message_hint;
+
+  /// No description provided for @discover_send_and_like.
+  ///
+  /// In en, this message translates to:
+  /// **'Send & Like'**
+  String get discover_send_and_like;
+
+  /// No description provided for @discover_match_title.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a Match!'**
+  String get discover_match_title;
+
+  /// No description provided for @discover_match_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You and {name} liked each other'**
+  String discover_match_subtitle(Object name);
+
+  /// No description provided for @discover_match_message_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Your message was sent!'**
+  String get discover_match_message_sent;
+
+  /// No description provided for @discover_send_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a Message'**
+  String get discover_send_message;
+
+  /// No description provided for @discover_keep_swiping.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Swiping'**
+  String get discover_keep_swiping;
+
+  /// No description provided for @discover_filter_all.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyone'**
+  String get discover_filter_all;
+
+  /// No description provided for @discover_filter_male.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get discover_filter_male;
+
+  /// No description provided for @discover_filter_female.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get discover_filter_female;
+
+  /// No description provided for @discover_filter_show.
+  ///
+  /// In en, this message translates to:
+  /// **'Show'**
+  String get discover_filter_show;
+
+  /// No description provided for @discover_filter_age_range.
+  ///
+  /// In en, this message translates to:
+  /// **'Age Range'**
+  String get discover_filter_age_range;
+
+  /// No description provided for @discover_filter_years.
+  ///
+  /// In en, this message translates to:
+  /// **'{min} - {max} years'**
+  String discover_filter_years(Object max, Object min);
+
+  /// No description provided for @discover_filter_apply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get discover_filter_apply;
+
+  /// No description provided for @discover_filter_max_distance.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum Distance'**
+  String get discover_filter_max_distance;
+
+  /// No description provided for @discover_filter_km.
+  ///
+  /// In en, this message translates to:
+  /// **'{distance} km'**
+  String discover_filter_km(Object distance);
+
+  /// No description provided for @discover_km_away.
+  ///
+  /// In en, this message translates to:
+  /// **'{distance} km away'**
+  String discover_km_away(Object distance);
+
+  /// No description provided for @discover_tap_for_more.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for more'**
+  String get discover_tap_for_more;
+
+  /// No description provided for @discover_premium.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium'**
+  String get discover_premium;
+
+  /// No description provided for @profile_section_about.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get profile_section_about;
+
+  /// No description provided for @profile_section_physical.
+  ///
+  /// In en, this message translates to:
+  /// **'Physical'**
+  String get profile_section_physical;
+
+  /// No description provided for @profile_section_lifestyle.
+  ///
+  /// In en, this message translates to:
+  /// **'Lifestyle'**
+  String get profile_section_lifestyle;
+
+  /// No description provided for @profile_section_background.
+  ///
+  /// In en, this message translates to:
+  /// **'Background'**
+  String get profile_section_background;
+
+  /// No description provided for @profile_section_languages.
+  ///
+  /// In en, this message translates to:
+  /// **'Languages'**
+  String get profile_section_languages;
+
+  /// No description provided for @profile_section_interests.
+  ///
+  /// In en, this message translates to:
+  /// **'Interests'**
+  String get profile_section_interests;
+
+  /// No description provided for @profile_section_prompts.
+  ///
+  /// In en, this message translates to:
+  /// **'Prompts'**
+  String get profile_section_prompts;
+
+  /// No description provided for @profile_label_height.
+  ///
+  /// In en, this message translates to:
+  /// **'Height'**
+  String get profile_label_height;
+
+  /// No description provided for @profile_label_weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get profile_label_weight;
+
+  /// No description provided for @profile_label_body_type.
+  ///
+  /// In en, this message translates to:
+  /// **'Body Type'**
+  String get profile_label_body_type;
+
+  /// No description provided for @profile_label_relationship.
+  ///
+  /// In en, this message translates to:
+  /// **'Relationship'**
+  String get profile_label_relationship;
+
+  /// No description provided for @profile_label_living_situation.
+  ///
+  /// In en, this message translates to:
+  /// **'Living Situation'**
+  String get profile_label_living_situation;
+
+  /// No description provided for @profile_label_children.
+  ///
+  /// In en, this message translates to:
+  /// **'Children'**
+  String get profile_label_children;
+
+  /// No description provided for @profile_label_smoking.
+  ///
+  /// In en, this message translates to:
+  /// **'Smoking'**
+  String get profile_label_smoking;
+
+  /// No description provided for @profile_label_drinking.
+  ///
+  /// In en, this message translates to:
+  /// **'Drinking'**
+  String get profile_label_drinking;
+
+  /// No description provided for @profile_label_education.
+  ///
+  /// In en, this message translates to:
+  /// **'Education'**
+  String get profile_label_education;
+
+  /// No description provided for @profile_label_work.
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get profile_label_work;
+
+  /// No description provided for @profile_label_religion.
+  ///
+  /// In en, this message translates to:
+  /// **'Religion'**
+  String get profile_label_religion;
+
+  /// No description provided for @profile_label_ethnicity.
+  ///
+  /// In en, this message translates to:
+  /// **'Ethnicity'**
+  String get profile_label_ethnicity;
+
+  /// No description provided for @profile_label_politics.
+  ///
+  /// In en, this message translates to:
+  /// **'Politics'**
+  String get profile_label_politics;
 }
 
 class _AppLocalizationsDelegate

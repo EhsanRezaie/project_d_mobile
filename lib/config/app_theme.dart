@@ -36,6 +36,35 @@ class AppTheme {
   static const Color darkWarning = Color(0xFFFFD54F);
   static const Color darkShadow = Color(0x4A000000);
 
+  // ============ GRADIENT DEFINITIONS (Discover) ============
+
+  static LinearGradient rejectGradient({required bool isDark}) {
+    final base = isDark ? darkError : lightError;
+    return LinearGradient(
+      colors: [base, base.withOpacity(0.7)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    );
+  }
+
+  static LinearGradient chatGradient({required bool isDark}) {
+    final base = isDark ? darkPrimary : lightPrimary;
+    return LinearGradient(
+      colors: [base, base.withOpacity(0.7)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    );
+  }
+
+  static LinearGradient likeGradient({required bool isDark}) {
+    final base = isDark ? darkPrimary : lightPrimary;
+    return LinearGradient(
+      colors: [base, base.withOpacity(0.7)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    );
+  }
+
   // ============ TEXT STYLES ============
   
   static const String fontFamily = 'Inter';

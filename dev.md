@@ -281,10 +281,32 @@ Expected response: `{"status":"healthy","redis":"connected"}`
 | 20 | Google Sign-In | ✅ |
 | 21 | Profile Edit & Account Settings | ✅ |
 | 22 | Settings Screen & Dark Mode | ✅ |
-| 23 | Localization & Polish | 🔄 |
-| 24 | Discover & Swiping | ⬜ |
+| 23 | Localization, Discover Screen & Profile Detail Redesign | ✅ |
+| 24 | Discover & Swiping (Swipe Stamps, Interest Icons from Backend) | ✅ |
 | 25 | Chat System (Messages + WebSocket) | ⬜ |
 | 26 | Likes, Matches & Production | ⬜ |
+
+## Discover Screen Redesign (Session 23-24)
+
+### What changed
+- **Gradient pill buttons** — Replace 3 small circles with icon-only circular gradient buttons using theme colors only (primary, error). No text labels, no overflow.
+- **Swipe stamps** — NOPE/LIKE stamps appear when dragging card (like Tinder). NOPE = error color, LIKE = primary color.
+- **Interest icons from backend** — Fetches `/api/v1/interests` to get emoji icons, displays them before interest names on card and detail screen.
+- **Emoji section headers** — Profile detail sections use emoji prefixes: 🔥 About, 💪 Physical, 🏠 Lifestyle, 🌍 Background, 🗣️ Languages, ❤️ Interests, 💬 Prompts.
+- **42 ARB keys** — All discover/profile strings localized (EN + FA). All hardcoded English strings replaced.
+- **Theme-only colors** — Every color in discover files comes from `AppTheme` light/dark constants. Zero hardcoded `Colors.xxx`.
+- **New file:** `lib/widgets/discover_action_button.dart` — Shared circular gradient button widget.
+- **New file:** `lib/widgets/user_card.dart` — Swipeable card with stamp overlays and interest chips.
+- **New file:** `lib/screens/discover/profile_detail_screen.dart` — Full profile view with emoji sections and gradient action buttons.
+
+### Color rules (strict)
+| Element | Color Source |
+|---------|-------------|
+| Reject (X) / NOPE stamp / Premium badge / Gender female | `lightError` / `darkError` |
+| Chat button / LIKE stamp / Verified badge / Gender male | `lightPrimary` / `darkPrimary` |
+| Like (Heart) button / Match dialog heart | `lightPrimary` / `darkPrimary` (via `likeGradient`) |
+| Message sent checkmark | `lightSuccess` / `darkSuccess` |
+| Limit indicator | `lightSuccess` / `lightWarning` |
 
 ## Translation Status (Session 22)
 

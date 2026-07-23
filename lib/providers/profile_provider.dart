@@ -5,6 +5,18 @@ import 'package:dating_app/models/profile_stats.dart';
 import 'package:dating_app/services/photo_service.dart';
 
 class ProfileProvider extends ChangeNotifier {
+  bool _disposed = false;
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  void _safeNotify() {
+    if (!_disposed) notifyListeners();
+  }
+
   List<PhotoResponse> _photos = [];
   ProfileStats? _stats;
   bool _isLoading = false;
@@ -60,7 +72,7 @@ class ProfileProvider extends ChangeNotifier {
         messages: 0,
         likesRemainingToday: 10,
       );
-      notifyListeners();
+      _safeNotify();
     } catch (e) {
       // Handle error
     }
@@ -68,24 +80,24 @@ class ProfileProvider extends ChangeNotifier {
 
   void addPhotoFromUpload(PhotoResponse photo) {
     _photos.add(photo);
-    notifyListeners();
+    _safeNotify();
   }
 
   void removePhotoById(String id) {
     _photos.removeWhere((p) => p.id == id);
-    notifyListeners();
+    _safeNotify();
   }
 
   void setMainPhotoById(String id) {
     for (var photo in _photos) {
       photo.isMain = (photo.id == id);
     }
-    notifyListeners();
+    _safeNotify();
   }
 
   void updatePhotoOrder(List<PhotoResponse> reordered) {
     _photos = reordered;
-    notifyListeners();
+    _safeNotify();
   }
 
   // Refresh all data
@@ -100,7 +112,7 @@ class ProfileProvider extends ChangeNotifier {
 
   void _setLoading(bool loading) {
     _isLoading = loading;
-    notifyListeners();
+    _safeNotify();
   }
 
   void clear() {
@@ -109,6 +121,6 @@ class ProfileProvider extends ChangeNotifier {
     _error = null;
     _isLoading = false;
     _isInitialized = false;
-    notifyListeners();
+    _safeNotify();
   }
 }

@@ -294,4 +294,151 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get error_wrong_credentials => 'ایمیل یا رمز عبور اشتباه است';
+
+  @override
+  String get discover_title => 'کشف';
+
+  @override
+  String get discover_loading => 'در حال پیدا کردن افراد نزدیک شما...';
+
+  @override
+  String get discover_no_profiles => 'پروفایل دیگری وجود ندارد';
+
+  @override
+  String get discover_no_profiles_hint => 'فیلترهای خود را تنظیم کنید';
+
+  @override
+  String get discover_try_again => 'تلاش مجدد';
+
+  @override
+  String get discover_refresh => 'بازخوانی';
+
+  @override
+  String get discover_say_something => 'چیزی بنویسید...';
+
+  @override
+  String get discover_send_message_hint =>
+      'یک پیام همراه لایک خود ارسال کنید...';
+
+  @override
+  String get discover_send_and_like => 'ارسال و لایک';
+
+  @override
+  String get discover_match_title => 'یک تطابق!';
+
+  @override
+  String discover_match_subtitle(Object name) {
+    return 'شما و $name یکدیگر را لایک کردید';
+  }
+
+  @override
+  String get discover_match_message_sent => 'پیام شما ارسال شد!';
+
+  @override
+  String get discover_send_message => 'ارسال پیام';
+
+  @override
+  String get discover_keep_swiping => 'ادامه سوایپ';
+
+  @override
+  String get discover_filter_all => 'همه';
+
+  @override
+  String get discover_filter_male => 'مرد';
+
+  @override
+  String get discover_filter_female => 'زن';
+
+  @override
+  String get discover_filter_show => 'نمایش';
+
+  @override
+  String get discover_filter_age_range => 'محدوده سنی';
+
+  @override
+  String discover_filter_years(Object max, Object min) {
+    return '$min تا $max سال';
+  }
+
+  @override
+  String get discover_filter_apply => 'اعمال';
+
+  @override
+  String get discover_filter_max_distance => 'حداکثر فاصله';
+
+  @override
+  String discover_filter_km(Object distance) {
+    return '$distance کیلومتر';
+  }
+
+  @override
+  String discover_km_away(Object distance) {
+    return '$distance کیلومتر دورتر';
+  }
+
+  @override
+  String get discover_tap_for_more => 'برای اطلاعات بیشتر لمس کنید';
+
+  @override
+  String get discover_premium => 'پریمیوم';
+
+  @override
+  String get profile_section_about => 'درباره';
+
+  @override
+  String get profile_section_physical => 'ظاهری';
+
+  @override
+  String get profile_section_lifestyle => 'سبک زندگی';
+
+  @override
+  String get profile_section_background => 'سابقه';
+
+  @override
+  String get profile_section_languages => 'زبان‌ها';
+
+  @override
+  String get profile_section_interests => 'علاقه‌مندی‌ها';
+
+  @override
+  String get profile_section_prompts => 'پرامپت‌ها';
+
+  @override
+  String get profile_label_height => 'قد';
+
+  @override
+  String get profile_label_weight => 'وزن';
+
+  @override
+  String get profile_label_body_type => 'نوع بدن';
+
+  @override
+  String get profile_label_relationship => 'روابط';
+
+  @override
+  String get profile_label_living_situation => 'وضعیت زندگی';
+
+  @override
+  String get profile_label_children => 'فرزندان';
+
+  @override
+  String get profile_label_smoking => 'سیگار';
+
+  @override
+  String get profile_label_drinking => 'مشروبات';
+
+  @override
+  String get profile_label_education => 'تحصیلات';
+
+  @override
+  String get profile_label_work => 'شغل';
+
+  @override
+  String get profile_label_religion => 'دین';
+
+  @override
+  String get profile_label_ethnicity => 'قومیت';
+
+  @override
+  String get profile_label_politics => 'سیاست';
 }

@@ -294,4 +294,150 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get error_wrong_credentials => 'Incorrect email or password';
+
+  @override
+  String get discover_title => 'Discover';
+
+  @override
+  String get discover_loading => 'Finding people near you...';
+
+  @override
+  String get discover_no_profiles => 'No more profiles';
+
+  @override
+  String get discover_no_profiles_hint => 'Try adjusting your filters';
+
+  @override
+  String get discover_try_again => 'Try Again';
+
+  @override
+  String get discover_refresh => 'Refresh';
+
+  @override
+  String get discover_say_something => 'Say something...';
+
+  @override
+  String get discover_send_message_hint => 'Send a message with your like...';
+
+  @override
+  String get discover_send_and_like => 'Send & Like';
+
+  @override
+  String get discover_match_title => 'It\'s a Match!';
+
+  @override
+  String discover_match_subtitle(Object name) {
+    return 'You and $name liked each other';
+  }
+
+  @override
+  String get discover_match_message_sent => 'Your message was sent!';
+
+  @override
+  String get discover_send_message => 'Send a Message';
+
+  @override
+  String get discover_keep_swiping => 'Keep Swiping';
+
+  @override
+  String get discover_filter_all => 'Everyone';
+
+  @override
+  String get discover_filter_male => 'Male';
+
+  @override
+  String get discover_filter_female => 'Female';
+
+  @override
+  String get discover_filter_show => 'Show';
+
+  @override
+  String get discover_filter_age_range => 'Age Range';
+
+  @override
+  String discover_filter_years(Object max, Object min) {
+    return '$min - $max years';
+  }
+
+  @override
+  String get discover_filter_apply => 'Apply';
+
+  @override
+  String get discover_filter_max_distance => 'Maximum Distance';
+
+  @override
+  String discover_filter_km(Object distance) {
+    return '$distance km';
+  }
+
+  @override
+  String discover_km_away(Object distance) {
+    return '$distance km away';
+  }
+
+  @override
+  String get discover_tap_for_more => 'Tap for more';
+
+  @override
+  String get discover_premium => 'Premium';
+
+  @override
+  String get profile_section_about => 'About';
+
+  @override
+  String get profile_section_physical => 'Physical';
+
+  @override
+  String get profile_section_lifestyle => 'Lifestyle';
+
+  @override
+  String get profile_section_background => 'Background';
+
+  @override
+  String get profile_section_languages => 'Languages';
+
+  @override
+  String get profile_section_interests => 'Interests';
+
+  @override
+  String get profile_section_prompts => 'Prompts';
+
+  @override
+  String get profile_label_height => 'Height';
+
+  @override
+  String get profile_label_weight => 'Weight';
+
+  @override
+  String get profile_label_body_type => 'Body Type';
+
+  @override
+  String get profile_label_relationship => 'Relationship';
+
+  @override
+  String get profile_label_living_situation => 'Living Situation';
+
+  @override
+  String get profile_label_children => 'Children';
+
+  @override
+  String get profile_label_smoking => 'Smoking';
+
+  @override
+  String get profile_label_drinking => 'Drinking';
+
+  @override
+  String get profile_label_education => 'Education';
+
+  @override
+  String get profile_label_work => 'Work';
+
+  @override
+  String get profile_label_religion => 'Religion';
+
+  @override
+  String get profile_label_ethnicity => 'Ethnicity';
+
+  @override
+  String get profile_label_politics => 'Politics';
 }

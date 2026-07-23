@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../config/app_theme.dart';
 import '../providers/auth_provider.dart';
+import '../providers/discover_provider.dart';
 import '../providers/onboarding_provider.dart';
-import '../providers/profile_provider.dart';  // ✅ ADD THIS
+import '../providers/profile_provider.dart';
 import '../services/photo_service.dart';
 import 'auth/sign_up_screen.dart';
 import 'onboarding/basic_info_screen.dart';
@@ -25,20 +26,29 @@ class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
   bool _isChecking = false;
 
-  final List<Widget> _screens = [
-    const DiscoverScreen(),
-    const SearchScreen(),
-    const ChatsScreen(),
-    // ✅ Wrap ProfileScreen with Provider
-    ChangeNotifierProvider(
-      create: (_) => ProfileProvider(),
-      child: const ProfileScreen(),
-    ),
-  ];
+  late final List<Widget> _screens;
+
+  void _initScreens() {
+    _screens = [
+      ChangeNotifierProvider(
+        create: (_) => DiscoverProvider(),
+        child: DiscoverScreen(
+          onSwitchToChats: () => _switchToTab(2),
+        ),
+      ),
+      const SearchScreen(),
+      const ChatsScreen(),
+      ChangeNotifierProvider(
+        create: (_) => ProfileProvider(),
+        child: const ProfileScreen(),
+      ),
+    ];
+  }
 
   @override
   void initState() {
     super.initState();
+    _initScreens();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkOnboardingStatus();
     });
@@ -113,6 +123,10 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+  void _switchToTab(int index) {
+    setState(() => _currentIndex = index);
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
@@ -143,7 +157,10 @@ class _MainScreenState extends State<MainScreen> {
 
     return Scaffold(
       backgroundColor: bgColor,
-      body: _screens[_currentIndex],
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _screens,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
