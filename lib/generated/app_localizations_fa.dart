@@ -251,6 +251,19 @@ class AppLocalizationsFa extends AppLocalizations {
   String get settings_language_desc => 'زبان مورد نظر خود را انتخاب کنید';
 
   @override
+  String get settings_account => 'حساب کاربری';
+
+  @override
+  String get settings_logout => 'خروج';
+
+  @override
+  String get settings_logout_desc => 'از حساب کاربری خود خارج شوید';
+
+  @override
+  String get settings_logout_confirm =>
+      'آیا مطمئن هستید که می‌خواهید خارج شوید؟';
+
+  @override
   String get error_email_exists => 'این ایمیل قبلاً ثبت نام کرده است';
 
   @override
@@ -312,6 +325,33 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get discover_refresh => 'بازخوانی';
+
+  @override
+  String get discover_widen_title => 'کسی در نزدیکی پیدا نشد';
+
+  @override
+  String get discover_widen_subtitle => 'جستجوی خود را گسترش دهید';
+
+  @override
+  String discover_widen_distance(Object km) {
+    return '+$km کیلومتر';
+  }
+
+  @override
+  String discover_widen_age(Object years) {
+    return '+$years سال';
+  }
+
+  @override
+  String get discover_limit_reached_title => 'محدودیت روزانه رسید';
+
+  @override
+  String get discover_limit_reached_likes =>
+      'همه لایک‌های امروز تمام شد. فردا برگردید!';
+
+  @override
+  String get discover_limit_reached_chats =>
+      'همه چت‌های امروز تمام شد. فردا برگردید!';
 
   @override
   String get discover_say_something => 'چیزی بنویسید...';

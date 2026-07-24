@@ -12,6 +12,9 @@ class ProfileDetailScreen extends StatefulWidget {
   final VoidCallback? onSwipeLeft;
   final VoidCallback? onSwipeRight;
   final VoidCallback? onChat;
+  final int? likesRemaining;
+  final int? chatsRemaining;
+  final bool isPremium;
 
   const ProfileDetailScreen({
     super.key,
@@ -20,6 +23,9 @@ class ProfileDetailScreen extends StatefulWidget {
     this.onSwipeLeft,
     this.onSwipeRight,
     this.onChat,
+    this.likesRemaining,
+    this.chatsRemaining,
+    this.isPremium = false,
   });
 
   @override
@@ -279,8 +285,14 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                       ],
                       if (profile.isVerified) ...[
                         const SizedBox(width: 8),
-                        Icon(Icons.verified, size: 16,
-                            color: isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary),
+                        Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.verified, size: 14, color: Colors.white),
+                        ),
                       ],
                     ],
                   ),
@@ -354,55 +366,49 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
         children: [
           if (profile.bio != null && profile.bio!.isNotEmpty)
             _buildBioSection(t, isDark, primaryColor, mutedColor, textColor, surfaceColor, borderColor),
-          _buildSection(
+          _buildChipSection(
             emoji: '💪',
             title: t.profile_section_physical,
-            children: [
+            chips: [
               if (profile.height != null)
-                _buildInfoRow(Icons.height, t.profile_label_height, '${profile.height} cm', textColor, mutedColor, primaryColor),
+                _buildValueChip('📏', '${profile.height} cm', isDark, textColor, borderColor),
               if (profile.weight != null)
-                _buildInfoRow(Icons.monitor_weight_outlined, t.profile_label_weight, '${profile.weight} kg', textColor, mutedColor, primaryColor),
+                _buildValueChip('⚖️', '${profile.weight} kg', isDark, textColor, borderColor),
               if (profile.bodyType != null)
-                _buildInfoRow(Icons.fitness_center, t.profile_label_body_type, _capitalize(profile.bodyType!), textColor, mutedColor, primaryColor),
+                _buildValueChip('💪', _capitalize(profile.bodyType!), isDark, textColor, borderColor),
             ],
-            mutedColor: mutedColor,
-            primaryColor: primaryColor,
           ),
-          _buildSection(
+          _buildChipSection(
             emoji: '🏠',
             title: t.profile_section_lifestyle,
-            children: [
+            chips: [
               if (profile.relationshipStatus != null)
-                _buildInfoRow(Icons.favorite_outline, t.profile_label_relationship, _capitalize(profile.relationshipStatus!), textColor, mutedColor, primaryColor),
+                _buildValueChip('❤️', _capitalize(profile.relationshipStatus!), isDark, textColor, borderColor),
               if (profile.livingSituation != null)
-                _buildInfoRow(Icons.home_outlined, t.profile_label_living_situation, _formatLiving(profile.livingSituation!), textColor, mutedColor, primaryColor),
+                _buildValueChip('🏠', _formatLiving(profile.livingSituation!), isDark, textColor, borderColor),
               if (profile.childrenStatus != null)
-                _buildInfoRow(Icons.child_care_outlined, t.profile_label_children, _formatChildren(profile.childrenStatus!), textColor, mutedColor, primaryColor),
+                _buildValueChip('👶', _formatChildren(profile.childrenStatus!), isDark, textColor, borderColor),
               if (profile.smoking != null)
-                _buildInfoRow(Icons.smoking_rooms_outlined, t.profile_label_smoking, _capitalize(profile.smoking!), textColor, mutedColor, primaryColor),
+                _buildValueChip('🚬', _capitalize(profile.smoking!), isDark, textColor, borderColor),
               if (profile.drinking != null)
-                _buildInfoRow(Icons.local_bar_outlined, t.profile_label_drinking, _capitalize(profile.drinking!), textColor, mutedColor, primaryColor),
+                _buildValueChip('🍷', _capitalize(profile.drinking!), isDark, textColor, borderColor),
             ],
-            mutedColor: mutedColor,
-            primaryColor: primaryColor,
           ),
-          _buildSection(
+          _buildChipSection(
             emoji: '🌍',
             title: t.profile_section_background,
-            children: [
+            chips: [
               if (profile.education != null)
-                _buildInfoRow(Icons.school_outlined, t.profile_label_education, _formatEducation(profile.education!), textColor, mutedColor, primaryColor),
+                _buildValueChip('🎓', _formatEducation(profile.education!), isDark, textColor, borderColor),
               if (profile.workplace != null && profile.workplace!.isNotEmpty)
-                _buildInfoRow(Icons.work_outline, t.profile_label_work, profile.workplace!, textColor, mutedColor, primaryColor),
+                _buildValueChip('💼', profile.workplace!, isDark, textColor, borderColor),
               if (profile.religion != null)
-                _buildInfoRow(Icons.church_outlined, t.profile_label_religion, _capitalize(profile.religion!), textColor, mutedColor, primaryColor),
+                _buildValueChip('☪️', _capitalize(profile.religion!), isDark, textColor, borderColor),
               if (profile.ethnicity != null)
-                _buildInfoRow(Icons.public_outlined, t.profile_label_ethnicity, _capitalize(profile.ethnicity!), textColor, mutedColor, primaryColor),
+                _buildValueChip('🌍', _capitalize(profile.ethnicity!), isDark, textColor, borderColor),
               if (profile.politicalOrientation != null)
-                _buildInfoRow(Icons.how_to_vote_outlined, t.profile_label_politics, _capitalize(profile.politicalOrientation!), textColor, mutedColor, primaryColor),
+                _buildValueChip('🗳️', _capitalize(profile.politicalOrientation!), isDark, textColor, borderColor),
             ],
-            mutedColor: mutedColor,
-            primaryColor: primaryColor,
           ),
           if (profile.languages != null && profile.languages!.isNotEmpty)
             _buildChipsSection(
@@ -495,14 +501,12 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
     );
   }
 
-  Widget _buildSection({
+  Widget _buildChipSection({
     required String emoji,
     required String title,
-    required List<Widget> children,
-    required Color mutedColor,
-    required Color primaryColor,
+    required List<Widget> chips,
   }) {
-    if (children.isEmpty) return const SizedBox.shrink();
+    if (chips.isEmpty) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -517,61 +521,36 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                 fontFamily: 'Inter',
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
-                color: primaryColor,
+                color: context.isDarkMode ? AppTheme.darkPrimary : AppTheme.lightPrimary,
               ),
             ),
           ],
         ),
         const SizedBox(height: 10),
-        ...children,
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: chips,
+        ),
       ],
     );
   }
 
-  Widget _buildInfoRow(
-    IconData icon,
-    String label,
-    String value,
-    Color textColor,
-    Color mutedColor,
-    Color primaryColor,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Row(
-        children: [
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: primaryColor.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(icon, size: 18, color: primaryColor),
-          ),
-          const SizedBox(width: 12),
-          Text(
-            label,
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 14,
-              color: mutedColor,
-            ),
-          ),
-          const Spacer(),
-          Flexible(
-            child: Text(
-              value,
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: textColor,
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
+  Widget _buildValueChip(String emoji, String value, bool isDark, Color textColor, Color borderColor) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.white10 : (context.isDarkMode ? AppTheme.darkPrimary : AppTheme.lightPrimary).withOpacity(0.06),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        '$emoji $value',
+        style: TextStyle(
+          fontFamily: 'Inter',
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+          color: textColor,
+        ),
       ),
     );
   }
@@ -734,8 +713,11 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
           const SizedBox(width: 20),
           DiscoverActionButton(
             icon: Icons.chat_bubble_rounded,
-            gradient: AppTheme.chatGradient(isDark: isDark),
+            backgroundColor: isDark ? AppTheme.darkSurface : Colors.white,
+            iconColor: isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary,
+            borderColor: isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary,
             size: 58,
+            badgeCount: widget.isPremium ? null : widget.chatsRemaining,
             onPressed: widget.onChat,
           ),
           const SizedBox(width: 20),
@@ -743,6 +725,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
             icon: Icons.favorite_rounded,
             gradient: AppTheme.likeGradient(isDark: isDark),
             size: 52,
+            badgeCount: widget.isPremium ? null : widget.likesRemaining,
             onPressed: widget.onSwipeRight,
           ),
         ],

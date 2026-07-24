@@ -253,6 +253,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_language_desc => 'Choose your preferred language';
 
   @override
+  String get settings_account => 'Account';
+
+  @override
+  String get settings_logout => 'Log Out';
+
+  @override
+  String get settings_logout_desc => 'Sign out of your account';
+
+  @override
+  String get settings_logout_confirm => 'Are you sure you want to log out?';
+
+  @override
   String get error_email_exists => 'This email is already registered';
 
   @override
@@ -312,6 +324,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get discover_refresh => 'Refresh';
+
+  @override
+  String get discover_widen_title => 'No one found nearby';
+
+  @override
+  String get discover_widen_subtitle => 'Try widening your search';
+
+  @override
+  String discover_widen_distance(Object km) {
+    return '+$km km';
+  }
+
+  @override
+  String discover_widen_age(Object years) {
+    return '+$years years';
+  }
+
+  @override
+  String get discover_limit_reached_title => 'Daily limit reached';
+
+  @override
+  String get discover_limit_reached_likes =>
+      'You\'ve used all your likes today. Come back tomorrow!';
+
+  @override
+  String get discover_limit_reached_chats =>
+      'You\'ve used all your chats today. Come back tomorrow!';
 
   @override
   String get discover_say_something => 'Say something...';

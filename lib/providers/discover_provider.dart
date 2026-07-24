@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dating_app/models/discover_profile.dart';
 import 'package:dating_app/services/discover_service.dart';
 
@@ -27,11 +28,18 @@ class DiscoverProvider extends ChangeNotifier {
   bool _isPremium = false;
   int _likesRemaining = 0;
   int _dailyLikesLimit = 20;
+  int _chatsRemaining = 0;
+  int _dailyChatsLimit = 10;
 
   String? _genderFilter;
   int _ageMin = 18;
-  int _ageMax = 100;
-  int _distanceKm = 50;
+  int? _ageMax;
+  int? _distanceKm;
+
+  static const _keyGender = 'discover_gender';
+  static const _keyAgeMin = 'discover_age_min';
+  static const _keyAgeMax = 'discover_age_max';
+  static const _keyDistance = 'discover_distance_km';
 
   List<DiscoverProfile> get profiles => _profiles;
   bool get isLoading => _isLoading;
@@ -41,10 +49,19 @@ class DiscoverProvider extends ChangeNotifier {
   bool get isPremium => _isPremium;
   int get likesRemaining => _likesRemaining;
   int get dailyLikesLimit => _dailyLikesLimit;
+  int get chatsRemaining => _chatsRemaining;
+  int get dailyChatsLimit => _dailyChatsLimit;
   String? get genderFilter => _genderFilter;
   int get ageMin => _ageMin;
-  int get ageMax => _ageMax;
-  int get distanceKm => _distanceKm;
+  int? get ageMax => _ageMax;
+  int? get distanceKm => _distanceKm;
+
+  bool get canWidenDistance => _distanceKm != null;
+  bool get canWidenAge => _ageMax != null;
+  bool get allFiltersMaxed => !canWidenDistance && !canWidenAge;
+
+  bool get isLikeBlocked => !_isPremium && _likesRemaining <= 0;
+  bool get isChatBlocked => !_isPremium && _chatsRemaining <= 0;
 
   List<DiscoverProfile> get visibleProfiles => _profiles.take(1).toList();
 
@@ -52,10 +69,47 @@ class DiscoverProvider extends ChangeNotifier {
 
   double get likesProgress {
     if (_isPremium || _dailyLikesLimit == 0) return 1.0;
-    return (_dailyLikesLimit - _likesRemaining) / _dailyLikesLimit;
+    return _likesRemaining / _dailyLikesLimit;
   }
 
+  double get chatsProgress {
+    if (_isPremium || _dailyChatsLimit == 0) return 1.0;
+    return _chatsRemaining / _dailyChatsLimit;
+  }
+
+  // ── Filter persistence ──────────────────────────────────────────────
+
+  Future<void> _loadFilters() async {
+    final prefs = await SharedPreferences.getInstance();
+    final gender = prefs.getString(_keyGender);
+    final ageMin = prefs.getInt(_keyAgeMin);
+    final ageMax = prefs.getInt(_keyAgeMax);
+    final distance = prefs.getInt(_keyDistance);
+
+    _genderFilter = gender == 'null' ? null : gender;
+    _ageMin = ageMin ?? 18;
+    _ageMax = ageMax == -1 ? null : ageMax;
+    _distanceKm = distance == -1 ? null : distance;
+  }
+
+  Future<void> _saveFilters() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyGender, _genderFilter ?? 'null');
+    await prefs.setInt(_keyAgeMin, _ageMin);
+    await prefs.setInt(_keyAgeMax, _ageMax ?? -1);
+    await prefs.setInt(_keyDistance, _distanceKm ?? -1);
+  }
+
+  // ── Profile loading ─────────────────────────────────────────────────
+
+  bool _filtersLoaded = false;
+
   Future<void> loadProfiles() async {
+    if (!_filtersLoaded) {
+      await _loadFilters();
+      _filtersLoaded = true;
+    }
+
     _isLoading = true;
     _errorMessage = null;
     _offset = 0;
@@ -127,16 +181,21 @@ class DiscoverProvider extends ChangeNotifier {
     _safeNotify();
   }
 
+  // ── Swipe actions ───────────────────────────────────────────────────
+
   Future<Map<String, dynamic>?> swipeRight(DiscoverProfile profile) async {
+    if (isLikeBlocked) return null;
+
     try {
       final response = await DiscoverService.swipeUser(profile.id, 'like');
-      _removeProfile(profile);
       if (response.statusCode == 200) {
+        _removeProfile(profile);
         final data = response.data as Map<String, dynamic>;
         await _refreshLimits();
         if (data['matched'] == true) {
           return data;
         }
+        return {};
       }
     } catch (_) {}
     return null;
@@ -144,8 +203,10 @@ class DiscoverProvider extends ChangeNotifier {
 
   Future<void> swipeLeft(DiscoverProfile profile) async {
     try {
-      await DiscoverService.swipeUser(profile.id, 'pass');
-      _removeProfile(profile);
+      final response = await DiscoverService.swipeUser(profile.id, 'pass');
+      if (response.statusCode == 200) {
+        _removeProfile(profile);
+      }
     } catch (_) {}
   }
 
@@ -153,11 +214,14 @@ class DiscoverProvider extends ChangeNotifier {
     DiscoverProfile profile, {
     String? message,
   }) async {
+    if (isLikeBlocked) return null;
+
     try {
       final response = await DiscoverService.swipeUser(profile.id, 'like');
+      if (response.statusCode != 200) return null;
 
       bool messageSent = false;
-      if (message != null && message.isNotEmpty) {
+      if (message != null && message.isNotEmpty && !isChatBlocked) {
         try {
           await DiscoverService.sendFirstMessage(profile.id, message);
           messageSent = true;
@@ -167,13 +231,11 @@ class DiscoverProvider extends ChangeNotifier {
       _removeProfile(profile);
       await _refreshLimits();
 
-      if (response.statusCode == 200) {
-        final data = response.data as Map<String, dynamic>;
-        return {
-          ...data,
-          'message_sent': messageSent,
-        };
-      }
+      final data = response.data as Map<String, dynamic>;
+      return {
+        ...data,
+        'message_sent': messageSent,
+      };
     } catch (_) {}
     return null;
   }
@@ -186,6 +248,8 @@ class DiscoverProvider extends ChangeNotifier {
     }
   }
 
+  // ── Limits ──────────────────────────────────────────────────────────
+
   Future<void> _refreshLimits() async {
     try {
       final response = await DiscoverService.getMyLimits();
@@ -194,24 +258,47 @@ class DiscoverProvider extends ChangeNotifier {
         _isPremium = data['is_premium'] ?? false;
         _likesRemaining = data['likes_remaining_today'] ?? 0;
         _dailyLikesLimit = data['daily_likes_limit'] ?? 20;
+        _chatsRemaining = data['chats_remaining_today'] ?? 0;
+        _dailyChatsLimit = data['daily_chats_limit'] ?? 10;
         _safeNotify();
       }
     } catch (_) {}
   }
 
+  // ── Filter setters ──────────────────────────────────────────────────
+
   void setGenderFilter(String? gender) {
     _genderFilter = gender;
+    _saveFilters();
     loadProfiles();
   }
 
-  void setAgeRange(int min, int max) {
+  void setAgeRange(int min, int? max) {
     _ageMin = min;
     _ageMax = max;
+    _saveFilters();
     loadProfiles();
   }
 
-  void setDistance(int km) {
+  void setDistance(int? km) {
     _distanceKm = km;
+    _saveFilters();
+    loadProfiles();
+  }
+
+  void widenDistance() {
+    final current = _distanceKm ?? 50;
+    final next = (current + 50).clamp(1, 500);
+    _distanceKm = next >= 500 ? null : next;
+    _saveFilters();
+    loadProfiles();
+  }
+
+  void widenAge() {
+    final current = _ageMax ?? 100;
+    final next = (current + 2).clamp(18, 100);
+    _ageMax = next >= 100 ? null : next;
+    _saveFilters();
     loadProfiles();
   }
 

@@ -48,6 +48,10 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   Future<void> _handleSwipeRight(DiscoverProfile profile) async {
     if (!mounted) return;
     final provider = Provider.of<DiscoverProvider>(context, listen: false);
+    if (provider.isLikeBlocked) {
+      _showLimitReached('likes');
+      return;
+    }
     final result = await provider.swipeRight(profile);
     if (result != null && result['matched'] == true && mounted) {
       _showMatchDialog(result, profile);
@@ -62,16 +66,60 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
   Future<void> _handleChat(DiscoverProfile profile) async {
     if (!mounted) return;
+    final provider = Provider.of<DiscoverProvider>(context, listen: false);
+    if (provider.isChatBlocked) {
+      _showLimitReached('chats');
+      return;
+    }
     final message = await _showChatBottomSheet();
     if (message == null) return;
     if (!mounted) return;
 
-    final provider = Provider.of<DiscoverProvider>(context, listen: false);
     final result = await provider.swipeAndChat(profile, message: message);
 
     if (result != null && result['matched'] == true && mounted) {
       _showMatchDialog(result, profile, messageSent: result['message_sent'] == true);
     }
+  }
+
+  void _showLimitReached(String type) {
+    final t = AppLocalizations.of(context)!;
+    final isDark = context.isDarkMode;
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: isDark ? AppTheme.darkSurface : Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          t.discover_limit_reached_title,
+          style: TextStyle(
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w700,
+            color: isDark ? AppTheme.darkText : AppTheme.lightText,
+          ),
+        ),
+        content: Text(
+          type == 'likes' ? t.discover_limit_reached_likes : t.discover_limit_reached_chats,
+          style: TextStyle(
+            fontFamily: 'Inter',
+            color: isDark ? AppTheme.darkTextMuted : AppTheme.lightTextMuted,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(
+              'OK',
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w600,
+                color: isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<String?> _showChatBottomSheet() async {
@@ -251,15 +299,28 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   }
 
   void _openProfileDetail(DiscoverProfile profile) {
+    final provider = Provider.of<DiscoverProvider>(context, listen: false);
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => ProfileDetailScreen(
           profile: profile,
           interestIcons: _interestIcons,
-          onSwipeLeft: () => _handleSwipeLeft(profile),
-          onSwipeRight: () => _handleSwipeRight(profile),
-          onChat: () => _handleChat(profile),
+          likesRemaining: provider.likesRemaining,
+          chatsRemaining: provider.chatsRemaining,
+          isPremium: provider.isPremium,
+          onSwipeLeft: () async {
+            await _handleSwipeLeft(profile);
+            if (mounted) Navigator.pop(context);
+          },
+          onSwipeRight: () async {
+            await _handleSwipeRight(profile);
+            if (mounted) Navigator.pop(context);
+          },
+          onChat: () async {
+            await _handleChat(profile);
+            if (mounted) Navigator.pop(context);
+          },
         ),
       ),
     );
@@ -312,7 +373,6 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
           return Column(
             children: [
               _buildFilterBar(provider, t, isDark, primaryColor),
-              _buildLimitIndicator(provider, isDark, primaryColor),
               Expanded(
                 child: provider.hasProfiles
                     ? _buildCardStack(provider, isDark)
@@ -382,17 +442,22 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
   Widget _buildEmptyState(
       DiscoverProvider provider, AppLocalizations t, bool isDark, Color primaryColor) {
+    final canWiden = provider.canWidenDistance || provider.canWidenAge;
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.person_search, size: 64,
-                color: isDark ? AppTheme.darkTextMuted : AppTheme.lightTextMuted),
+            Icon(
+              canWiden ? Icons.explore_off : Icons.person_search,
+              size: 64,
+              color: isDark ? AppTheme.darkTextMuted : AppTheme.lightTextMuted,
+            ),
             const SizedBox(height: 16),
             Text(
-              t.discover_no_profiles,
+              canWiden ? t.discover_widen_title : t.discover_no_profiles,
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 20,
@@ -402,18 +467,84 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              t.discover_no_profiles_hint,
+              canWiden ? t.discover_widen_subtitle : t.discover_no_profiles_hint,
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 14,
                 color: isDark ? AppTheme.darkTextMuted : AppTheme.lightTextMuted,
               ),
             ),
+            if (canWiden) ...[
+              const SizedBox(height: 20),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                alignment: WrapAlignment.center,
+                children: [
+                  if (provider.canWidenDistance)
+                    _buildWidenButton(
+                      label: t.discover_widen_distance(50),
+                      icon: Icons.near_me,
+                      isDark: isDark,
+                      primaryColor: primaryColor,
+                      onTap: () => provider.widenDistance(),
+                    ),
+                  if (provider.canWidenAge)
+                    _buildWidenButton(
+                      label: t.discover_widen_age(2),
+                      icon: Icons.cake_outlined,
+                      isDark: isDark,
+                      primaryColor: primaryColor,
+                      onTap: () => provider.widenAge(),
+                    ),
+                ],
+              ),
+            ],
             const SizedBox(height: 24),
             ElevatedButton.icon(
               onPressed: () => provider.refresh(),
               icon: const Icon(Icons.refresh),
               label: Text(t.discover_refresh),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWidenButton({
+    required String label,
+    required IconData icon,
+    required bool isDark,
+    required Color primaryColor,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: isDark
+              ? primaryColor.withOpacity(0.15)
+              : primaryColor.withOpacity(0.08),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: primaryColor.withOpacity(0.3),
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 16, color: primaryColor),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: primaryColor,
+              ),
             ),
           ],
         ),
@@ -444,7 +575,9 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
             const SizedBox(width: 8),
             _buildFilterChip(
               icon: Icons.cake_outlined,
-              label: '${provider.ageMin}-${provider.ageMax}',
+              label: provider.ageMax == null
+                  ? '${provider.ageMin}-100+'
+                  : '${provider.ageMin}-${provider.ageMax}',
               onTap: () => _showAgePicker(provider),
               isDark: isDark,
               primaryColor: primaryColor,
@@ -452,7 +585,9 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
             const SizedBox(width: 8),
             _buildFilterChip(
               icon: Icons.near_me,
-              label: '${provider.distanceKm} km',
+              label: provider.distanceKm == null
+                  ? '500+ km'
+                  : '${provider.distanceKm} km',
               onTap: () => _showDistancePicker(provider),
               isDark: isDark,
               primaryColor: primaryColor,
@@ -572,8 +707,13 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     final t = AppLocalizations.of(context)!;
     final isDark = context.isDarkMode;
     final primaryColor = isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary;
-    double min = provider.ageMin.toDouble();
-    double max = provider.ageMax.toDouble();
+    double min = provider.ageMin.toDouble().clamp(18.0, 100.0);
+    double max = (provider.ageMax ?? 100).toDouble().clamp(18.0, 100.0);
+
+    String ageLabel(double value) {
+      if (value >= 100) return '100+';
+      return '${value.round()}';
+    }
 
     showModalBottomSheet(
       context: context,
@@ -601,7 +741,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    t.discover_filter_years(max.round(), min.round()),
+                    '${ageLabel(min)} - ${ageLabel(max)} years',
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 14,
@@ -615,8 +755,8 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                     divisions: 82,
                     activeColor: primaryColor,
                     labels: RangeLabels(
-                      '${min.round()}',
-                      '${max.round()}',
+                      ageLabel(min),
+                      ageLabel(max),
                     ),
                     onChanged: (values) {
                       setSheetState(() {
@@ -630,7 +770,8 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.pop(ctx);
-                        provider.setAgeRange(min.round(), max.round());
+                        final apiMax = max >= 100 ? null : max.round();
+                        provider.setAgeRange(min.round(), apiMax);
                       },
                       child: Text(t.discover_filter_apply),
                     ),
@@ -648,7 +789,12 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     final t = AppLocalizations.of(context)!;
     final isDark = context.isDarkMode;
     final primaryColor = isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary;
-    double distance = provider.distanceKm.toDouble();
+    double distance = (provider.distanceKm ?? 500).toDouble().clamp(1.0, 500.0);
+
+    String distanceLabel(double value) {
+      if (value >= 500) return '500+ km';
+      return '${value.round()} km';
+    }
 
     showModalBottomSheet(
       context: context,
@@ -676,7 +822,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '${distance.round()} km',
+                    distanceLabel(distance),
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 14,
@@ -689,7 +835,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                     max: 500,
                     divisions: 499,
                     activeColor: primaryColor,
-                    label: '${distance.round()} km',
+                    label: distanceLabel(distance),
                     onChanged: (v) => setSheetState(() => distance = v),
                   ),
                   SizedBox(
@@ -697,7 +843,8 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.pop(ctx);
-                        provider.setDistance(distance.round());
+                        final apiDistance = distance >= 500 ? null : distance.round();
+                        provider.setDistance(apiDistance);
                       },
                       child: Text(t.discover_filter_apply),
                     ),
@@ -708,50 +855,6 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
           },
         );
       },
-    );
-  }
-
-  Widget _buildLimitIndicator(
-      DiscoverProvider provider, bool isDark, Color primaryColor) {
-    if (provider.isPremium) return const SizedBox.shrink();
-
-    final remaining = provider.likesRemaining;
-    final total = provider.dailyLikesLimit;
-    final fraction = total > 0 ? remaining / total : 1.0;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
-      child: Row(
-        children: [
-          Icon(Icons.favorite_border, size: 14,
-              color: remaining > 0 ? primaryColor : AppTheme.darkTextMuted),
-          const SizedBox(width: 6),
-          Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(
-                value: fraction,
-                minHeight: 4,
-                backgroundColor: isDark ? AppTheme.darkBorder : Colors.grey.shade200,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  remaining > 5
-                      ? (isDark ? AppTheme.darkSuccess : AppTheme.lightSuccess)
-                      : (isDark ? AppTheme.darkWarning : AppTheme.lightWarning),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 6),
-          Text(
-            '$remaining / $total',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 11,
-              color: isDark ? AppTheme.darkTextMuted : AppTheme.lightTextMuted,
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -798,16 +901,20 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
           const SizedBox(width: 20),
           DiscoverActionButton(
             icon: Icons.chat_bubble_rounded,
-            gradient: AppTheme.chatGradient(isDark: isDark),
+            backgroundColor: isDark ? AppTheme.darkSurface : Colors.white,
+            iconColor: isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary,
+            borderColor: isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary,
             size: 62,
-            onPressed: () => _handleChat(profile),
+            badgeCount: provider.isPremium ? null : provider.chatsRemaining,
+            onPressed: provider.isChatBlocked ? null : () => _handleChat(profile),
           ),
           const SizedBox(width: 20),
           DiscoverActionButton(
             icon: Icons.favorite_rounded,
             gradient: AppTheme.likeGradient(isDark: isDark),
             size: 56,
-            onPressed: () => _handleSwipeRight(profile),
+            badgeCount: provider.isPremium ? null : provider.likesRemaining,
+            onPressed: provider.isLikeBlocked ? null : () => _handleSwipeRight(profile),
           ),
         ],
       ),

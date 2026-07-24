@@ -566,6 +566,30 @@ abstract class AppLocalizations {
   /// **'Choose your preferred language'**
   String get settings_language_desc;
 
+  /// No description provided for @settings_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get settings_account;
+
+  /// No description provided for @settings_logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Out'**
+  String get settings_logout;
+
+  /// No description provided for @settings_logout_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out of your account'**
+  String get settings_logout_desc;
+
+  /// No description provided for @settings_logout_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to log out?'**
+  String get settings_logout_confirm;
+
   /// No description provided for @error_email_exists.
   ///
   /// In en, this message translates to:
@@ -685,6 +709,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Refresh'**
   String get discover_refresh;
+
+  /// No description provided for @discover_widen_title.
+  ///
+  /// In en, this message translates to:
+  /// **'No one found nearby'**
+  String get discover_widen_title;
+
+  /// No description provided for @discover_widen_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Try widening your search'**
+  String get discover_widen_subtitle;
+
+  /// No description provided for @discover_widen_distance.
+  ///
+  /// In en, this message translates to:
+  /// **'+{km} km'**
+  String discover_widen_distance(Object km);
+
+  /// No description provided for @discover_widen_age.
+  ///
+  /// In en, this message translates to:
+  /// **'+{years} years'**
+  String discover_widen_age(Object years);
+
+  /// No description provided for @discover_limit_reached_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily limit reached'**
+  String get discover_limit_reached_title;
+
+  /// No description provided for @discover_limit_reached_likes.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve used all your likes today. Come back tomorrow!'**
+  String get discover_limit_reached_likes;
+
+  /// No description provided for @discover_limit_reached_chats.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve used all your chats today. Come back tomorrow!'**
+  String get discover_limit_reached_chats;
 
   /// No description provided for @discover_say_something.
   ///

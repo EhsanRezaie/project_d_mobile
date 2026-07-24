@@ -5,6 +5,7 @@ import 'package:dating_app/generated/app_localizations.dart';
 import 'package:dating_app/providers/auth_provider.dart';
 import 'package:dating_app/providers/settings_provider.dart';
 import 'package:dating_app/providers/language_provider.dart';
+import 'package:dating_app/screens/login_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -22,6 +23,67 @@ class _SettingsScreenState extends State<SettingsScreen> {
       final settingsProvider = Provider.of<SettingsProvider>(context, listen: false);
       settingsProvider.loadFromUser(authProvider.user);
     });
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    final isDark = context.isDarkMode;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: isDark ? AppTheme.darkSurface : Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          t.settings_logout,
+          style: TextStyle(
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w700,
+            color: isDark ? AppTheme.darkText : AppTheme.lightText,
+          ),
+        ),
+        content: Text(
+          t.settings_logout_confirm,
+          style: TextStyle(
+            fontFamily: 'Inter',
+            color: isDark ? AppTheme.darkTextMuted : AppTheme.lightTextMuted,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(
+              t.cancel,
+              style: TextStyle(
+                fontFamily: 'Inter',
+                color: isDark ? AppTheme.darkTextMuted : AppTheme.lightTextMuted,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(ctx);
+              final authProvider = Provider.of<AuthProvider>(context, listen: false);
+              await authProvider.logout();
+              if (context.mounted) {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/login',
+                  (route) => false,
+                );
+              }
+            },
+            child: Text(
+              t.settings_logout,
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w600,
+                color: isDark ? AppTheme.darkError : AppTheme.lightError,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showLanguagePicker() {
@@ -322,6 +384,71 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                           ),
                           const SizedBox(width: 8),
+                          Icon(
+                            Icons.chevron_right,
+                            color: textMutedColor,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+                surfaceColor: surfaceColor,
+                borderColor: borderColor,
+                borderRadius: 16,
+              ),
+              const SizedBox(height: 28),
+              _buildSectionHeader(t.settings_account, isDark, onSurfaceColor),
+              const SizedBox(height: 12),
+              _buildSettingsCard(
+                children: [
+                  InkWell(
+                    onTap: () => _showLogoutDialog(context),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? AppTheme.darkError.withOpacity(0.1)
+                                  : AppTheme.lightError.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(
+                              Icons.logout,
+                              color: isDark ? AppTheme.darkError : AppTheme.lightError,
+                              size: 22,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  t.settings_logout,
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: isDark ? AppTheme.darkError : AppTheme.lightError,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  t.settings_logout_desc,
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 13,
+                                    color: textMutedColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                           Icon(
                             Icons.chevron_right,
                             color: textMutedColor,

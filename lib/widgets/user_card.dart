@@ -308,12 +308,12 @@ class _UserCardState extends State<UserCard>
                   if (profile.isVerified) ...[
                     const SizedBox(width: 6),
                     Container(
-                      padding: const EdgeInsets.all(4),
+                      padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
                         color: isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.verified, size: 12, color: Colors.white),
+                      child: const Icon(Icons.verified, size: 14, color: Colors.white),
                     ),
                   ],
                 ],
@@ -327,34 +327,6 @@ class _UserCardState extends State<UserCard>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (profile.interests.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Wrap(
-                        spacing: 6,
-                        runSpacing: 4,
-                        children: profile.interests.take(3).map((interest) {
-                          final icon = widget.interestIcons[interest];
-                          return Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: Colors.white.withOpacity(0.3)),
-                            ),
-                            child: Text(
-                              icon != null ? '$icon $interest' : interest,
-                              style: const TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 11,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
                   Row(
                     children: [
                       Text(
@@ -428,25 +400,6 @@ class _UserCardState extends State<UserCard>
                         ],
                       ),
                     ),
-                  if (profile.bodyType != null)
-                    Row(
-                      children: [
-                        _buildQuickStat(
-                            _capitalize(profile.bodyType!), isDark),
-                      ],
-                    ),
-                  if (profile.workplace != null &&
-                      profile.workplace!.isNotEmpty) ...[
-                    const SizedBox(height: 4),
-                    Text(
-                      profile.workplace!,
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 13,
-                        color: Colors.white.withOpacity(0.75),
-                      ),
-                    ),
-                  ],
                 ],
               ),
             ),
@@ -479,27 +432,4 @@ class _UserCardState extends State<UserCard>
     );
   }
 
-  Widget _buildQuickStat(String text, bool isDark) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontFamily: 'Inter',
-          fontSize: 11,
-          fontWeight: FontWeight.w500,
-          color: Colors.white,
-        ),
-      ),
-    );
-  }
-
-  String _capitalize(String s) {
-    if (s.isEmpty) return s;
-    return s[0].toUpperCase() + s.substring(1);
-  }
 }

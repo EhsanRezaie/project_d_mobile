@@ -5,19 +5,23 @@ class DiscoverService {
   static Future<Response> getDiscoverProfiles({
     String? gender,
     int ageMin = 18,
-    int ageMax = 100,
-    int distanceKm = 50,
+    int? ageMax,
+    int? distanceKm,
     int limit = 20,
     int offset = 0,
   }) async {
     try {
       final params = <String, dynamic>{
         'age_min': ageMin,
-        'age_max': ageMax,
-        'distance_km': distanceKm,
         'limit': limit,
         'offset': offset,
       };
+      if (ageMax != null) {
+        params['age_max'] = ageMax;
+      }
+      if (distanceKm != null) {
+        params['distance_km'] = distanceKm;
+      }
       if (gender != null && gender != 'all') {
         params['gender'] = gender;
       }
