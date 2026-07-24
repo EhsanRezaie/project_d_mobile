@@ -479,4 +479,168 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profile_label_politics => 'Politics';
+
+  @override
+  String get search_title => 'Search';
+
+  @override
+  String get search_loading => 'Searching...';
+
+  @override
+  String get search_no_results => 'No results found';
+
+  @override
+  String get search_no_results_hint => 'Try adjusting your filters';
+
+  @override
+  String get search_filters => 'Filters';
+
+  @override
+  String get search_advanced_filters => 'Advanced Filters';
+
+  @override
+  String get search_apply_filters => 'Apply Filters';
+
+  @override
+  String get search_reset_filters => 'Reset All';
+
+  @override
+  String get search_sort_by => 'Sort By';
+
+  @override
+  String get search_sort_recent => 'Recent';
+
+  @override
+  String get search_sort_distance => 'Distance';
+
+  @override
+  String get search_sort_age => 'Age';
+
+  @override
+  String get search_sort_name => 'Name';
+
+  @override
+  String get search_filter_location => 'Location';
+
+  @override
+  String get search_filter_country => 'Country';
+
+  @override
+  String get search_filter_province => 'Province';
+
+  @override
+  String get search_filter_city => 'City';
+
+  @override
+  String get search_filter_height => 'Height';
+
+  @override
+  String get search_filter_weight => 'Weight';
+
+  @override
+  String get search_filter_body_type => 'Body Type';
+
+  @override
+  String get search_filter_relationship => 'Relationship';
+
+  @override
+  String get search_filter_education => 'Education';
+
+  @override
+  String get search_filter_smoking => 'Smoking';
+
+  @override
+  String get search_filter_drinking => 'Drinking';
+
+  @override
+  String get search_filter_political => 'Political';
+
+  @override
+  String get search_filter_children => 'Children';
+
+  @override
+  String get search_filter_living => 'Living Situation';
+
+  @override
+  String get search_filter_religion => 'Religion';
+
+  @override
+  String get search_filter_ethnicity => 'Ethnicity';
+
+  @override
+  String get search_filter_interests => 'Interests';
+
+  @override
+  String get search_filter_languages => 'Languages';
+
+  @override
+  String get search_filter_has_photos => 'Has Photos';
+
+  @override
+  String get search_filter_verified => 'Verified Only';
+
+  @override
+  String get search_filter_age_range => 'Age Range';
+
+  @override
+  String get search_filter_distance_km => 'Distance (km)';
+
+  @override
+  String get search_filter_gender => 'Gender';
+
+  @override
+  String search_page(Object current, Object total) {
+    return 'Page $current of $total';
+  }
+
+  @override
+  String get search_next => 'Next';
+
+  @override
+  String get search_prev => 'Previous';
+
+  @override
+  String search_active_filters(Object count) {
+    return '$count filters';
+  }
+
+  @override
+  String get search_limit_reached_likes =>
+      'You\'ve used all your likes today. Come back tomorrow!';
+
+  @override
+  String get search_limit_reached_chats =>
+      'You\'ve used all your chats today. Come back tomorrow!';
+
+  @override
+  String get search_say_something => 'Say something...';
+
+  @override
+  String get search_send_and_like => 'Send & Like';
+
+  @override
+  String get search_match_title => 'It\'s a Match!';
+
+  @override
+  String search_match_subtitle(Object name) {
+    return 'You and $name liked each other';
+  }
+
+  @override
+  String get search_match_message_sent => 'Your message was sent!';
+
+  @override
+  String get search_send_message => 'Send a Message';
+
+  @override
+  String get search_continue_browsing => 'Continue Browsing';
+
+  @override
+  String get search_tap_for_details => 'Tap for details';
+
+  @override
+  String get search_premium => 'Premium';
+
+  @override
+  String get search_verified => 'Verified';
 }

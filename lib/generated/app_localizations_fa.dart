@@ -481,4 +481,168 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get profile_label_politics => 'سیاست';
+
+  @override
+  String get search_title => 'جستجو';
+
+  @override
+  String get search_loading => 'در حال جستجو...';
+
+  @override
+  String get search_no_results => 'نتیجه‌ای یافت نشد';
+
+  @override
+  String get search_no_results_hint => 'فیلترهای خود را تغییر دهید';
+
+  @override
+  String get search_filters => 'فیلترها';
+
+  @override
+  String get search_advanced_filters => 'فیلترهای پیشرفته';
+
+  @override
+  String get search_apply_filters => 'اعمال فیلترها';
+
+  @override
+  String get search_reset_filters => 'بازنشانی همه';
+
+  @override
+  String get search_sort_by => 'مرتب سازی';
+
+  @override
+  String get search_sort_recent => 'جدیدترین';
+
+  @override
+  String get search_sort_distance => 'فاصله';
+
+  @override
+  String get search_sort_age => 'سن';
+
+  @override
+  String get search_sort_name => 'نام';
+
+  @override
+  String get search_filter_location => 'مکان';
+
+  @override
+  String get search_filter_country => 'کشور';
+
+  @override
+  String get search_filter_province => 'استان';
+
+  @override
+  String get search_filter_city => 'شهر';
+
+  @override
+  String get search_filter_height => 'قد';
+
+  @override
+  String get search_filter_weight => 'وزن';
+
+  @override
+  String get search_filter_body_type => 'نوع اندام';
+
+  @override
+  String get search_filter_relationship => 'وضعیت تأهل';
+
+  @override
+  String get search_filter_education => 'تحصیلات';
+
+  @override
+  String get search_filter_smoking => 'سیگار';
+
+  @override
+  String get search_filter_drinking => 'الکل';
+
+  @override
+  String get search_filter_political => 'گرایش سیاسی';
+
+  @override
+  String get search_filter_children => 'فرزند';
+
+  @override
+  String get search_filter_living => 'وضعیت محل سکونت';
+
+  @override
+  String get search_filter_religion => 'دین';
+
+  @override
+  String get search_filter_ethnicity => 'قومیت';
+
+  @override
+  String get search_filter_interests => 'علایق';
+
+  @override
+  String get search_filter_languages => 'زبان‌ها';
+
+  @override
+  String get search_filter_has_photos => 'عکس دارد';
+
+  @override
+  String get search_filter_verified => 'فقط تأیید شده';
+
+  @override
+  String get search_filter_age_range => 'محدوده سنی';
+
+  @override
+  String get search_filter_distance_km => 'فاصله (کیلومتر)';
+
+  @override
+  String get search_filter_gender => 'جنسیت';
+
+  @override
+  String search_page(Object current, Object total) {
+    return 'صفحه $current از $total';
+  }
+
+  @override
+  String get search_next => 'بعدی';
+
+  @override
+  String get search_prev => 'قبلی';
+
+  @override
+  String search_active_filters(Object count) {
+    return '$count فیلتر فعال';
+  }
+
+  @override
+  String get search_limit_reached_likes =>
+      'همه لایک‌های امروز تمام شد. فردا برگردید!';
+
+  @override
+  String get search_limit_reached_chats =>
+      'همه چت‌های امروز تمام شد. فردا برگردید!';
+
+  @override
+  String get search_say_something => 'چیزی بنویسید...';
+
+  @override
+  String get search_send_and_like => 'ارسال و لایک';
+
+  @override
+  String get search_match_title => 'یک تطابق!';
+
+  @override
+  String search_match_subtitle(Object name) {
+    return 'شما و $name یکدیگر را لایک کردید';
+  }
+
+  @override
+  String get search_match_message_sent => 'پیام شما ارسال شد!';
+
+  @override
+  String get search_send_message => 'ارسال پیام';
+
+  @override
+  String get search_continue_browsing => 'ادامه جستجو';
+
+  @override
+  String get search_tap_for_details => 'برای اطلاعات بیشتر لمس کنید';
+
+  @override
+  String get search_premium => 'پریمیوم';
+
+  @override
+  String get search_verified => 'تأیید شده';
 }

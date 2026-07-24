@@ -991,6 +991,318 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Politics'**
   String get profile_label_politics;
+
+  /// No description provided for @search_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search_title;
+
+  /// No description provided for @search_loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Searching...'**
+  String get search_loading;
+
+  /// No description provided for @search_no_results.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get search_no_results;
+
+  /// No description provided for @search_no_results_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Try adjusting your filters'**
+  String get search_no_results_hint;
+
+  /// No description provided for @search_filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get search_filters;
+
+  /// No description provided for @search_advanced_filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced Filters'**
+  String get search_advanced_filters;
+
+  /// No description provided for @search_apply_filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply Filters'**
+  String get search_apply_filters;
+
+  /// No description provided for @search_reset_filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset All'**
+  String get search_reset_filters;
+
+  /// No description provided for @search_sort_by.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort By'**
+  String get search_sort_by;
+
+  /// No description provided for @search_sort_recent.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent'**
+  String get search_sort_recent;
+
+  /// No description provided for @search_sort_distance.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get search_sort_distance;
+
+  /// No description provided for @search_sort_age.
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get search_sort_age;
+
+  /// No description provided for @search_sort_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get search_sort_name;
+
+  /// No description provided for @search_filter_location.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get search_filter_location;
+
+  /// No description provided for @search_filter_country.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get search_filter_country;
+
+  /// No description provided for @search_filter_province.
+  ///
+  /// In en, this message translates to:
+  /// **'Province'**
+  String get search_filter_province;
+
+  /// No description provided for @search_filter_city.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get search_filter_city;
+
+  /// No description provided for @search_filter_height.
+  ///
+  /// In en, this message translates to:
+  /// **'Height'**
+  String get search_filter_height;
+
+  /// No description provided for @search_filter_weight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get search_filter_weight;
+
+  /// No description provided for @search_filter_body_type.
+  ///
+  /// In en, this message translates to:
+  /// **'Body Type'**
+  String get search_filter_body_type;
+
+  /// No description provided for @search_filter_relationship.
+  ///
+  /// In en, this message translates to:
+  /// **'Relationship'**
+  String get search_filter_relationship;
+
+  /// No description provided for @search_filter_education.
+  ///
+  /// In en, this message translates to:
+  /// **'Education'**
+  String get search_filter_education;
+
+  /// No description provided for @search_filter_smoking.
+  ///
+  /// In en, this message translates to:
+  /// **'Smoking'**
+  String get search_filter_smoking;
+
+  /// No description provided for @search_filter_drinking.
+  ///
+  /// In en, this message translates to:
+  /// **'Drinking'**
+  String get search_filter_drinking;
+
+  /// No description provided for @search_filter_political.
+  ///
+  /// In en, this message translates to:
+  /// **'Political'**
+  String get search_filter_political;
+
+  /// No description provided for @search_filter_children.
+  ///
+  /// In en, this message translates to:
+  /// **'Children'**
+  String get search_filter_children;
+
+  /// No description provided for @search_filter_living.
+  ///
+  /// In en, this message translates to:
+  /// **'Living Situation'**
+  String get search_filter_living;
+
+  /// No description provided for @search_filter_religion.
+  ///
+  /// In en, this message translates to:
+  /// **'Religion'**
+  String get search_filter_religion;
+
+  /// No description provided for @search_filter_ethnicity.
+  ///
+  /// In en, this message translates to:
+  /// **'Ethnicity'**
+  String get search_filter_ethnicity;
+
+  /// No description provided for @search_filter_interests.
+  ///
+  /// In en, this message translates to:
+  /// **'Interests'**
+  String get search_filter_interests;
+
+  /// No description provided for @search_filter_languages.
+  ///
+  /// In en, this message translates to:
+  /// **'Languages'**
+  String get search_filter_languages;
+
+  /// No description provided for @search_filter_has_photos.
+  ///
+  /// In en, this message translates to:
+  /// **'Has Photos'**
+  String get search_filter_has_photos;
+
+  /// No description provided for @search_filter_verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified Only'**
+  String get search_filter_verified;
+
+  /// No description provided for @search_filter_age_range.
+  ///
+  /// In en, this message translates to:
+  /// **'Age Range'**
+  String get search_filter_age_range;
+
+  /// No description provided for @search_filter_distance_km.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance (km)'**
+  String get search_filter_distance_km;
+
+  /// No description provided for @search_filter_gender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get search_filter_gender;
+
+  /// No description provided for @search_page.
+  ///
+  /// In en, this message translates to:
+  /// **'Page {current} of {total}'**
+  String search_page(Object current, Object total);
+
+  /// No description provided for @search_next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get search_next;
+
+  /// No description provided for @search_prev.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous'**
+  String get search_prev;
+
+  /// No description provided for @search_active_filters.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} filters'**
+  String search_active_filters(Object count);
+
+  /// No description provided for @search_limit_reached_likes.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve used all your likes today. Come back tomorrow!'**
+  String get search_limit_reached_likes;
+
+  /// No description provided for @search_limit_reached_chats.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve used all your chats today. Come back tomorrow!'**
+  String get search_limit_reached_chats;
+
+  /// No description provided for @search_say_something.
+  ///
+  /// In en, this message translates to:
+  /// **'Say something...'**
+  String get search_say_something;
+
+  /// No description provided for @search_send_and_like.
+  ///
+  /// In en, this message translates to:
+  /// **'Send & Like'**
+  String get search_send_and_like;
+
+  /// No description provided for @search_match_title.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s a Match!'**
+  String get search_match_title;
+
+  /// No description provided for @search_match_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You and {name} liked each other'**
+  String search_match_subtitle(Object name);
+
+  /// No description provided for @search_match_message_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Your message was sent!'**
+  String get search_match_message_sent;
+
+  /// No description provided for @search_send_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a Message'**
+  String get search_send_message;
+
+  /// No description provided for @search_continue_browsing.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Browsing'**
+  String get search_continue_browsing;
+
+  /// No description provided for @search_tap_for_details.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap for details'**
+  String get search_tap_for_details;
+
+  /// No description provided for @search_premium.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium'**
+  String get search_premium;
+
+  /// No description provided for @search_verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get search_verified;
 }
 
 class _AppLocalizationsDelegate

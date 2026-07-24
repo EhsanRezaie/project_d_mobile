@@ -13,6 +13,7 @@ import 'onboarding/photo_upload_screen.dart';
 import 'profile/profile_screen.dart';
 import 'discover/discover_screen.dart';
 import 'search/search_screen.dart';
+import '../providers/search_provider.dart';
 import 'chats/chats_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -36,7 +37,10 @@ class _MainScreenState extends State<MainScreen> {
           onSwitchToChats: () => _switchToTab(2),
         ),
       ),
-      const SearchScreen(),
+      ChangeNotifierProvider(
+        create: (_) => SearchProvider(),
+        child: const SearchScreen(),
+      ),
       const ChatsScreen(),
       ChangeNotifierProvider(
         create: (_) => ProfileProvider(),

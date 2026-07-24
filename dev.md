@@ -23,6 +23,10 @@ Flutter mobile client for Iranian dating app (Badoo-style).
 - ✅ Logout option in settings
 - ✅ Verified badge on card and detail screen
 - ✅ Detail page closes on like/pass/chat action
+- ✅ Search screen with 3-column grid and infinite scroll
+- ✅ Advanced search filters (25+ options)
+- ✅ Search profile detail with Like + Chat buttons
+- ✅ Filter persistence across app restarts (SharedPreferences)
 - 🔄 Localization & Translation (In Progress)
 - ⬜ Real-time chat with WebSocket (Coming in Session 26)
 - ⬜ Likes & matches system (Coming in Session 26)
@@ -184,6 +188,7 @@ The app connects to a FastAPI backend with the following endpoints:
 | `/interests` | GET | Get interests | ✅ |
 | `/prompts` | GET | Get prompts | ✅ |
 | `/discover` | GET | Get card stack | ✅ |
+| `/search` | GET | Search users with filters | ✅ |
 | `/swipes` | POST | Send like/pass | ✅ |
 | `/rewards/my-limits` | GET | Get daily limits | ✅ |
 | `/matches` | GET | Get matches | ⬜ |
@@ -203,8 +208,9 @@ The app connects to a FastAPI backend with the following endpoints:
 | 23 | Localization, Discover Screen & Profile Detail Redesign | ✅ |
 | 24 | Discover & Swiping (Swipe Stamps, Interest Icons from Backend) | ✅ |
 | 25 | Discover Polish, Limits, Filters, Logout | ✅ |
-| 26 | Chat System (Messages + WebSocket) | ⬜ |
-| 27 | Likes, Matches & Production | ⬜ |
+| 26 | Search Screen (Grid, Filters, Detail, Infinite Scroll) | ✅ |
+| 27 | Chat System (Messages + WebSocket) | ⬜ |
+| 28 | Likes, Matches & Production | ⬜ |
 
 ## Session 25 - Discover Polish, Limits, Filters, Logout
 
@@ -259,6 +265,51 @@ The app connects to a FastAPI backend with the following endpoints:
 - Fixed swipeRight/swipeAndChat: `_removeProfile` now only called after server confirms success
 - Fixed limit race condition: `_loadFilters` only called once, not on every empty result
 - Fixed detail page navigation: uses MaterialPageRoute (not named routes)
+
+## Session 26 - Search Screen
+
+### Search Grid
+- **3-column grid** with compact cards (smaller than Discover cards)
+- **Infinite scroll** pagination (loads more when scrolling near bottom)
+- **No caching** — all searches use `ApiService.noCache` for real-time results
+- **Card shows**: photo, name + age + gender icon, distance, location
+
+### Search Filters
+- **Quick filter bar**: Gender, Age range, Distance, Sort, Advanced (opens sheet)
+- **Advanced filter sheet** (25+ options):
+  - Location: Country → Province → City cascading dropdowns (English)
+  - Physical: Height range, Weight range, Body type chips
+  - Lifestyle: Relationship, Education, Smoking, Drinking, Political, Children, Living
+  - Background: Religion chips, Ethnicity chips
+  - Interests: Collapsible by category, multi-select with count badges
+  - Languages: Multi-select chips
+  - Verification: Has Photos toggle, Verified Only toggle
+- **Filter persistence**: All filters saved to SharedPreferences with `search_` prefix
+- **Sort options**: Recent (default), Distance, Age, Name
+
+### Search Profile Detail
+- Same layout as Discover profile detail (hero image, photo strip, chip sections)
+- **2 buttons only**: Like + Chat (no Pass button)
+- Uses callbacks instead of Provider (since pushed via Navigator)
+- Shows all photos, interests, prompts when backend provides them
+
+### Limits Sync
+- Shares same `/rewards/my-limits` endpoint as Discover
+- `WidgetsBindingObserver` refreshes limits when app resumes
+- Both providers independently call the same backend endpoint
+
+### Files Created
+- `lib/services/search_service.dart` — API layer
+- `lib/providers/search_provider.dart` — State management
+- `lib/widgets/search_grid_card.dart` — Compact card widget
+- `lib/screens/search/search_screen.dart` — Main screen
+- `lib/screens/search/search_filter_sheet.dart` — Advanced filters
+- `lib/screens/search/search_profile_detail.dart` — Detail page
+
+### Localization
+- 48 new search keys in `app_en.arb` and `app_fa.arb`
+- Filter values in English (location names from API)
+- UI labels localized for both languages
 
 ## Color Rules (strict)
 
