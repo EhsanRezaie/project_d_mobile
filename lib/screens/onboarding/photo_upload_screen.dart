@@ -686,14 +686,18 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
               border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
             ),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Icon(Icons.verified, color: Colors.green, size: 20),
                 const SizedBox(width: 8),
-                Text(
-                  'All photos verified — you\'re all set.',
-                  style: TextStyle(
-                    color: Colors.green,
-                    fontWeight: FontWeight.w600,
+                Expanded(
+                  child: Text(
+                    'All photos verified — you\'re all set.',
+                    softWrap: true,
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ],
@@ -712,6 +716,7 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
               children: [
                 Text(
                   _lastVerifyMessage!,
+                  softWrap: true,
                   style: TextStyle(color: errorColor, fontSize: 13),
                 ),
                 if (hasMismatch) ...[
