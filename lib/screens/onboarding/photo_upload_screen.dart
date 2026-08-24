@@ -134,17 +134,19 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
     setState(() => _isWorking = false);
 
     if (result != null) {
+      final old = replaceIndex != null && replaceIndex < _photos.length
+          ? _photos[replaceIndex]
+          : null;
+      if (old?.serverId != null) {
+        await PhotoService.deletePhoto(old!.serverId!);
+        _mismatchedPhotoIds.remove(old.serverId);
+      }
       setState(() {
         if (replaceIndex != null && replaceIndex < _photos.length) {
-          final old = _photos[replaceIndex];
-          if (old.serverId != null) {
-            PhotoService.deletePhoto(old.serverId!);
-            _mismatchedPhotoIds.remove(old.serverId);
-          }
           _photos[replaceIndex] = PhotoUpload(
             id: result.id,
             file: finalFile,
-            isMain: old.isMain,
+            isMain: old!.isMain,
             isUploaded: true,
             url: result.url,
             serverId: result.id,
@@ -166,19 +168,22 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
         _errorMessage = null;
       });
       _syncPhotosToProvider();
+      if (!mounted) return;
       showActionToast(context, 'Photo uploaded');
     } else {
+      final old = replaceIndex != null && replaceIndex < _photos.length
+          ? _photos[replaceIndex]
+          : null;
+      if (old?.serverId != null) {
+        await PhotoService.deletePhoto(old!.serverId!);
+        _mismatchedPhotoIds.remove(old.serverId);
+      }
       setState(() {
         if (replaceIndex != null && replaceIndex < _photos.length) {
-          final old = _photos[replaceIndex];
-          if (old.serverId != null) {
-            PhotoService.deletePhoto(old.serverId!);
-            _mismatchedPhotoIds.remove(old.serverId);
-          }
           _photos[replaceIndex] = PhotoUpload(
             id: DateTime.now().millisecondsSinceEpoch.toString(),
             file: finalFile,
-            isMain: old.isMain,
+            isMain: old!.isMain,
             rejectReason: uploadError,
           );
         } else {
@@ -195,6 +200,7 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
         _lastVerifyMessage = null;
       });
       _syncPhotosToProvider();
+      if (!mounted) return;
       showActionToast(
         context,
         uploadError ?? 'Upload failed',
@@ -268,7 +274,7 @@ class _PhotoUploadScreenState extends State<PhotoUploadScreen> {
   Future<void> _removePhoto(int index) async {
     final photo = _photos[index];
     if (photo.serverId != null) {
-      PhotoService.deletePhoto(photo.serverId!);
+      await PhotoService.deletePhoto(photo.serverId!);
       _mismatchedPhotoIds.remove(photo.serverId);
     }
     setState(() {
