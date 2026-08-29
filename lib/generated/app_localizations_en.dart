@@ -1294,4 +1294,310 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get location_manual_hint =>
       'If the city is wrong, you can set it manually.';
+
+  @override
+  String get enum_male => 'Male';
+
+  @override
+  String get enum_female => 'Female';
+
+  @override
+  String get enum_straight => 'Straight';
+
+  @override
+  String get enum_gay => 'Gay';
+
+  @override
+  String get enum_bisexual => 'Bisexual';
+
+  @override
+  String get enum_pansexual => 'Pansexual';
+
+  @override
+  String get enum_asexual => 'Asexual';
+
+  @override
+  String get enum_slim => 'Slim';
+
+  @override
+  String get enum_average => 'Average';
+
+  @override
+  String get enum_athletic => 'Athletic';
+
+  @override
+  String get enum_curvy => 'Curvy';
+
+  @override
+  String get enum_muscular => 'Muscular';
+
+  @override
+  String get enum_overweight => 'Overweight';
+
+  @override
+  String get enum_single => 'Single';
+
+  @override
+  String get enum_divorced => 'Divorced';
+
+  @override
+  String get enum_widowed => 'Widowed';
+
+  @override
+  String get enum_separated => 'Separated';
+
+  @override
+  String get enum_alone => 'Alone';
+
+  @override
+  String get enum_with_family => 'With Family';
+
+  @override
+  String get enum_with_roommate => 'With Roommates';
+
+  @override
+  String get enum_with_partner => 'With Partner';
+
+  @override
+  String get enum_have_children => 'Have Children';
+
+  @override
+  String get enum_want_children => 'Want Children';
+
+  @override
+  String get enum_dont_want_children => 'Don\'t Want Children';
+
+  @override
+  String get enum_open_to_children => 'Open to Children';
+
+  @override
+  String get enum_never => 'Never';
+
+  @override
+  String get enum_occasionally => 'Occasionally';
+
+  @override
+  String get enum_regularly => 'Regularly';
+
+  @override
+  String get enum_daily => 'Daily';
+
+  @override
+  String get enum_socially => 'Socially';
+
+  @override
+  String get enum_long_term_relationship => 'Long-term Relationship';
+
+  @override
+  String get enum_casual_dating => 'Casual Dating';
+
+  @override
+  String get enum_marriage => 'Marriage';
+
+  @override
+  String get enum_new_friends => 'New Friends';
+
+  @override
+  String get enum_not_sure_yet => 'Not Sure Yet';
+
+  @override
+  String get enum_dog => 'Dog';
+
+  @override
+  String get enum_cat => 'Cat';
+
+  @override
+  String get enum_both => 'Both';
+
+  @override
+  String get enum_other_pet => 'Other Pet';
+
+  @override
+  String get enum_no_pets => 'No Pets';
+
+  @override
+  String get enum_loves_pets => 'Loves Pets';
+
+  @override
+  String get enum_aries => 'Aries';
+
+  @override
+  String get enum_taurus => 'Taurus';
+
+  @override
+  String get enum_gemini => 'Gemini';
+
+  @override
+  String get enum_cancer => 'Cancer';
+
+  @override
+  String get enum_leo => 'Leo';
+
+  @override
+  String get enum_virgo => 'Virgo';
+
+  @override
+  String get enum_libra => 'Libra';
+
+  @override
+  String get enum_scorpio => 'Scorpio';
+
+  @override
+  String get enum_sagittarius => 'Sagittarius';
+
+  @override
+  String get enum_capricorn => 'Capricorn';
+
+  @override
+  String get enum_aquarius => 'Aquarius';
+
+  @override
+  String get enum_pisces => 'Pisces';
+
+  @override
+  String get enum_high_school => 'High School';
+
+  @override
+  String get enum_bachelor => 'Bachelor';
+
+  @override
+  String get enum_master => 'Master';
+
+  @override
+  String get enum_phd => 'PhD';
+
+  @override
+  String get enum_liberal => 'Liberal';
+
+  @override
+  String get enum_conservative => 'Conservative';
+
+  @override
+  String get enum_moderate => 'Moderate';
+
+  @override
+  String get enum_apolitical => 'Apolitical';
+
+  @override
+  String get enum_muslim => 'Muslim';
+
+  @override
+  String get enum_christian => 'Christian';
+
+  @override
+  String get enum_jewish => 'Jewish';
+
+  @override
+  String get enum_zoroastrian => 'Zoroastrian';
+
+  @override
+  String get enum_atheist => 'Atheist';
+
+  @override
+  String get enum_agnostic => 'Agnostic';
+
+  @override
+  String get enum_spiritual => 'Spiritual';
+
+  @override
+  String get enum_sikh => 'Sikh';
+
+  @override
+  String get enum_buddhist => 'Buddhist';
+
+  @override
+  String get enum_hindu => 'Hindu';
+
+  @override
+  String get enum_other_religion => 'Other';
+
+  @override
+  String get enum_persian => 'Persian';
+
+  @override
+  String get enum_azeri => 'Azeri';
+
+  @override
+  String get enum_kurd => 'Kurd';
+
+  @override
+  String get enum_lur => 'Lur';
+
+  @override
+  String get enum_arab => 'Arab';
+
+  @override
+  String get enum_baloch => 'Baloch';
+
+  @override
+  String get enum_turkmen => 'Turkmen';
+
+  @override
+  String get enum_asian => 'Asian';
+
+  @override
+  String get enum_black => 'Black / African Descent';
+
+  @override
+  String get enum_hispanic => 'Hispanic / Latino';
+
+  @override
+  String get enum_white => 'White / Caucasian';
+
+  @override
+  String get enum_middle_eastern => 'Middle Eastern';
+
+  @override
+  String get enum_mixed => 'Mixed';
+
+  @override
+  String get enum_other_ethnicity => 'Other';
+
+  @override
+  String get lang_english => 'English';
+
+  @override
+  String get lang_persian => 'Persian';
+
+  @override
+  String get lang_turkish => 'Turkish';
+
+  @override
+  String get lang_arabic => 'Arabic';
+
+  @override
+  String get lang_spanish => 'Spanish';
+
+  @override
+  String get lang_french => 'French';
+
+  @override
+  String get lang_german => 'German';
+
+  @override
+  String get lang_italian => 'Italian';
+
+  @override
+  String get lang_russian => 'Russian';
+
+  @override
+  String get lang_chinese => 'Chinese';
+
+  @override
+  String get lang_japanese => 'Japanese';
+
+  @override
+  String get lang_korean => 'Korean';
+
+  @override
+  String get lang_hindi => 'Hindi';
+
+  @override
+  String get lang_urdu => 'Urdu';
+
+  @override
+  String get lang_kurdish => 'Kurdish';
+
+  @override
+  String get lang_armenian => 'Armenian';
 }

@@ -24,7 +24,6 @@
   "email_invalid": "Please enter a valid email",
   "password_required": "Password is required",
   "password_min_length": "Password must be at least 8 characters",
-
   "splash_subtitle": "Find Your Match",
   "splash_connecting": "Connecting to server...",
   "splash_check_internet": "Please check your internet connection",
@@ -32,7 +31,6 @@
   "splash_connection_failed": "Connection failed",
   "screenshot_disabled_notice": "Screenshots are disabled to protect your privacy",
   "photo_fullscreen_hint": "Tap photo for full screen",
-
   "signup_title": "Create Account",
   "signup_subtitle": "Join us and find your match",
   "signup_email_label": "Email",
@@ -50,25 +48,21 @@
   "signup_email_hint": "Enter your email",
   "signup_password_hint": "Enter your password",
   "signup_confirm_password_hint": "Confirm your password",
-
-  "verify_title": "Verify Your Email",
-  "verify_subtitle": "Enter the 6-digit code sent to",
+  "verify_title": "Enter Verification Code",
+  "verify_subtitle": "We sent a 6-digit code to",
   "verify_code_hint": "Enter 6-digit code",
   "verify_resend": "Resend Code",
-  "verify_button": "Verify & Continue",
+  "verify_button": "Verify",
   "verify_referral_hint": "Referral code (optional)",
   "verify_referral_bonus": "💡 Get 3 days of premium free with a referral code",
   "verify_referral_invalid": "Referral code must be exactly 8 characters",
-
   "login_email_required": "Email is required",
   "login_email_invalid": "Please enter a valid email",
   "login_password_required": "Password is required",
   "login_password_invalid": "Password must be at least 8 characters",
-
   "verify_resend_success": "New verification code sent to your phone",
   "verify_resend_failed": "Failed to resend code",
   "verify_code_required": "Please enter the 6-digit code",
-
   "phone_hint": "Phone number",
   "phone_error_required": "Please enter your phone number",
   "phone_error_invalid": "Please enter a valid phone number",
@@ -77,14 +71,10 @@
   "enter_phone_subtitle": "We'll send you a verification code via SMS",
   "signup_phone_title": "Create your account",
   "signup_phone_subtitle": "We'll send a verification code to your phone",
-  "verify_title": "Enter Verification Code",
-  "verify_subtitle": "We sent a 6-digit code to",
-  "verify_button": "Verify",
   "terms_and_policy_agreement": "By continuing you agree to our",
   "terms_of_service": "Terms of Service",
   "privacy_policy": "Privacy Policy",
   "and": "and",
-
   "terms_title": "Terms of Service",
   "terms_last_updated": "Last updated: August 2026",
   "terms_sec_1_title": "1. Acceptance of Terms",
@@ -103,7 +93,6 @@
   "terms_sec_7_body": "We may suspend or terminate your account at any time if you violate these terms or if required by law. You may stop using the app at any time and request account deletion through the app settings.",
   "terms_sec_8_title": "8. Changes to These Terms",
   "terms_sec_8_body": "We may update these Terms from time to time. We will notify you of significant changes. Continued use of the app after changes means you accept the updated terms.",
-
   "privacy_title": "Privacy Policy",
   "privacy_last_updated": "Last updated: August 2026",
   "privacy_sec_1_title": "1. Information We Collect",
@@ -120,7 +109,6 @@
   "privacy_sec_6_body": "We retain your data for as long as your account is active. If you delete your account, we remove or anonymize your personal data within a reasonable period, except where retention is required by law.",
   "privacy_sec_7_title": "7. Contact Us",
   "privacy_sec_7_body": "If you have questions about this Privacy Policy or our data practices, please contact our support team through the app's Help & Support section.",
-
   "settings_title": "Settings",
   "settings_appearance": "Appearance",
   "settings_dark_mode": "Dark Mode",
@@ -151,7 +139,6 @@
   "settings_premium_perk_chats": "Unlimited chats",
   "settings_premium_perk_boost": "Profile boost",
   "settings_premium_cta": "Upgrade now",
-
   "notifications_title": "Notifications",
   "notifications_empty": "No notifications yet",
   "notifications_section_liked": "Liked",
@@ -160,7 +147,6 @@
   "notifications_section_system": "System",
   "notifications_empty_section": "Nothing here yet",
   "notifications_close": "Close",
-
   "error_email_exists": "This email is already registered",
   "error_email_invalid_format": "Invalid email format",
   "error_too_many_attempts": "Too many attempts. Please wait a moment",
@@ -175,7 +161,6 @@
   "error_invalid_data": "Invalid data provided",
   "error_login_failed": "Login failed",
   "error_wrong_credentials": "Incorrect email or password",
-
   "discover_title": "Discover",
   "discover_loading": "Finding people near you...",
   "discover_no_profiles": "No more profiles",
@@ -210,7 +195,6 @@
   "discover_tap_for_more": "Tap for more",
   "discover_premium": "Premium",
   "discover_revert_pass": "Revert last pass",
-
   "profile_section_about": "About",
   "profile_section_physical": "Physical",
   "profile_section_lifestyle": "Lifestyle",
@@ -231,7 +215,6 @@
   "profile_label_religion": "Religion",
   "profile_label_ethnicity": "Ethnicity",
   "profile_label_politics": "Politics",
-
   "search_title": "Search",
   "search_loading": "Searching...",
   "search_no_results": "No results found",
@@ -289,7 +272,6 @@
   "search_tap_for_details": "Tap for details",
   "search_premium": "Premium",
   "search_verified": "Verified",
-
   "chat_liked_me": "Liked Me",
   "chat_i_liked": "I Liked",
   "chat_chats": "Chats",
@@ -412,7 +394,6 @@
   "chat_matched_at": "Matched {time}",
   "toast_like_sent": "Like sent!",
   "toast_like_and_message_sent": "Like and message sent!",
-
   "profile_updated_success": "Profile updated successfully!",
   "interests_updated_success": "Interests updated successfully!",
   "photos_updated_success": "Photos updated successfully",
@@ -453,26 +434,37 @@
   "photo_contact_support": "Contact support",
   "@photo_crop_error": {
     "placeholders": {
-      "error": { "type": "String", "format": "text" }
+      "error": {
+        "type": "String",
+        "format": "text"
+      }
     }
   },
   "@photo_rejected_reason": {
     "placeholders": {
-      "reason": { "type": "String", "format": "text" }
+      "reason": {
+        "type": "String",
+        "format": "text"
+      }
     }
   },
   "@verify_selfie_cooldown": {
     "placeholders": {
-      "seconds": { "type": "int" }
+      "seconds": {
+        "type": "int"
+      }
     }
   },
   "@photo_verification_count": {
     "placeholders": {
-      "verified": { "type": "int" },
-      "total": { "type": "int" }
+      "verified": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
-
   "support": "Support",
   "my_tickets": "My Tickets",
   "new_ticket": "New Ticket",
@@ -489,7 +481,7 @@
   "ticket_subject_payment": "Payment / Premium",
   "ticket_subject_bug": "Report a problem (bug)",
   "ticket_subject_other": "Other",
-  "ticket_other_hint": "Selecting \u201cOther\u201d? Explain your issue in the message below.",
+  "ticket_other_hint": "Selecting “Other”? Explain your issue in the message below.",
   "ticket_empty_title": "No tickets yet",
   "ticket_empty_body": "Have an issue? Create a support ticket and our team will help you.",
   "ticket_create_first": "Create your first ticket",
@@ -500,5 +492,107 @@
   "ticket_you": "You",
   "ticket_load_error": "Couldn't load tickets. Pull to refresh.",
   "notifications_see_details": "See details",
-  "location_manual_hint": "If the city is wrong, you can set it manually."
+  "location_manual_hint": "If the city is wrong, you can set it manually.",
+  "enum_male": "Male",
+  "enum_female": "Female",
+  "enum_straight": "Straight",
+  "enum_gay": "Gay",
+  "enum_bisexual": "Bisexual",
+  "enum_pansexual": "Pansexual",
+  "enum_asexual": "Asexual",
+  "enum_slim": "Slim",
+  "enum_average": "Average",
+  "enum_athletic": "Athletic",
+  "enum_curvy": "Curvy",
+  "enum_muscular": "Muscular",
+  "enum_overweight": "Overweight",
+  "enum_single": "Single",
+  "enum_divorced": "Divorced",
+  "enum_widowed": "Widowed",
+  "enum_separated": "Separated",
+  "enum_alone": "Alone",
+  "enum_with_family": "With Family",
+  "enum_with_roommate": "With Roommates",
+  "enum_with_partner": "With Partner",
+  "enum_have_children": "Have Children",
+  "enum_want_children": "Want Children",
+  "enum_dont_want_children": "Don't Want Children",
+  "enum_open_to_children": "Open to Children",
+  "enum_never": "Never",
+  "enum_occasionally": "Occasionally",
+  "enum_regularly": "Regularly",
+  "enum_daily": "Daily",
+  "enum_socially": "Socially",
+  "enum_long_term_relationship": "Long-term Relationship",
+  "enum_casual_dating": "Casual Dating",
+  "enum_marriage": "Marriage",
+  "enum_new_friends": "New Friends",
+  "enum_not_sure_yet": "Not Sure Yet",
+  "enum_dog": "Dog",
+  "enum_cat": "Cat",
+  "enum_both": "Both",
+  "enum_other_pet": "Other Pet",
+  "enum_no_pets": "No Pets",
+  "enum_loves_pets": "Loves Pets",
+  "enum_aries": "Aries",
+  "enum_taurus": "Taurus",
+  "enum_gemini": "Gemini",
+  "enum_cancer": "Cancer",
+  "enum_leo": "Leo",
+  "enum_virgo": "Virgo",
+  "enum_libra": "Libra",
+  "enum_scorpio": "Scorpio",
+  "enum_sagittarius": "Sagittarius",
+  "enum_capricorn": "Capricorn",
+  "enum_aquarius": "Aquarius",
+  "enum_pisces": "Pisces",
+  "enum_high_school": "High School",
+  "enum_bachelor": "Bachelor",
+  "enum_master": "Master",
+  "enum_phd": "PhD",
+  "enum_liberal": "Liberal",
+  "enum_conservative": "Conservative",
+  "enum_moderate": "Moderate",
+  "enum_apolitical": "Apolitical",
+  "enum_muslim": "Muslim",
+  "enum_christian": "Christian",
+  "enum_jewish": "Jewish",
+  "enum_zoroastrian": "Zoroastrian",
+  "enum_atheist": "Atheist",
+  "enum_agnostic": "Agnostic",
+  "enum_spiritual": "Spiritual",
+  "enum_sikh": "Sikh",
+  "enum_buddhist": "Buddhist",
+  "enum_hindu": "Hindu",
+  "enum_other_religion": "Other",
+  "enum_persian": "Persian",
+  "enum_azeri": "Azeri",
+  "enum_kurd": "Kurd",
+  "enum_lur": "Lur",
+  "enum_arab": "Arab",
+  "enum_baloch": "Baloch",
+  "enum_turkmen": "Turkmen",
+  "enum_asian": "Asian",
+  "enum_black": "Black / African Descent",
+  "enum_hispanic": "Hispanic / Latino",
+  "enum_white": "White / Caucasian",
+  "enum_middle_eastern": "Middle Eastern",
+  "enum_mixed": "Mixed",
+  "enum_other_ethnicity": "Other",
+  "lang_english": "English",
+  "lang_persian": "Persian",
+  "lang_turkish": "Turkish",
+  "lang_arabic": "Arabic",
+  "lang_spanish": "Spanish",
+  "lang_french": "French",
+  "lang_german": "German",
+  "lang_italian": "Italian",
+  "lang_russian": "Russian",
+  "lang_chinese": "Chinese",
+  "lang_japanese": "Japanese",
+  "lang_korean": "Korean",
+  "lang_hindi": "Hindi",
+  "lang_urdu": "Urdu",
+  "lang_kurdish": "Kurdish",
+  "lang_armenian": "Armenian"
 }

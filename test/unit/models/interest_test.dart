@@ -24,4 +24,20 @@ void main() {
     expect(round.name, original.name);
     expect(round.category, original.category);
   });
+
+  test('parses localized labels and exposes them', () {
+    final i = Interest.fromJson({
+      'id': 'i1',
+      'name': 'football',
+      'name_localized': 'فوتبال',
+      'category': 'sports_fitness',
+      'category_localized': 'ورزش و تناسب اندام',
+      'icon': '🏈',
+    });
+    expect(i.label, 'فوتبال');
+    expect(i.categoryLabel, 'ورزش و تناسب اندام');
+    // Fallback to the stable key when no localization is present.
+    final bare = Interest.fromJson({'id': 'x', 'name': 'yoga', 'category': 'sports_fitness'});
+    expect(bare.label, 'yoga');
+  });
 }

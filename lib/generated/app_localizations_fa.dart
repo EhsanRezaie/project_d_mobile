@@ -1297,4 +1297,310 @@ class AppLocalizationsFa extends AppLocalizations {
   @override
   String get location_manual_hint =>
       'اگر شهر اشتباه است، می‌توانید آن را به صورت دستی انتخاب کنید.';
+
+  @override
+  String get enum_male => 'مرد';
+
+  @override
+  String get enum_female => 'زن';
+
+  @override
+  String get enum_straight => 'دگرجنس‌گرا';
+
+  @override
+  String get enum_gay => 'همجنس‌گرا';
+
+  @override
+  String get enum_bisexual => 'دوجنس‌گرا';
+
+  @override
+  String get enum_pansexual => 'همه‌جنس‌گرا';
+
+  @override
+  String get enum_asexual => 'بدون میل جنسی';
+
+  @override
+  String get enum_slim => 'لاغر';
+
+  @override
+  String get enum_average => 'متوسط';
+
+  @override
+  String get enum_athletic => 'ورزشکاری';
+
+  @override
+  String get enum_curvy => 'خوش‌اندام';
+
+  @override
+  String get enum_muscular => 'عضلانی';
+
+  @override
+  String get enum_overweight => 'دارای اضافه‌وزن';
+
+  @override
+  String get enum_single => 'مجرد';
+
+  @override
+  String get enum_divorced => 'مطلقه/مطلقه';
+
+  @override
+  String get enum_widowed => 'بیوه';
+
+  @override
+  String get enum_separated => 'جدا شده';
+
+  @override
+  String get enum_alone => 'تنها';
+
+  @override
+  String get enum_with_family => 'با خانواده';
+
+  @override
+  String get enum_with_roommate => 'با هم‌خانه';
+
+  @override
+  String get enum_with_partner => 'با شریک زندگی';
+
+  @override
+  String get enum_have_children => 'بچه دارم';
+
+  @override
+  String get enum_want_children => 'بچه می‌خواهم';
+
+  @override
+  String get enum_dont_want_children => 'بچه نمی‌خواهم';
+
+  @override
+  String get enum_open_to_children => 'مشتاق بچه‌دار شدن';
+
+  @override
+  String get enum_never => 'هرگز';
+
+  @override
+  String get enum_occasionally => 'گاهی';
+
+  @override
+  String get enum_regularly => 'مرتب';
+
+  @override
+  String get enum_daily => 'روزانه';
+
+  @override
+  String get enum_socially => 'اجتماعی';
+
+  @override
+  String get enum_long_term_relationship => 'رابطه بلندمدت';
+
+  @override
+  String get enum_casual_dating => 'دوستی معمولی';
+
+  @override
+  String get enum_marriage => 'ازدواج';
+
+  @override
+  String get enum_new_friends => 'دوستان جدید';
+
+  @override
+  String get enum_not_sure_yet => 'هنوز مطمئن نیستم';
+
+  @override
+  String get enum_dog => 'سگ';
+
+  @override
+  String get enum_cat => 'گربه';
+
+  @override
+  String get enum_both => 'هر دو';
+
+  @override
+  String get enum_other_pet => 'حیوان دیگر';
+
+  @override
+  String get enum_no_pets => 'بدون حیوان خانگی';
+
+  @override
+  String get enum_loves_pets => 'عاشق حیوانات';
+
+  @override
+  String get enum_aries => 'حمل';
+
+  @override
+  String get enum_taurus => 'ثور';
+
+  @override
+  String get enum_gemini => 'جوزا';
+
+  @override
+  String get enum_cancer => 'سرطان';
+
+  @override
+  String get enum_leo => 'اسد';
+
+  @override
+  String get enum_virgo => 'سنبله';
+
+  @override
+  String get enum_libra => 'میزان';
+
+  @override
+  String get enum_scorpio => 'عقرب';
+
+  @override
+  String get enum_sagittarius => 'قوس';
+
+  @override
+  String get enum_capricorn => 'جدی';
+
+  @override
+  String get enum_aquarius => 'دلو';
+
+  @override
+  String get enum_pisces => 'حوت';
+
+  @override
+  String get enum_high_school => 'دیپلم';
+
+  @override
+  String get enum_bachelor => 'کارشناسی';
+
+  @override
+  String get enum_master => 'کارشناسی ارشد';
+
+  @override
+  String get enum_phd => 'دکترا';
+
+  @override
+  String get enum_liberal => 'لیبرال';
+
+  @override
+  String get enum_conservative => 'محافظه‌کار';
+
+  @override
+  String get enum_moderate => 'میانه‌رو';
+
+  @override
+  String get enum_apolitical => 'غیرسیاسی';
+
+  @override
+  String get enum_muslim => 'مسلمان';
+
+  @override
+  String get enum_christian => 'مسیحی';
+
+  @override
+  String get enum_jewish => 'یهودی';
+
+  @override
+  String get enum_zoroastrian => 'زرتشتی';
+
+  @override
+  String get enum_atheist => 'بی‌دین';
+
+  @override
+  String get enum_agnostic => 'ندانم‌گرا';
+
+  @override
+  String get enum_spiritual => 'معنوی';
+
+  @override
+  String get enum_sikh => 'سیک';
+
+  @override
+  String get enum_buddhist => 'بودایی';
+
+  @override
+  String get enum_hindu => 'هندو';
+
+  @override
+  String get enum_other_religion => 'سایر';
+
+  @override
+  String get enum_persian => 'فارس';
+
+  @override
+  String get enum_azeri => 'آذری';
+
+  @override
+  String get enum_kurd => 'کرد';
+
+  @override
+  String get enum_lur => 'لر';
+
+  @override
+  String get enum_arab => 'عرب';
+
+  @override
+  String get enum_baloch => 'بلوچ';
+
+  @override
+  String get enum_turkmen => 'ترکمن';
+
+  @override
+  String get enum_asian => 'آسیایی';
+
+  @override
+  String get enum_black => 'سیاه‌پوست';
+
+  @override
+  String get enum_hispanic => 'اسپانیایی‌تبار';
+
+  @override
+  String get enum_white => 'سفیدپوست';
+
+  @override
+  String get enum_middle_eastern => 'خاورمیانه‌ای';
+
+  @override
+  String get enum_mixed => 'دورگه';
+
+  @override
+  String get enum_other_ethnicity => 'سایر';
+
+  @override
+  String get lang_english => 'انگلیسی';
+
+  @override
+  String get lang_persian => 'فارسی';
+
+  @override
+  String get lang_turkish => 'ترکی';
+
+  @override
+  String get lang_arabic => 'عربی';
+
+  @override
+  String get lang_spanish => 'اسپانیایی';
+
+  @override
+  String get lang_french => 'فرانسوی';
+
+  @override
+  String get lang_german => 'آلمانی';
+
+  @override
+  String get lang_italian => 'ایتالیایی';
+
+  @override
+  String get lang_russian => 'روسی';
+
+  @override
+  String get lang_chinese => 'چینی';
+
+  @override
+  String get lang_japanese => 'ژاپنی';
+
+  @override
+  String get lang_korean => 'کرهای';
+
+  @override
+  String get lang_hindi => 'هندی';
+
+  @override
+  String get lang_urdu => 'اردو';
+
+  @override
+  String get lang_kurdish => 'کردی';
+
+  @override
+  String get lang_armenian => 'ارمنی';
 }

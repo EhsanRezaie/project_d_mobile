@@ -2473,6 +2473,618 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'If the city is wrong, you can set it manually.'**
   String get location_manual_hint;
+
+  /// No description provided for @enum_male.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get enum_male;
+
+  /// No description provided for @enum_female.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get enum_female;
+
+  /// No description provided for @enum_straight.
+  ///
+  /// In en, this message translates to:
+  /// **'Straight'**
+  String get enum_straight;
+
+  /// No description provided for @enum_gay.
+  ///
+  /// In en, this message translates to:
+  /// **'Gay'**
+  String get enum_gay;
+
+  /// No description provided for @enum_bisexual.
+  ///
+  /// In en, this message translates to:
+  /// **'Bisexual'**
+  String get enum_bisexual;
+
+  /// No description provided for @enum_pansexual.
+  ///
+  /// In en, this message translates to:
+  /// **'Pansexual'**
+  String get enum_pansexual;
+
+  /// No description provided for @enum_asexual.
+  ///
+  /// In en, this message translates to:
+  /// **'Asexual'**
+  String get enum_asexual;
+
+  /// No description provided for @enum_slim.
+  ///
+  /// In en, this message translates to:
+  /// **'Slim'**
+  String get enum_slim;
+
+  /// No description provided for @enum_average.
+  ///
+  /// In en, this message translates to:
+  /// **'Average'**
+  String get enum_average;
+
+  /// No description provided for @enum_athletic.
+  ///
+  /// In en, this message translates to:
+  /// **'Athletic'**
+  String get enum_athletic;
+
+  /// No description provided for @enum_curvy.
+  ///
+  /// In en, this message translates to:
+  /// **'Curvy'**
+  String get enum_curvy;
+
+  /// No description provided for @enum_muscular.
+  ///
+  /// In en, this message translates to:
+  /// **'Muscular'**
+  String get enum_muscular;
+
+  /// No description provided for @enum_overweight.
+  ///
+  /// In en, this message translates to:
+  /// **'Overweight'**
+  String get enum_overweight;
+
+  /// No description provided for @enum_single.
+  ///
+  /// In en, this message translates to:
+  /// **'Single'**
+  String get enum_single;
+
+  /// No description provided for @enum_divorced.
+  ///
+  /// In en, this message translates to:
+  /// **'Divorced'**
+  String get enum_divorced;
+
+  /// No description provided for @enum_widowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Widowed'**
+  String get enum_widowed;
+
+  /// No description provided for @enum_separated.
+  ///
+  /// In en, this message translates to:
+  /// **'Separated'**
+  String get enum_separated;
+
+  /// No description provided for @enum_alone.
+  ///
+  /// In en, this message translates to:
+  /// **'Alone'**
+  String get enum_alone;
+
+  /// No description provided for @enum_with_family.
+  ///
+  /// In en, this message translates to:
+  /// **'With Family'**
+  String get enum_with_family;
+
+  /// No description provided for @enum_with_roommate.
+  ///
+  /// In en, this message translates to:
+  /// **'With Roommates'**
+  String get enum_with_roommate;
+
+  /// No description provided for @enum_with_partner.
+  ///
+  /// In en, this message translates to:
+  /// **'With Partner'**
+  String get enum_with_partner;
+
+  /// No description provided for @enum_have_children.
+  ///
+  /// In en, this message translates to:
+  /// **'Have Children'**
+  String get enum_have_children;
+
+  /// No description provided for @enum_want_children.
+  ///
+  /// In en, this message translates to:
+  /// **'Want Children'**
+  String get enum_want_children;
+
+  /// No description provided for @enum_dont_want_children.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t Want Children'**
+  String get enum_dont_want_children;
+
+  /// No description provided for @enum_open_to_children.
+  ///
+  /// In en, this message translates to:
+  /// **'Open to Children'**
+  String get enum_open_to_children;
+
+  /// No description provided for @enum_never.
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get enum_never;
+
+  /// No description provided for @enum_occasionally.
+  ///
+  /// In en, this message translates to:
+  /// **'Occasionally'**
+  String get enum_occasionally;
+
+  /// No description provided for @enum_regularly.
+  ///
+  /// In en, this message translates to:
+  /// **'Regularly'**
+  String get enum_regularly;
+
+  /// No description provided for @enum_daily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get enum_daily;
+
+  /// No description provided for @enum_socially.
+  ///
+  /// In en, this message translates to:
+  /// **'Socially'**
+  String get enum_socially;
+
+  /// No description provided for @enum_long_term_relationship.
+  ///
+  /// In en, this message translates to:
+  /// **'Long-term Relationship'**
+  String get enum_long_term_relationship;
+
+  /// No description provided for @enum_casual_dating.
+  ///
+  /// In en, this message translates to:
+  /// **'Casual Dating'**
+  String get enum_casual_dating;
+
+  /// No description provided for @enum_marriage.
+  ///
+  /// In en, this message translates to:
+  /// **'Marriage'**
+  String get enum_marriage;
+
+  /// No description provided for @enum_new_friends.
+  ///
+  /// In en, this message translates to:
+  /// **'New Friends'**
+  String get enum_new_friends;
+
+  /// No description provided for @enum_not_sure_yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Sure Yet'**
+  String get enum_not_sure_yet;
+
+  /// No description provided for @enum_dog.
+  ///
+  /// In en, this message translates to:
+  /// **'Dog'**
+  String get enum_dog;
+
+  /// No description provided for @enum_cat.
+  ///
+  /// In en, this message translates to:
+  /// **'Cat'**
+  String get enum_cat;
+
+  /// No description provided for @enum_both.
+  ///
+  /// In en, this message translates to:
+  /// **'Both'**
+  String get enum_both;
+
+  /// No description provided for @enum_other_pet.
+  ///
+  /// In en, this message translates to:
+  /// **'Other Pet'**
+  String get enum_other_pet;
+
+  /// No description provided for @enum_no_pets.
+  ///
+  /// In en, this message translates to:
+  /// **'No Pets'**
+  String get enum_no_pets;
+
+  /// No description provided for @enum_loves_pets.
+  ///
+  /// In en, this message translates to:
+  /// **'Loves Pets'**
+  String get enum_loves_pets;
+
+  /// No description provided for @enum_aries.
+  ///
+  /// In en, this message translates to:
+  /// **'Aries'**
+  String get enum_aries;
+
+  /// No description provided for @enum_taurus.
+  ///
+  /// In en, this message translates to:
+  /// **'Taurus'**
+  String get enum_taurus;
+
+  /// No description provided for @enum_gemini.
+  ///
+  /// In en, this message translates to:
+  /// **'Gemini'**
+  String get enum_gemini;
+
+  /// No description provided for @enum_cancer.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancer'**
+  String get enum_cancer;
+
+  /// No description provided for @enum_leo.
+  ///
+  /// In en, this message translates to:
+  /// **'Leo'**
+  String get enum_leo;
+
+  /// No description provided for @enum_virgo.
+  ///
+  /// In en, this message translates to:
+  /// **'Virgo'**
+  String get enum_virgo;
+
+  /// No description provided for @enum_libra.
+  ///
+  /// In en, this message translates to:
+  /// **'Libra'**
+  String get enum_libra;
+
+  /// No description provided for @enum_scorpio.
+  ///
+  /// In en, this message translates to:
+  /// **'Scorpio'**
+  String get enum_scorpio;
+
+  /// No description provided for @enum_sagittarius.
+  ///
+  /// In en, this message translates to:
+  /// **'Sagittarius'**
+  String get enum_sagittarius;
+
+  /// No description provided for @enum_capricorn.
+  ///
+  /// In en, this message translates to:
+  /// **'Capricorn'**
+  String get enum_capricorn;
+
+  /// No description provided for @enum_aquarius.
+  ///
+  /// In en, this message translates to:
+  /// **'Aquarius'**
+  String get enum_aquarius;
+
+  /// No description provided for @enum_pisces.
+  ///
+  /// In en, this message translates to:
+  /// **'Pisces'**
+  String get enum_pisces;
+
+  /// No description provided for @enum_high_school.
+  ///
+  /// In en, this message translates to:
+  /// **'High School'**
+  String get enum_high_school;
+
+  /// No description provided for @enum_bachelor.
+  ///
+  /// In en, this message translates to:
+  /// **'Bachelor'**
+  String get enum_bachelor;
+
+  /// No description provided for @enum_master.
+  ///
+  /// In en, this message translates to:
+  /// **'Master'**
+  String get enum_master;
+
+  /// No description provided for @enum_phd.
+  ///
+  /// In en, this message translates to:
+  /// **'PhD'**
+  String get enum_phd;
+
+  /// No description provided for @enum_liberal.
+  ///
+  /// In en, this message translates to:
+  /// **'Liberal'**
+  String get enum_liberal;
+
+  /// No description provided for @enum_conservative.
+  ///
+  /// In en, this message translates to:
+  /// **'Conservative'**
+  String get enum_conservative;
+
+  /// No description provided for @enum_moderate.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get enum_moderate;
+
+  /// No description provided for @enum_apolitical.
+  ///
+  /// In en, this message translates to:
+  /// **'Apolitical'**
+  String get enum_apolitical;
+
+  /// No description provided for @enum_muslim.
+  ///
+  /// In en, this message translates to:
+  /// **'Muslim'**
+  String get enum_muslim;
+
+  /// No description provided for @enum_christian.
+  ///
+  /// In en, this message translates to:
+  /// **'Christian'**
+  String get enum_christian;
+
+  /// No description provided for @enum_jewish.
+  ///
+  /// In en, this message translates to:
+  /// **'Jewish'**
+  String get enum_jewish;
+
+  /// No description provided for @enum_zoroastrian.
+  ///
+  /// In en, this message translates to:
+  /// **'Zoroastrian'**
+  String get enum_zoroastrian;
+
+  /// No description provided for @enum_atheist.
+  ///
+  /// In en, this message translates to:
+  /// **'Atheist'**
+  String get enum_atheist;
+
+  /// No description provided for @enum_agnostic.
+  ///
+  /// In en, this message translates to:
+  /// **'Agnostic'**
+  String get enum_agnostic;
+
+  /// No description provided for @enum_spiritual.
+  ///
+  /// In en, this message translates to:
+  /// **'Spiritual'**
+  String get enum_spiritual;
+
+  /// No description provided for @enum_sikh.
+  ///
+  /// In en, this message translates to:
+  /// **'Sikh'**
+  String get enum_sikh;
+
+  /// No description provided for @enum_buddhist.
+  ///
+  /// In en, this message translates to:
+  /// **'Buddhist'**
+  String get enum_buddhist;
+
+  /// No description provided for @enum_hindu.
+  ///
+  /// In en, this message translates to:
+  /// **'Hindu'**
+  String get enum_hindu;
+
+  /// No description provided for @enum_other_religion.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get enum_other_religion;
+
+  /// No description provided for @enum_persian.
+  ///
+  /// In en, this message translates to:
+  /// **'Persian'**
+  String get enum_persian;
+
+  /// No description provided for @enum_azeri.
+  ///
+  /// In en, this message translates to:
+  /// **'Azeri'**
+  String get enum_azeri;
+
+  /// No description provided for @enum_kurd.
+  ///
+  /// In en, this message translates to:
+  /// **'Kurd'**
+  String get enum_kurd;
+
+  /// No description provided for @enum_lur.
+  ///
+  /// In en, this message translates to:
+  /// **'Lur'**
+  String get enum_lur;
+
+  /// No description provided for @enum_arab.
+  ///
+  /// In en, this message translates to:
+  /// **'Arab'**
+  String get enum_arab;
+
+  /// No description provided for @enum_baloch.
+  ///
+  /// In en, this message translates to:
+  /// **'Baloch'**
+  String get enum_baloch;
+
+  /// No description provided for @enum_turkmen.
+  ///
+  /// In en, this message translates to:
+  /// **'Turkmen'**
+  String get enum_turkmen;
+
+  /// No description provided for @enum_asian.
+  ///
+  /// In en, this message translates to:
+  /// **'Asian'**
+  String get enum_asian;
+
+  /// No description provided for @enum_black.
+  ///
+  /// In en, this message translates to:
+  /// **'Black / African Descent'**
+  String get enum_black;
+
+  /// No description provided for @enum_hispanic.
+  ///
+  /// In en, this message translates to:
+  /// **'Hispanic / Latino'**
+  String get enum_hispanic;
+
+  /// No description provided for @enum_white.
+  ///
+  /// In en, this message translates to:
+  /// **'White / Caucasian'**
+  String get enum_white;
+
+  /// No description provided for @enum_middle_eastern.
+  ///
+  /// In en, this message translates to:
+  /// **'Middle Eastern'**
+  String get enum_middle_eastern;
+
+  /// No description provided for @enum_mixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Mixed'**
+  String get enum_mixed;
+
+  /// No description provided for @enum_other_ethnicity.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get enum_other_ethnicity;
+
+  /// No description provided for @lang_english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get lang_english;
+
+  /// No description provided for @lang_persian.
+  ///
+  /// In en, this message translates to:
+  /// **'Persian'**
+  String get lang_persian;
+
+  /// No description provided for @lang_turkish.
+  ///
+  /// In en, this message translates to:
+  /// **'Turkish'**
+  String get lang_turkish;
+
+  /// No description provided for @lang_arabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Arabic'**
+  String get lang_arabic;
+
+  /// No description provided for @lang_spanish.
+  ///
+  /// In en, this message translates to:
+  /// **'Spanish'**
+  String get lang_spanish;
+
+  /// No description provided for @lang_french.
+  ///
+  /// In en, this message translates to:
+  /// **'French'**
+  String get lang_french;
+
+  /// No description provided for @lang_german.
+  ///
+  /// In en, this message translates to:
+  /// **'German'**
+  String get lang_german;
+
+  /// No description provided for @lang_italian.
+  ///
+  /// In en, this message translates to:
+  /// **'Italian'**
+  String get lang_italian;
+
+  /// No description provided for @lang_russian.
+  ///
+  /// In en, this message translates to:
+  /// **'Russian'**
+  String get lang_russian;
+
+  /// No description provided for @lang_chinese.
+  ///
+  /// In en, this message translates to:
+  /// **'Chinese'**
+  String get lang_chinese;
+
+  /// No description provided for @lang_japanese.
+  ///
+  /// In en, this message translates to:
+  /// **'Japanese'**
+  String get lang_japanese;
+
+  /// No description provided for @lang_korean.
+  ///
+  /// In en, this message translates to:
+  /// **'Korean'**
+  String get lang_korean;
+
+  /// No description provided for @lang_hindi.
+  ///
+  /// In en, this message translates to:
+  /// **'Hindi'**
+  String get lang_hindi;
+
+  /// No description provided for @lang_urdu.
+  ///
+  /// In en, this message translates to:
+  /// **'Urdu'**
+  String get lang_urdu;
+
+  /// No description provided for @lang_kurdish.
+  ///
+  /// In en, this message translates to:
+  /// **'Kurdish'**
+  String get lang_kurdish;
+
+  /// No description provided for @lang_armenian.
+  ///
+  /// In en, this message translates to:
+  /// **'Armenian'**
+  String get lang_armenian;
 }
 
 class _AppLocalizationsDelegate

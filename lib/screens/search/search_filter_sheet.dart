@@ -103,7 +103,9 @@ class _SearchFilterSheetState extends State<SearchFilterSheet> {
     try {
       final results = await Future.wait([
         LocationService.getCountries(),
-        OnboardingService.getInterests(),
+        OnboardingService.getInterests(
+          language: Localizations.localeOf(context).languageCode,
+        ),
       ]);
       if (mounted) {
         setState(() {
@@ -841,7 +843,7 @@ class _SearchFilterSheetState extends State<SearchFilterSheet> {
                         ),
                       ),
                       child: Text(
-                        '${interest.icon ?? ''} ${interest.name}'.trim(),
+                        '${interest.icon ?? ''} ${interest.label}'.trim(),
                         style: TextStyle(
                           fontFamily: AppTheme.fontFor(
                             !Localizations.localeOf(

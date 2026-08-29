@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../config/app_theme.dart';
 import '../../providers/auth_provider.dart';
 import '../../generated/app_localizations.dart';
+import '../../utils/profile_localization.dart';
 import '../../utils/responsive.dart';
 import '../../widgets/action_toast.dart';
 
@@ -63,32 +64,32 @@ class _EditProfileDetailsScreenState extends State<EditProfileDetailsScreen> {
   // BODY TYPE - Matches backend: slim, average, athletic, curvy, muscular, overweight
   // ============================================================
   final List<String> _bodyTypeOptions = [
-    'Slim',
-    'Average',
-    'Athletic',
-    'Curvy',
-    'Muscular',
-    'Plus Size',  // maps to 'overweight'
+    'slim',
+    'average',
+    'athletic',
+    'curvy',
+    'muscular',
+    'overweight',
   ];
 
   // ============================================================
   // RELATIONSHIP STATUS - Matches backend: single, divorced, widowed, separated
   // ============================================================
   final List<String> _relationshipOptions = [
-    'Single',
-    'Divorced',
-    'Widowed',
-    'Separated',
+    'single',
+    'divorced',
+    'widowed',
+    'separated',
   ];
 
   // ============================================================
   // LIVING SITUATION - Matches backend: alone, with_family, with_roommate, with_partner
   // ============================================================
   final List<String> _livingSituationOptions = [
-    'Alone',
-    'With Family',
-    'With Roommates',
-    'With Partner',
+    'alone',
+    'with_family',
+    'with_roommate',
+    'with_partner',
   ];
 
   // ============================================================
@@ -96,10 +97,10 @@ class _EditProfileDetailsScreenState extends State<EditProfileDetailsScreen> {
   // dont_want_children, open_to_children
   // ============================================================
   final List<String> _childrenOptions = [
-    'Have Children',
-    'Want Children',
-    'Don\'t Want Children',
-    'Open to Children',
+    'have_children',
+    'want_children',
+    'dont_want_children',
+    'open_to_children',
   ];
 
   // ============================================================
@@ -107,126 +108,126 @@ class _EditProfileDetailsScreenState extends State<EditProfileDetailsScreen> {
   // marriage, new_friends, not_sure_yet
   // ============================================================
   final List<String> _hereForOptions = [
-    'Long-term Relationship',
-    'Casual Dating',
-    'Marriage',
-    'New Friends',
-    'Not Sure Yet',
+    'long_term_relationship',
+    'casual_dating',
+    'marriage',
+    'new_friends',
+    'not_sure_yet',
   ];
 
   // ============================================================
   // PETS - Matches backend: dog, cat, both, other_pet, no_pets, loves_pets
   // ============================================================
   final List<String> _petsOptions = [
-    'Dog',
-    'Cat',
-    'Both',
-    'Other Pet',
-    'No Pets',
-    'Loves Pets',
+    'dog',
+    'cat',
+    'both',
+    'other_pet',
+    'no_pets',
+    'loves_pets',
   ];
 
   // ============================================================
   // WORKOUT FREQUENCY - Matches backend: never, occasionally, regularly, daily
   // ============================================================
   final List<String> _workoutOptions = [
-    'Never',
-    'Occasionally',
-    'Regularly',
-    'Daily',
+    'never',
+    'occasionally',
+    'regularly',
+    'daily',
   ];
 
   // ============================================================
   // ZODIAC SIGN - Matches backend: 12 signs
   // ============================================================
   final List<String> _zodiacOptions = [
-    'Aries',
-    'Taurus',
-    'Gemini',
-    'Cancer',
-    'Leo',
-    'Virgo',
-    'Libra',
-    'Scorpio',
-    'Sagittarius',
-    'Capricorn',
-    'Aquarius',
-    'Pisces',
+    'aries',
+    'taurus',
+    'gemini',
+    'cancer',
+    'leo',
+    'virgo',
+    'libra',
+    'scorpio',
+    'sagittarius',
+    'capricorn',
+    'aquarius',
+    'pisces',
   ];
 
   // ============================================================
   // SMOKING - Matches backend: never, occasionally, regularly
   // ============================================================
   final List<String> _smokingOptions = [
-    'Never',
-    'Occasionally',
-    'Regularly',
+    'never',
+    'occasionally',
+    'regularly',
   ];
 
   // ============================================================
   // DRINKING - Matches backend: never, socially, regularly
   // ============================================================
   final List<String> _drinkingOptions = [
-    'Never',
-    'Socially',
-    'Regularly',
+    'never',
+    'socially',
+    'regularly',
   ];
 
   // ============================================================
   // EDUCATION - Matches backend: high_school, bachelor, master, phd
   // ============================================================
   final List<String> _educationOptions = [
-    'High School',          // maps to 'high_school'
-    'Undergraduate Degree', // maps to 'bachelor'
-    'Postgraduate Degree',  // maps to 'master'
-    'PhD / Doctorate',      // maps to 'phd'
+    'high_school',
+    'bachelor',
+    'master',
+    'phd',
   ];
 
   // ============================================================
   // POLITICAL - Matches backend: liberal, conservative, moderate, apolitical
   // ============================================================
   final List<String> _politicalOptions = [
-    'Liberal',
-    'Conservative',
-    'Moderate',
-    'Apolitical',
+    'liberal',
+    'conservative',
+    'moderate',
+    'apolitical',
   ];
 
   // ============================================================
   // RELIGION - Free text (no enum)
   // ============================================================
   final List<String> _religionOptions = [
-    'Muslim',
-    'Christian',
-    'Jewish',
-    'Zoroastrian',
-    'Atheist',
-    'Agnostic',
-    'Spiritual',
-    'Sikh',
-    'Buddhist',
-    'Hindu',
-    'Other',
+    'muslim',
+    'christian',
+    'jewish',
+    'zoroastrian',
+    'atheist',
+    'agnostic',
+    'spiritual',
+    'sikh',
+    'buddhist',
+    'hindu',
+    'other',
   ];
 
   // ============================================================
   // ETHNICITY - Free text (no enum)
   // ============================================================
   final List<String> _ethnicityOptions = [
-    'Persian',
-    'Azeri',
-    'Kurd',
-    'Lur',
-    'Arab',
-    'Baloch',
-    'Turkmen',
-    'Asian',
-    'Black / African Descent',
-    'Hispanic / Latino',
-    'White / Caucasian',
-    'Middle Eastern',
-    'Mixed',
-    'Other',
+    'persian',
+    'azeri',
+    'kurd',
+    'lur',
+    'arab',
+    'baloch',
+    'turkmen',
+    'asian',
+    'black / african descent',
+    'hispanic / latino',
+    'white / caucasian',
+    'middle eastern',
+    'mixed',
+    'other',
   ];
 
   @override
@@ -242,227 +243,33 @@ class _EditProfileDetailsScreenState extends State<EditProfileDetailsScreen> {
     if (user != null) {
       if (user.height != null) _height = user.height!.toDouble();
       if (user.weight != null) _weight = user.weight!.toDouble();
-      if (user.bodyType != null) _bodyType = _capitalize(user.bodyType!);
+      if (user.bodyType != null) _bodyType = user.bodyType;
       if (user.relationshipStatus != null) {
-        _relationshipStatus = _capitalize(user.relationshipStatus!);
+        _relationshipStatus = user.relationshipStatus;
       }
       if (user.livingSituation != null) {
-        _livingSituation = _capitalize(user.livingSituation!);
+        _livingSituation = user.livingSituation;
       }
       if (user.childrenStatus != null) {
-        _childrenStatus = _childrenDisplay(user.childrenStatus!);
+        _childrenStatus = user.childrenStatus;
       }
-      if (user.smoking != null) _smoking = _capitalize(user.smoking!);
-      if (user.drinking != null) _drinking = _capitalize(user.drinking!);
-      if (user.hereFor != null) _hereFor = _hereForDisplay(user.hereFor!);
-      if (user.pets != null) _pets = _petsDisplay(user.pets!);
+      if (user.smoking != null) _smoking = user.smoking;
+      if (user.drinking != null) _drinking = user.drinking;
+      if (user.hereFor != null) _hereFor = user.hereFor;
+      if (user.pets != null) _pets = user.pets;
       if (user.workoutFrequency != null) {
-        _workoutFrequency = _workoutDisplay(user.workoutFrequency!);
+        _workoutFrequency = user.workoutFrequency;
       }
-      if (user.zodiacSign != null) _zodiacSign = _zodiacDisplay(user.zodiacSign!);
-      if (user.education != null) _education = _capitalize(user.education!);
+      if (user.zodiacSign != null) _zodiacSign = user.zodiacSign;
+      if (user.education != null) _education = user.education;
       if (user.workplace != null) _workplaceController.text = user.workplace!;
-      if (user.religion != null) _religion = _capitalize(user.religion!);
-      if (user.ethnicity != null) _ethnicity = _capitalize(user.ethnicity!);
+      if (user.religion != null) _religion = user.religion;
+      if (user.ethnicity != null) _ethnicity = user.ethnicity;
       if (user.politicalOrientation != null) {
-        _politicalOrientation = _capitalize(user.politicalOrientation!);
+        _politicalOrientation = user.politicalOrientation;
       }
       if (user.languages != null) _selectedLanguages = List.from(user.languages!);
     }
-  }
-
-  String _capitalize(String str) {
-    if (str.isEmpty) return str;
-    return str[0].toUpperCase() + str.substring(1);
-  }
-
-  String _childrenDisplay(String v) {
-    switch (v) {
-      case 'have_children':
-        return 'Have Children';
-      case 'want_children':
-        return 'Want Children';
-      case 'dont_want_children':
-        return 'Don\'t Want Children';
-      case 'open_to_children':
-        return 'Open to Children';
-      default:
-        return _capitalize(v);
-    }
-  }
-
-  String _hereForDisplay(String v) {
-    switch (v) {
-      case 'long_term_relationship':
-        return 'Long-term Relationship';
-      case 'casual_dating':
-        return 'Casual Dating';
-      case 'marriage':
-        return 'Marriage';
-      case 'new_friends':
-        return 'New Friends';
-      case 'not_sure_yet':
-        return 'Not Sure Yet';
-      default:
-        return _capitalize(v);
-    }
-  }
-
-  String _petsDisplay(String v) {
-    switch (v) {
-      case 'dog':
-        return 'Dog';
-      case 'cat':
-        return 'Cat';
-      case 'both':
-        return 'Both';
-      case 'other_pet':
-        return 'Other Pet';
-      case 'no_pets':
-        return 'No Pets';
-      case 'loves_pets':
-        return 'Loves Pets';
-      default:
-        return _capitalize(v);
-    }
-  }
-
-  String _workoutDisplay(String v) {
-    switch (v) {
-      case 'never':
-        return 'Never';
-      case 'occasionally':
-        return 'Occasionally';
-      case 'regularly':
-        return 'Regularly';
-      case 'daily':
-        return 'Daily';
-      default:
-        return _capitalize(v);
-    }
-  }
-
-  String _zodiacDisplay(String v) {
-    switch (v) {
-      case 'aries':
-        return 'Aries';
-      case 'taurus':
-        return 'Taurus';
-      case 'gemini':
-        return 'Gemini';
-      case 'cancer':
-        return 'Cancer';
-      case 'leo':
-        return 'Leo';
-      case 'virgo':
-        return 'Virgo';
-      case 'libra':
-        return 'Libra';
-      case 'scorpio':
-        return 'Scorpio';
-      case 'sagittarius':
-        return 'Sagittarius';
-      case 'capricorn':
-        return 'Capricorn';
-      case 'aquarius':
-        return 'Aquarius';
-      case 'pisces':
-        return 'Pisces';
-      default:
-        return _capitalize(v);
-    }
-  }
-
-  String _getBackendValue(String displayValue, {String field = ''}) {
-    // Body Type
-    if (displayValue == 'Slim') return 'slim';
-    if (displayValue == 'Average') return 'average';
-    if (displayValue == 'Athletic') return 'athletic';
-    if (displayValue == 'Curvy') return 'curvy';
-    if (displayValue == 'Muscular') return 'muscular';
-    if (displayValue == 'Plus Size') return 'overweight';
-
-    // Relationship Status
-    if (displayValue == 'Single') return 'single';
-    if (displayValue == 'Divorced') return 'divorced';
-    if (displayValue == 'Widowed') return 'widowed';
-    if (displayValue == 'Separated') return 'separated';
-
-    // Living Situation
-    if (displayValue == 'Alone') return 'alone';
-    if (displayValue == 'With Family') return 'with_family';
-    if (displayValue == 'With Roommates') return 'with_roommate';
-    if (displayValue == 'With Partner') return 'with_partner';
-
-    // Children Status
-    if (displayValue == 'Have Children') return 'have_children';
-    if (displayValue == 'Want Children') return 'want_children';
-    if (displayValue == 'Don\'t Want Children') return 'dont_want_children';
-    if (displayValue == 'Open to Children') return 'open_to_children';
-
-    // Here For
-    if (displayValue == 'Long-term Relationship') return 'long_term_relationship';
-    if (displayValue == 'Casual Dating') return 'casual_dating';
-    if (displayValue == 'Marriage') return 'marriage';
-    if (displayValue == 'New Friends') return 'new_friends';
-    if (displayValue == 'Not Sure Yet') return 'not_sure_yet';
-
-    // Pets
-    if (displayValue == 'Dog') return 'dog';
-    if (displayValue == 'Cat') return 'cat';
-    if (displayValue == 'Both') return 'both';
-    if (displayValue == 'Other Pet') return 'other_pet';
-    if (displayValue == 'No Pets') return 'no_pets';
-    if (displayValue == 'Loves Pets') return 'loves_pets';
-
-    // Workout Frequency (Never/Occasionally/Regularly fall through to smoking)
-    if (displayValue == 'Daily') return 'daily';
-
-    // Zodiac Sign
-    if (displayValue == 'Aries') return 'aries';
-    if (displayValue == 'Taurus') return 'taurus';
-    if (displayValue == 'Gemini') return 'gemini';
-    if (displayValue == 'Cancer') return 'cancer';
-    if (displayValue == 'Leo') return 'leo';
-    if (displayValue == 'Virgo') return 'virgo';
-    if (displayValue == 'Libra') return 'libra';
-    if (displayValue == 'Scorpio') return 'scorpio';
-    if (displayValue == 'Sagittarius') return 'sagittarius';
-    if (displayValue == 'Capricorn') return 'capricorn';
-    if (displayValue == 'Aquarius') return 'aquarius';
-    if (displayValue == 'Pisces') return 'pisces';
-
-    // Smoking (values: never, occasionally, regularly)
-    if (field == 'smoking') {
-      if (displayValue == 'Never') return 'never';
-      if (displayValue == 'Occasionally') return 'occasionally';
-      if (displayValue == 'Regularly') return 'regularly';
-    }
-
-    // Drinking (values: never, socially, regularly).
-    // Normalize any stale 'occasionally' (legacy bug) to 'socially'.
-    if (field == 'drinking') {
-      if (displayValue == 'Never') return 'never';
-      if (displayValue == 'Socially') return 'socially';
-      if (displayValue == 'Occasionally') return 'socially';
-      if (displayValue == 'Regularly') return 'regularly';
-    }
-
-    // Education
-    if (displayValue == 'High School') return 'high_school';
-    if (displayValue == 'Undergraduate Degree') return 'bachelor';
-    if (displayValue == 'Postgraduate Degree') return 'master';
-    if (displayValue == 'PhD / Doctorate') return 'phd';
-
-    // Political Orientation
-    if (displayValue == 'Liberal') return 'liberal';
-    if (displayValue == 'Conservative') return 'conservative';
-    if (displayValue == 'Moderate') return 'moderate';
-    if (displayValue == 'Apolitical') return 'apolitical';
-
-    // Religion - free text
-    if (displayValue == 'Other') return 'other';
-    return displayValue.toLowerCase();
   }
 
   void _toggleLanguage(String language) {
@@ -505,63 +312,63 @@ class _EditProfileDetailsScreenState extends State<EditProfileDetailsScreen> {
 
       // Body Type
       if (_bodyType != null) {
-        final backendValue = _getBackendValue(_bodyType!);
+        final backendValue = _bodyType!;
         updateData['body_type'] = backendValue;
       }
 
       // Relationship Status
       if (_relationshipStatus != null) {
-        final backendValue = _getBackendValue(_relationshipStatus!);
+        final backendValue = _relationshipStatus!;
         updateData['relationship_status'] = backendValue;
       }
 
       // Living Situation
       if (_livingSituation != null) {
-        final backendValue = _getBackendValue(_livingSituation!);
+        final backendValue = _livingSituation!;
         updateData['living_situation'] = backendValue;
       }
 
       // Children Status
       if (_childrenStatus != null) {
-        final backendValue = _getBackendValue(_childrenStatus!);
+        final backendValue = _childrenStatus!;
         updateData['children_status'] = backendValue;
       }
 
       // Smoking
       if (_smoking != null) {
-        final backendValue = _getBackendValue(_smoking!, field: 'smoking');
+        final backendValue = _smoking!;
         updateData['smoking'] = backendValue;
       }
 
       // Drinking
       if (_drinking != null) {
-        final backendValue = _getBackendValue(_drinking!, field: 'drinking');
+        final backendValue = _drinking!;
         updateData['drinking'] = backendValue;
       }
 
       // Here For
       if (_hereFor != null) {
-        updateData['here_for'] = _getBackendValue(_hereFor!);
+        updateData['here_for'] = _hereFor!;
       }
 
       // Pets
       if (_pets != null) {
-        updateData['pets'] = _getBackendValue(_pets!);
+        updateData['pets'] = _pets!;
       }
 
       // Workout Frequency
       if (_workoutFrequency != null) {
-        updateData['workout_frequency'] = _getBackendValue(_workoutFrequency!);
+        updateData['workout_frequency'] = _workoutFrequency!;
       }
 
       // Zodiac Sign
       if (_zodiacSign != null) {
-        updateData['zodiac_sign'] = _getBackendValue(_zodiacSign!);
+        updateData['zodiac_sign'] = _zodiacSign!;
       }
 
       // Education
       if (_education != null) {
-        final backendValue = _getBackendValue(_education!);
+        final backendValue = _education!;
         updateData['education'] = backendValue;
       }
 
@@ -572,19 +379,19 @@ class _EditProfileDetailsScreenState extends State<EditProfileDetailsScreen> {
 
       // Religion
       if (_religion != null) {
-        final backendValue = _getBackendValue(_religion!);
+        final backendValue = _religion!;
         updateData['religion'] = backendValue;
       }
 
       // Ethnicity
       if (_ethnicity != null) {
-        final backendValue = _getBackendValue(_ethnicity!);
+        final backendValue = _ethnicity!;
         updateData['ethnicity'] = backendValue;
       }
 
       // Political Orientation
       if (_politicalOrientation != null) {
-        final backendValue = _getBackendValue(_politicalOrientation!);
+        final backendValue = _politicalOrientation!;
         updateData['political_orientation'] = backendValue;
       }
 
@@ -938,7 +745,7 @@ class _EditProfileDetailsScreenState extends State<EditProfileDetailsScreen> {
                                           ),
                                         ),
                                         child: Text(
-                                          language,
+                                          localizedLanguage(AppLocalizations.of(context)!, language),
                                           style: TextStyle(
                                             fontFamily: AppTheme.fontFor(!Localizations.localeOf(context).languageCode.contains('en')),
                                             fontSize: 14,
@@ -1025,12 +832,14 @@ class _EditProfileDetailsScreenState extends State<EditProfileDetailsScreen> {
     required List<String> options,
     required String? selected,
     required void Function(String) onTap,
+    String Function(String)? display,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = isDark ? AppTheme.darkPrimary : AppTheme.lightPrimary;
     final surfaceColor = isDark ? AppTheme.darkSurface : AppTheme.lightSurface;
     final borderColor = isDark ? AppTheme.darkBorder : AppTheme.lightBorder;
     final onSurfaceColor = Theme.of(context).colorScheme.onSurface;
+    final t = AppLocalizations.of(context)!;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1053,6 +862,8 @@ class _EditProfileDetailsScreenState extends State<EditProfileDetailsScreen> {
           runSpacing: 8,
           children: options.map((option) {
             final isSelected = selected == option;
+            final optionLabel =
+                display?.call(option) ?? localizedEnum(t, option);
             return GestureDetector(
               onTap: () => onTap(option),
               child: AnimatedContainer(
@@ -1067,7 +878,7 @@ class _EditProfileDetailsScreenState extends State<EditProfileDetailsScreen> {
                   ),
                 ),
                 child: Text(
-                  option,
+                  optionLabel,
                   style: TextStyle(
                     fontFamily: AppTheme.fontFor(!Localizations.localeOf(context).languageCode.contains('en')),
                     fontSize: 14,

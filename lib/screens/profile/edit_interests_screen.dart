@@ -44,7 +44,8 @@ class _EditInterestsScreenState extends State<EditInterestsScreen> {
     if (!mounted) return;
     setState(() => _isLoading = true);
     try {
-      final interests = await OnboardingService.getInterests();
+      final language = Localizations.localeOf(context).languageCode;
+      final interests = await OnboardingService.getInterests(language: language);
       if (!mounted) return;
 
       setState(() {
@@ -66,8 +67,8 @@ class _EditInterestsScreenState extends State<EditInterestsScreen> {
   Map<String, List<Interest>> _groupByCategory(List<Interest> interests) {
     final map = <String, List<Interest>>{};
     for (final interest in interests) {
-      final category = interest.category.isNotEmpty
-          ? _formatCategory(interest.category)
+      final category = interest.categoryLabel.isNotEmpty
+          ? interest.categoryLabel
           : 'Other';
       if (!map.containsKey(category)) {
         map[category] = [];
@@ -75,11 +76,6 @@ class _EditInterestsScreenState extends State<EditInterestsScreen> {
       map[category]!.add(interest);
     }
     return map;
-  }
-
-  String _formatCategory(String category) {
-    final parts = category.split('_');
-    return parts.map((part) => part[0].toUpperCase() + part.substring(1)).join(' & ');
   }
 
   void _toggleInterest(Interest interest) {
@@ -480,7 +476,7 @@ class _EditInterestsScreenState extends State<EditInterestsScreen> {
                               ),
                             ),
                           Text(
-                            _formatInterestName(interest.name),
+                            interest.label,
                             style: TextStyle(
                               fontFamily: AppTheme.fontFor(!Localizations.localeOf(context).languageCode.contains('en')),
                               fontSize: 14,
@@ -508,11 +504,5 @@ class _EditInterestsScreenState extends State<EditInterestsScreen> {
         ],
       ),
     );
-  }
-
-  String _formatInterestName(String name) {
-    return name.replaceAll('_', ' ').split(' ')
-        .map((word) => word[0].toUpperCase() + word.substring(1))
-        .join(' ');
   }
 }

@@ -5,6 +5,8 @@ import 'package:dating_app/generated/app_localizations.dart';
 import 'package:dating_app/models/discover_profile.dart';
 import 'package:dating_app/providers/chat_provider.dart';
 import 'package:dating_app/screens/chats/chat_detail_screen.dart';
+import 'package:dating_app/services/interest_localizer.dart';
+import 'package:dating_app/utils/profile_localization.dart';
 import 'package:dating_app/utils/responsive.dart';
 import 'package:dating_app/utils/cached_image.dart';
 import 'package:dating_app/widgets/discover_action_button.dart';
@@ -517,7 +519,7 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
             chips: [
               _buildValueChip(
                 profile.gender == 'male' ? '♂️' : '♀️',
-                _capitalize(profile.gender),
+                localizedEnum(t, profile.gender),
                 isDark,
                 textColor,
                 borderColor,
@@ -541,7 +543,7 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
               if (profile.bodyType != null)
                 _buildValueChip(
                   '💪',
-                  _capitalize(profile.bodyType!),
+                  localizedEnum(t, profile.bodyType),
                   isDark,
                   textColor,
                   borderColor,
@@ -555,7 +557,7 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
               if (profile.relationshipStatus != null)
                 _buildValueChip(
                   '❤️',
-                  _capitalize(profile.relationshipStatus!),
+                  localizedEnum(t, profile.relationshipStatus),
                   isDark,
                   textColor,
                   borderColor,
@@ -563,7 +565,7 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
               if (profile.livingSituation != null)
                 _buildValueChip(
                   '🏠',
-                  _formatLiving(profile.livingSituation!),
+                  localizedEnum(t, profile.livingSituation),
                   isDark,
                   textColor,
                   borderColor,
@@ -571,7 +573,7 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
               if (profile.childrenStatus != null)
                 _buildValueChip(
                   '👶',
-                  _formatChildren(profile.childrenStatus!),
+                  localizedEnum(t, profile.childrenStatus),
                   isDark,
                   textColor,
                   borderColor,
@@ -579,7 +581,7 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
               if (profile.smoking != null)
                 _buildValueChip(
                   '🚬',
-                  _capitalize(profile.smoking!),
+                  localizedEnum(t, profile.smoking),
                   isDark,
                   textColor,
                   borderColor,
@@ -587,7 +589,7 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
               if (profile.drinking != null)
                 _buildValueChip(
                   '🍷',
-                  _capitalize(profile.drinking!),
+                  localizedEnum(t, profile.drinking),
                   isDark,
                   textColor,
                   borderColor,
@@ -595,7 +597,7 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
               if (profile.hereFor != null)
                 _buildValueChip(
                   '🎯',
-                  _formatHereFor(profile.hereFor!),
+                  localizedEnum(t, profile.hereFor),
                   isDark,
                   textColor,
                   borderColor,
@@ -603,7 +605,7 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
               if (profile.pets != null)
                 _buildValueChip(
                   '🐾',
-                  _formatPets(profile.pets!),
+                  localizedEnum(t, profile.pets),
                   isDark,
                   textColor,
                   borderColor,
@@ -611,7 +613,7 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
               if (profile.workoutFrequency != null)
                 _buildValueChip(
                   '🏃',
-                  _formatWorkout(profile.workoutFrequency!),
+                  localizedEnum(t, profile.workoutFrequency),
                   isDark,
                   textColor,
                   borderColor,
@@ -619,7 +621,7 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
               if (profile.zodiacSign != null)
                 _buildValueChip(
                   '♈',
-                  _formatZodiac(profile.zodiacSign!),
+                  localizedEnum(t, profile.zodiacSign),
                   isDark,
                   textColor,
                   borderColor,
@@ -633,7 +635,7 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
               if (profile.education != null)
                 _buildValueChip(
                   '🎓',
-                  _formatEducation(profile.education!),
+                  localizedEnum(t, profile.education),
                   isDark,
                   textColor,
                   borderColor,
@@ -649,7 +651,7 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
               if (profile.religion != null)
                 _buildValueChip(
                   '☪️',
-                  _capitalize(profile.religion!),
+                  localizedEnum(t, profile.religion),
                   isDark,
                   textColor,
                   borderColor,
@@ -657,7 +659,7 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
               if (profile.ethnicity != null)
                 _buildValueChip(
                   '🌍',
-                  _capitalize(profile.ethnicity!),
+                  localizedEnum(t, profile.ethnicity),
                   isDark,
                   textColor,
                   borderColor,
@@ -665,7 +667,7 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
               if (profile.politicalOrientation != null)
                 _buildValueChip(
                   '🗳️',
-                  _capitalize(profile.politicalOrientation!),
+                  localizedEnum(t, profile.politicalOrientation),
                   isDark,
                   textColor,
                   borderColor,
@@ -677,6 +679,7 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
               emoji: '🗣️',
               title: t.profile_section_languages,
               items: profile.languages!,
+              display: (v) => localizedLanguage(t, v),
               isDark: isDark,
               primaryColor: primaryColor,
               mutedColor: mutedColor,
@@ -689,6 +692,7 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
               title: t.profile_section_interests,
               items: profile.interests,
               iconMap: widget.interestIcons,
+              display: InterestLocalizer.instance.name,
               isDark: isDark,
               primaryColor: primaryColor,
               mutedColor: mutedColor,
@@ -831,6 +835,7 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
     required String title,
     required List<String> items,
     Map<String, String> iconMap = const {},
+    String Function(String)? display,
     required bool isDark,
     required Color primaryColor,
     required Color mutedColor,
@@ -862,6 +867,7 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
           runSpacing: 8,
           children: items.map((item) {
             final icon = iconMap[item];
+            final label = display?.call(item) ?? item;
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
@@ -871,7 +877,7 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                icon != null ? '$icon $item' : item,
+                icon != null ? '$icon $label' : label,
                 style: TextStyle(
                   fontFamily: AppTheme.fontFor(!Localizations.localeOf(context).languageCode.contains('en')),
                   fontSize: 13,
@@ -1482,137 +1488,5 @@ class _SearchProfileDetailState extends State<SearchProfileDetail> {
         ),
       ),
     );
-  }
-
-  String _capitalize(String s) {
-    if (s.isEmpty) return s;
-    return s[0].toUpperCase() + s.substring(1);
-  }
-
-  String _formatLiving(String value) {
-    switch (value.toLowerCase()) {
-      case 'alone':
-        return 'Alone';
-      case 'with_family':
-        return 'With Family';
-      case 'with_roommate':
-        return 'With Roommates';
-      case 'with_partner':
-        return 'With Partner';
-      default:
-        return _capitalize(value);
-    }
-  }
-
-  String _formatChildren(String value) {
-    switch (value.toLowerCase()) {
-      case 'have_children':
-        return 'Have Children';
-      case 'want_children':
-        return 'Want Children';
-      case 'dont_want_children':
-        return "Don't Want Children";
-      case 'open_to_children':
-        return 'Open to Children';
-      default:
-        return _capitalize(value);
-    }
-  }
-
-  String _formatHereFor(String value) {
-    switch (value.toLowerCase()) {
-      case 'long_term_relationship':
-        return 'Long-term Relationship';
-      case 'casual_dating':
-        return 'Casual Dating';
-      case 'marriage':
-        return 'Marriage';
-      case 'new_friends':
-        return 'New Friends';
-      case 'not_sure_yet':
-        return 'Not Sure Yet';
-      default:
-        return _capitalize(value);
-    }
-  }
-
-  String _formatPets(String value) {
-    switch (value.toLowerCase()) {
-      case 'dog':
-        return 'Dog';
-      case 'cat':
-        return 'Cat';
-      case 'both':
-        return 'Both';
-      case 'other_pet':
-        return 'Other Pet';
-      case 'no_pets':
-        return 'No Pets';
-      case 'loves_pets':
-        return 'Loves Pets';
-      default:
-        return _capitalize(value);
-    }
-  }
-
-  String _formatWorkout(String value) {
-    switch (value.toLowerCase()) {
-      case 'never':
-        return 'Never';
-      case 'occasionally':
-        return 'Occasionally';
-      case 'regularly':
-        return 'Regularly';
-      case 'daily':
-        return 'Daily';
-      default:
-        return _capitalize(value);
-    }
-  }
-
-  String _formatZodiac(String value) {
-    switch (value.toLowerCase()) {
-      case 'aries':
-        return 'Aries';
-      case 'taurus':
-        return 'Taurus';
-      case 'gemini':
-        return 'Gemini';
-      case 'cancer':
-        return 'Cancer';
-      case 'leo':
-        return 'Leo';
-      case 'virgo':
-        return 'Virgo';
-      case 'libra':
-        return 'Libra';
-      case 'scorpio':
-        return 'Scorpio';
-      case 'sagittarius':
-        return 'Sagittarius';
-      case 'capricorn':
-        return 'Capricorn';
-      case 'aquarius':
-        return 'Aquarius';
-      case 'pisces':
-        return 'Pisces';
-      default:
-        return _capitalize(value);
-    }
-  }
-
-  String _formatEducation(String value) {
-    switch (value.toLowerCase()) {
-      case 'high_school':
-        return 'High School';
-      case 'bachelor':
-        return 'Undergraduate Degree';
-      case 'master':
-        return 'Postgraduate Degree';
-      case 'phd':
-        return 'PhD / Doctorate';
-      default:
-        return _capitalize(value);
-    }
   }
 }

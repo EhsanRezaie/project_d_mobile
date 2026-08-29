@@ -24,7 +24,6 @@
   "email_invalid": "لطفاً یک ایمیل معتبر وارد کنید",
   "password_required": "رمز عبور الزامی است",
   "password_min_length": "رمز عبور باید حداقل ۸ کاراکتر باشد",
-
   "splash_subtitle": "پیدا کردن همتا",
   "splash_connecting": "در حال اتصال به سرور...",
   "splash_check_internet": "لطفاً اتصال اینترنت خود را بررسی کنید",
@@ -32,7 +31,6 @@
   "splash_connection_failed": "ارتباط با سرور برقرار نشد",
   "screenshot_disabled_notice": "برای حفظ حریم خصوصی شما، امکان اسکرین‌شات غیرفعال است",
   "photo_fullscreen_hint": "برای نمایش تمام‌صفحه روی عکس بزنید",
-
   "signup_title": "ایجاد حساب کاربری",
   "signup_subtitle": "به ما ملحق شو و همتای خودت رو پیدا کن",
   "signup_email_label": "ایمیل",
@@ -50,25 +48,21 @@
   "signup_email_hint": "ایمیل خود را وارد کنید",
   "signup_password_hint": "رمز عبور خود را وارد کنید",
   "signup_confirm_password_hint": "رمز عبور را تکرار کنید",
-
-  "verify_title": "تایید ایمیل",
-  "verify_subtitle": "کد ۶ رقمی ارسال شده به را وارد کنید",
+  "verify_title": "کد تایید را وارد کنید",
+  "verify_subtitle": "کد ۶ رقمی ارسال شده است به",
   "verify_code_hint": "کد ۶ رقمی را وارد کنید",
   "verify_resend": "ارسال مجدد کد",
-  "verify_button": "تایید و ادامه",
+  "verify_button": "تایید",
   "verify_referral_hint": "کد دعوت (اختیاری)",
   "verify_referral_bonus": "💡 با کد دعوت ۳ روز پریمیوم رایگان دریافت کنید",
   "verify_referral_invalid": "کد دعوت باید دقیقاً ۸ کاراکتر باشد",
-
   "login_email_required": "ایمیل الزامی است",
   "login_email_invalid": "لطفاً یک ایمیل معتبر وارد کنید",
   "login_password_required": "رمز عبور الزامی است",
   "login_password_invalid": "رمز عبور باید حداقل ۸ کاراکتر باشد",
-
   "verify_resend_success": "کد تایید جدید به تلفن شما ارسال شد",
   "verify_resend_failed": "ارسال مجدد کد انجام نشد",
   "verify_code_required": "لطفاً کد ۶ رقمی را وارد کنید",
-
   "phone_hint": "شماره تلفن",
   "phone_error_required": "لطفاً شماره تلفن خود را وارد کنید",
   "phone_error_invalid": "لطفاً یک شماره تلفن معتبر وارد کنید",
@@ -77,14 +71,10 @@
   "enter_phone_subtitle": "یک کد تایید از طریق پیامک برای شما ارسال می‌کنیم",
   "signup_phone_title": "ساخت حساب کاربری",
   "signup_phone_subtitle": "کد تایید به شماره تلفن شما ارسال می‌شود",
-  "verify_title": "کد تایید را وارد کنید",
-  "verify_subtitle": "کد ۶ رقمی ارسال شده است به",
-  "verify_button": "تایید",
   "terms_and_policy_agreement": "با ادامه، شما با",
   "terms_of_service": "شرایط خدمات",
   "privacy_policy": "سیاست حریم خصوصی",
   "and": "و",
-
   "terms_title": "شرایط خدمات",
   "terms_last_updated": "آخرین به‌روزرسانی: آگوست ۲۰۲۶",
   "terms_sec_1_title": "۱. پذیرش شرایط",
@@ -103,7 +93,6 @@
   "terms_sec_7_body": "در صورت نقض این شرایط یا الزام قانونی، ممکن است حساب شما را در هر زمان معلق یا خاتمه دهیم. می‌توانید در هر زمان استفاده از برنامه را متوقف و از طریق تنظیمات، حذف حساب را درخواست کنید.",
   "terms_sec_8_title": "۸. تغییرات در شرایط",
   "terms_sec_8_body": "ممکن است این شرایط را هر از گاهی به‌روزرسانی کنیم. در صورت تغییرات مهم به شما اطلاع می‌دهیم. ادامه استفاده از برنامه پس از تغییرات به معنای پذیرش شرایط به‌روز شده است.",
-
   "privacy_title": "سیاست حریم خصوصی",
   "privacy_last_updated": "آخرین به‌روزرسانی: آگوست ۲۰۲۶",
   "privacy_sec_1_title": "۱. اطلاعاتی که جمع‌آوری می‌کنیم",
@@ -120,7 +109,6 @@
   "privacy_sec_6_body": "داده‌های شما تا زمانی که حساب شما فعال است نگهداری می‌شود. پس از حذف حساب، اطلاعات شخصی شما در مدت زمان مناسب حذف یا ناشناس می‌شود، مگر اینکه قانون نگهداری را الزام کند.",
   "privacy_sec_7_title": "۷. تماس با ما",
   "privacy_sec_7_body": "اگر سؤالی درباره این سیاست حریم خصوصی یا روش‌های داده‌ای ما دارید، از طریق بخش پشتیبانی و راهنما در برنامه با تیم پشتیبانی تماس بگیرید.",
-
   "settings_title": "تنظیمات",
   "settings_appearance": "ظاهر",
   "settings_dark_mode": "حالت تاریک",
@@ -151,7 +139,6 @@
   "settings_premium_perk_chats": "چت نامحدود",
   "settings_premium_perk_boost": "افزایش بازدید پروفایل",
   "settings_premium_cta": "همین حالا ارتقا دهید",
-
   "notifications_title": "اعلان‌ها",
   "notifications_empty": "هنوز اعلانی ندارید",
   "notifications_section_liked": "لایک‌شده",
@@ -160,7 +147,6 @@
   "notifications_section_system": "سیستم",
   "notifications_empty_section": "موردی وجود ندارد",
   "notifications_close": "بستن",
-
   "error_email_exists": "این ایمیل قبلاً ثبت نام کرده است",
   "error_email_invalid_format": "فرمت ایمیل نامعتبر است",
   "error_too_many_attempts": "تعداد تلاش‌ها بیش از حد است. لطفاً کمی صبر کنید",
@@ -175,7 +161,6 @@
   "error_invalid_data": "داده‌های نامعتبر",
   "error_login_failed": "ورود انجام نشد",
   "error_wrong_credentials": "ایمیل یا رمز عبور اشتباه است",
-
   "discover_title": "کشف",
   "discover_loading": "در حال پیدا کردن افراد نزدیک شما...",
   "discover_no_profiles": "پروفایل دیگری وجود ندارد",
@@ -210,14 +195,13 @@
   "discover_tap_for_more": "برای اطلاعات بیشتر لمس کنید",
   "discover_premium": "پریمیوم",
   "discover_revert_pass": "بازگشت آخرین رد کردن",
-
   "profile_section_about": "درباره",
   "profile_section_physical": "ظاهری",
   "profile_section_lifestyle": "سبک زندگی",
   "profile_section_background": "سابقه",
-  "profile_section_languages": "زبان\u200cها",
-  "profile_section_interests": "علاقه\u200cمندی\u200cها",
-  "profile_section_prompts": "پرامپت\u200cها",
+  "profile_section_languages": "زبان‌ها",
+  "profile_section_interests": "علاقه‌مندی‌ها",
+  "profile_section_prompts": "پرامپت‌ها",
   "profile_label_height": "قد",
   "profile_label_weight": "وزن",
   "profile_label_body_type": "نوع بدن",
@@ -231,7 +215,6 @@
   "profile_label_religion": "دین",
   "profile_label_ethnicity": "قومیت",
   "profile_label_politics": "سیاست",
-
   "search_title": "جستجو",
   "search_loading": "در حال جستجو...",
   "search_no_results": "نتیجه‌ای یافت نشد",
@@ -267,7 +250,7 @@
   "search_filter_religion": "دین",
   "search_filter_ethnicity": "قومیت",
   "search_filter_interests": "علایق",
-  "search_filter_languages": "زبان\u200cها",
+  "search_filter_languages": "زبان‌ها",
   "search_filter_has_photos": "عکس دارد",
   "search_filter_verified": "فقط تأیید شده",
   "search_filter_age_range": "محدوده سنی",
@@ -277,8 +260,8 @@
   "search_next": "بعدی",
   "search_prev": "قبلی",
   "search_active_filters": "{count} فیلتر فعال",
-  "search_limit_reached_likes": "همه لایک\u200cهای امروز تمام شد. فردا برگردید!",
-  "search_limit_reached_chats": "همه چت\u200cهای امروز تمام شد. فردا برگردید!",
+  "search_limit_reached_likes": "همه لایک‌های امروز تمام شد. فردا برگردید!",
+  "search_limit_reached_chats": "همه چت‌های امروز تمام شد. فردا برگردید!",
   "search_say_something": "چیزی بنویسید...",
   "search_send_and_like": "ارسال و لایک",
   "search_match_title": "یک تطابق!",
@@ -289,14 +272,13 @@
   "search_tap_for_details": "برای اطلاعات بیشتر لمس کنید",
   "search_premium": "پریمیوم",
   "search_verified": "تأیید شده",
-
   "chat_liked_me": "منو لایک کردن",
   "chat_i_liked": "لایک کردم",
-  "chat_chats": "چت\u200cها",
-  "chat_requests": "درخواست\u200cها",
+  "chat_chats": "چت‌ها",
+  "chat_requests": "درخواست‌ها",
   "chat_pending": "در انتظار",
   "chat_incoming": "ورودی",
-  "chat_empty_pending": "هنوز چتی شروع نکرده\u200cاید",
+  "chat_empty_pending": "هنوز چتی شروع نکرده‌اید",
   "chat_empty_incoming": "چت ورودی ندارید",
   "chat_accept": "پذیرش",
   "chat_liked_you": "{name} شما را لایک کرد",
@@ -347,8 +329,8 @@
   },
   "chat_empty_matches": "هنوز تطابقی نداری. شروع به سوایپ کن!",
   "chat_empty_liked_me": "هنوز کسی شما را لایک نکرده",
-  "chat_empty_i_liked": "هنوز کسی را لایک نکرده\u200cاید",
-  "chat_empty_chats": "هنوز مکالمه\u200cای ندارید",
+  "chat_empty_i_liked": "هنوز کسی را لایک نکرده‌اید",
+  "chat_empty_chats": "هنوز مکالمه‌ای ندارید",
   "chat_online": "آنلاین",
   "chat_last_seen_minutes": "{minutes} دقیقه پیش",
   "chat_last_seen_hours": "{hours} ساعت پیش",
@@ -366,7 +348,7 @@
   "chat_edit_message": "ویرایش پیام",
   "chat_message_reported": "پیام گزارش شد",
   "chat_limit_reached": "محدودیت چت روزانه",
-  "chat_limit_explanation": "همه چت\u200cهای امروز تمام شد. فردا برگردید!",
+  "chat_limit_explanation": "همه چت‌های امروز تمام شد. فردا برگردید!",
   "chat_unmatched": "شروع مکالمه",
   "chat_initiation_limit": "محدودیت پیام",
   "chat_initiation_limit_explanation": "حداکثر ۲ پیام ارسال کنید. منتظر پاسخ باشید تا ادامه دهید.",
@@ -412,7 +394,6 @@
   "chat_matched_at": "تطابق {time}",
   "toast_like_sent": "لایک ارسال شد!",
   "toast_like_and_message_sent": "لایک و پیام ارسال شد!",
-
   "profile_updated_success": "پروفایل با موفقیت به‌روزرسانی شد!",
   "interests_updated_success": "علاقه‌مندی‌ها با موفقیت به‌روزرسانی شدند!",
   "photos_updated_success": "عکس‌ها با موفقیت به‌روزرسانی شدند",
@@ -453,31 +434,37 @@
   "photo_contact_support": "تماس با پشتیبانی",
   "@photo_crop_error": {
     "placeholders": {
-      "error": { "type": "String", "format": "text" }
+      "error": {
+        "type": "String",
+        "format": "text"
+      }
     }
   },
   "@photo_rejected_reason": {
     "placeholders": {
-      "reason": { "type": "String", "format": "text" }
+      "reason": {
+        "type": "String",
+        "format": "text"
+      }
     }
   },
   "@verify_selfie_cooldown": {
     "placeholders": {
-      "seconds": { "type": "int" }
+      "seconds": {
+        "type": "int"
+      }
     }
   },
   "@photo_verification_count": {
     "placeholders": {
-      "verified": { "type": "int" },
-      "total": { "type": "int" }
+      "verified": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
-  "@verify_selfie_cooldown": {
-    "placeholders": {
-      "seconds": { "type": "int" }
-    }
-  },
-
   "support": "پشتیبانی",
   "my_tickets": "تیکت‌های من",
   "new_ticket": "تیکت جدید",
@@ -505,5 +492,107 @@
   "ticket_you": "شما",
   "ticket_load_error": "امکان بارگذاری تیکت‌ها وجود ندارد. برای تازه‌سازی بکشید.",
   "notifications_see_details": "مشاهده جزئیات",
-  "location_manual_hint": "اگر شهر اشتباه است، می‌توانید آن را به صورت دستی انتخاب کنید."
+  "location_manual_hint": "اگر شهر اشتباه است، می‌توانید آن را به صورت دستی انتخاب کنید.",
+  "enum_male": "مرد",
+  "enum_female": "زن",
+  "enum_straight": "دگرجنس‌گرا",
+  "enum_gay": "همجنس‌گرا",
+  "enum_bisexual": "دوجنس‌گرا",
+  "enum_pansexual": "همه‌جنس‌گرا",
+  "enum_asexual": "بدون میل جنسی",
+  "enum_slim": "لاغر",
+  "enum_average": "متوسط",
+  "enum_athletic": "ورزشکاری",
+  "enum_curvy": "خوش‌اندام",
+  "enum_muscular": "عضلانی",
+  "enum_overweight": "دارای اضافه‌وزن",
+  "enum_single": "مجرد",
+  "enum_divorced": "مطلقه/مطلقه",
+  "enum_widowed": "بیوه",
+  "enum_separated": "جدا شده",
+  "enum_alone": "تنها",
+  "enum_with_family": "با خانواده",
+  "enum_with_roommate": "با هم‌خانه",
+  "enum_with_partner": "با شریک زندگی",
+  "enum_have_children": "بچه دارم",
+  "enum_want_children": "بچه می‌خواهم",
+  "enum_dont_want_children": "بچه نمی‌خواهم",
+  "enum_open_to_children": "مشتاق بچه‌دار شدن",
+  "enum_never": "هرگز",
+  "enum_occasionally": "گاهی",
+  "enum_regularly": "مرتب",
+  "enum_daily": "روزانه",
+  "enum_socially": "اجتماعی",
+  "enum_long_term_relationship": "رابطه بلندمدت",
+  "enum_casual_dating": "دوستی معمولی",
+  "enum_marriage": "ازدواج",
+  "enum_new_friends": "دوستان جدید",
+  "enum_not_sure_yet": "هنوز مطمئن نیستم",
+  "enum_dog": "سگ",
+  "enum_cat": "گربه",
+  "enum_both": "هر دو",
+  "enum_other_pet": "حیوان دیگر",
+  "enum_no_pets": "بدون حیوان خانگی",
+  "enum_loves_pets": "عاشق حیوانات",
+  "enum_aries": "حمل",
+  "enum_taurus": "ثور",
+  "enum_gemini": "جوزا",
+  "enum_cancer": "سرطان",
+  "enum_leo": "اسد",
+  "enum_virgo": "سنبله",
+  "enum_libra": "میزان",
+  "enum_scorpio": "عقرب",
+  "enum_sagittarius": "قوس",
+  "enum_capricorn": "جدی",
+  "enum_aquarius": "دلو",
+  "enum_pisces": "حوت",
+  "enum_high_school": "دیپلم",
+  "enum_bachelor": "کارشناسی",
+  "enum_master": "کارشناسی ارشد",
+  "enum_phd": "دکترا",
+  "enum_liberal": "لیبرال",
+  "enum_conservative": "محافظه‌کار",
+  "enum_moderate": "میانه‌رو",
+  "enum_apolitical": "غیرسیاسی",
+  "enum_muslim": "مسلمان",
+  "enum_christian": "مسیحی",
+  "enum_jewish": "یهودی",
+  "enum_zoroastrian": "زرتشتی",
+  "enum_atheist": "بی‌دین",
+  "enum_agnostic": "ندانم‌گرا",
+  "enum_spiritual": "معنوی",
+  "enum_sikh": "سیک",
+  "enum_buddhist": "بودایی",
+  "enum_hindu": "هندو",
+  "enum_other_religion": "سایر",
+  "enum_persian": "فارس",
+  "enum_azeri": "آذری",
+  "enum_kurd": "کرد",
+  "enum_lur": "لر",
+  "enum_arab": "عرب",
+  "enum_baloch": "بلوچ",
+  "enum_turkmen": "ترکمن",
+  "enum_asian": "آسیایی",
+  "enum_black": "سیاه‌پوست",
+  "enum_hispanic": "اسپانیایی‌تبار",
+  "enum_white": "سفیدپوست",
+  "enum_middle_eastern": "خاورمیانه‌ای",
+  "enum_mixed": "دورگه",
+  "enum_other_ethnicity": "سایر",
+  "lang_english": "انگلیسی",
+  "lang_persian": "فارسی",
+  "lang_turkish": "ترکی",
+  "lang_arabic": "عربی",
+  "lang_spanish": "اسپانیایی",
+  "lang_french": "فرانسوی",
+  "lang_german": "آلمانی",
+  "lang_italian": "ایتالیایی",
+  "lang_russian": "روسی",
+  "lang_chinese": "چینی",
+  "lang_japanese": "ژاپنی",
+  "lang_korean": "کرهای",
+  "lang_hindi": "هندی",
+  "lang_urdu": "اردو",
+  "lang_kurdish": "کردی",
+  "lang_armenian": "ارمنی"
 }
