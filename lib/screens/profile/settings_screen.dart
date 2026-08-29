@@ -6,6 +6,7 @@ import 'package:dating_app/providers/auth_provider.dart';
 import 'package:dating_app/providers/settings_provider.dart';
 import 'package:dating_app/providers/language_provider.dart';
 import 'package:dating_app/screens/login_screen.dart';
+import 'package:dating_app/screens/profile/delete_account_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -468,6 +469,75 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 const SizedBox(height: 2),
                                 Text(
                                   t.settings_logout_desc,
+                                  style: TextStyle(
+                                    fontFamily: AppTheme.fontFor(!Localizations.localeOf(context).languageCode.contains('en')),
+                                    fontSize: 13,
+                                    color: textMutedColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(
+                            Icons.chevron_right,
+                            color: textMutedColor,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    indent: 16,
+                    endIndent: 16,
+                    color: borderColor.withValues(alpha: 0.5),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const DeleteAccountScreen(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? AppTheme.darkError.withValues(alpha: 0.1)
+                                  : AppTheme.lightError.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(
+                              Icons.delete_forever,
+                              color: isDark ? AppTheme.darkError : AppTheme.lightError,
+                              size: 22,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  t.delete_account_title,
+                                  style: TextStyle(
+                                    fontFamily: AppTheme.fontFor(!Localizations.localeOf(context).languageCode.contains('en')),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: isDark ? AppTheme.darkError : AppTheme.lightError,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  t.settings_delete_account_desc,
                                   style: TextStyle(
                                     fontFamily: AppTheme.fontFor(!Localizations.localeOf(context).languageCode.contains('en')),
                                     fontSize: 13,

@@ -3085,6 +3085,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Armenian'**
   String get lang_armenian;
+
+  /// No description provided for @delete_account_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get delete_account_title;
+
+  /// No description provided for @delete_account_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanently deletes your profile, photos and conversations. You can still change your mind within 30 days — just log in again and your account comes back.'**
+  String get delete_account_desc;
+
+  /// No description provided for @delete_account_step_code.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll send a 6-digit code to {phone} to confirm it\'s really you.'**
+  String delete_account_step_code(String phone);
+
+  /// No description provided for @delete_account_code_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code'**
+  String get delete_account_code_label;
+
+  /// No description provided for @delete_account_code_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6-digit code'**
+  String get delete_account_code_hint;
+
+  /// No description provided for @delete_account_resend.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code'**
+  String get delete_account_resend;
+
+  /// No description provided for @delete_account_reason_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us why you\'re leaving (optional)'**
+  String get delete_account_reason_hint;
+
+  /// No description provided for @delete_account_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete my account'**
+  String get delete_account_confirm;
+
+  /// No description provided for @delete_account_cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get delete_account_cancel;
+
+  /// No description provided for @delete_account_sending.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending code…'**
+  String get delete_account_sending;
+
+  /// No description provided for @delete_account_deleting.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting account…'**
+  String get delete_account_deleting;
+
+  /// No description provided for @delete_account_error_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid or expired code.'**
+  String get delete_account_error_code;
+
+  /// No description provided for @delete_account_error_cooldown.
+  ///
+  /// In en, this message translates to:
+  /// **'Please wait {seconds}s before requesting a new code.'**
+  String delete_account_error_cooldown(int seconds);
+
+  /// No description provided for @delete_account_error_generic.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get delete_account_error_generic;
+
+  /// No description provided for @delete_account_success_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deletion scheduled'**
+  String get delete_account_success_title;
+
+  /// No description provided for @delete_account_success_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account will be permanently deleted on {date}. You can log back in before then to keep your account.'**
+  String delete_account_success_body(String date);
+
+  /// No description provided for @delete_account_permanent_note.
+  ///
+  /// In en, this message translates to:
+  /// **'This can\'t be undone after the 30-day period.'**
+  String get delete_account_permanent_note;
+
+  /// No description provided for @login_account_restored.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back — your account has been restored.'**
+  String get login_account_restored;
+
+  /// No description provided for @login_account_finalizing.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deletion is being finalized. This number will become available shortly.'**
+  String get login_account_finalizing;
+
+  /// No description provided for @done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get done;
+
+  /// No description provided for @settings_delete_account_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanently delete your account and data'**
+  String get settings_delete_account_desc;
 }
 
 class _AppLocalizationsDelegate

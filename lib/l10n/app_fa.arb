@@ -594,5 +594,47 @@
   "lang_hindi": "هندی",
   "lang_urdu": "اردو",
   "lang_kurdish": "کردی",
-  "lang_armenian": "ارمنی"
+  "lang_armenian": "ارمنی",
+  "delete_account_title": "حذف حساب",
+  "delete_account_desc": "پروفایل، عکس‌ها و گفتگوهای شما به‌صورت کامل حذف می‌شود. تا ۳۰ روز می‌توانید نظرتان را عوض کنید — فقط دوباره وارد شوید تا حساب برگردد.",
+  "delete_account_step_code": "برای تأیید هویت، یک کد ۶ رقمی به {phone} ارسال می‌کنیم.",
+  "delete_account_code_label": "کد تأیید",
+  "delete_account_code_hint": "کد ۶ رقمی را وارد کنید",
+  "delete_account_resend": "ارسال مجدد کد",
+  "delete_account_reason_hint": "به ما بگویید چرا می‌روید (اختیاری)",
+  "delete_account_confirm": "حذف حساب من",
+  "delete_account_cancel": "انصراف",
+  "delete_account_sending": "در حال ارسال کد…",
+  "delete_account_deleting": "در حال حذف حساب…",
+  "delete_account_error_code": "کد نامعتبر یا منقضی شده است.",
+  "delete_account_error_cooldown": "لطفاً {seconds} ثانیه دیگر صبر کنید.",
+  "delete_account_error_generic": "مشکلی پیش آمد. دوباره تلاش کنید.",
+  "delete_account_success_title": "حذف حساب زمان‌بندی شد",
+  "delete_account_success_body": "حساب شما در تاریخ {date} به‌صورت دائمی حذف می‌شود. قبل از آن می‌توانید دوباره وارد شوید تا حساب حفظ شود.",
+  "delete_account_permanent_note": "پس از ۳۰ روز این کار قابل بازگشت نیست.",
+  "login_account_restored": "خوش آمدید — حساب شما بازیابی شد.",
+  "login_account_finalizing": "حذف حساب در حال نهایی‌شدن است. این شماره به‌زودی آزاد می‌شود.",
+  "@delete_account_step_code": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "@delete_account_error_cooldown": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "@delete_account_success_body": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "done": "تمام",
+  "settings_delete_account_desc": "حذف دائمی حساب و اطلاعات شما"
 }

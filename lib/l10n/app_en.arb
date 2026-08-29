@@ -594,5 +594,47 @@
   "lang_hindi": "Hindi",
   "lang_urdu": "Urdu",
   "lang_kurdish": "Kurdish",
-  "lang_armenian": "Armenian"
+  "lang_armenian": "Armenian",
+  "delete_account_title": "Delete Account",
+  "delete_account_desc": "Permanently deletes your profile, photos and conversations. You can still change your mind within 30 days — just log in again and your account comes back.",
+  "delete_account_step_code": "We'll send a 6-digit code to {phone} to confirm it's really you.",
+  "delete_account_code_label": "Verification code",
+  "delete_account_code_hint": "Enter the 6-digit code",
+  "delete_account_resend": "Resend code",
+  "delete_account_reason_hint": "Tell us why you're leaving (optional)",
+  "delete_account_confirm": "Delete my account",
+  "delete_account_cancel": "Cancel",
+  "delete_account_sending": "Sending code…",
+  "delete_account_deleting": "Deleting account…",
+  "delete_account_error_code": "Invalid or expired code.",
+  "delete_account_error_cooldown": "Please wait {seconds}s before requesting a new code.",
+  "delete_account_error_generic": "Something went wrong. Please try again.",
+  "delete_account_success_title": "Account deletion scheduled",
+  "delete_account_success_body": "Your account will be permanently deleted on {date}. You can log back in before then to keep your account.",
+  "delete_account_permanent_note": "This can't be undone after the 30-day period.",
+  "login_account_restored": "Welcome back — your account has been restored.",
+  "login_account_finalizing": "Account deletion is being finalized. This number will become available shortly.",
+  "@delete_account_step_code": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "@delete_account_error_cooldown": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "@delete_account_success_body": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "done": "Done",
+  "settings_delete_account_desc": "Permanently delete your account and data"
 }

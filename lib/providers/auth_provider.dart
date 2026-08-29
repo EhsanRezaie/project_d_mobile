@@ -18,6 +18,9 @@ class AuthProvider extends ChangeNotifier {
   bool _isAuthenticated = false;
   bool _isServerHealthy = true;
   bool _isNewUser = false;
+  bool _accountRestored = false;
+  String? _deletionScheduledFor;
+  String? _deleteError;
   String? _serverError;
   String? _errorMessage;
 
@@ -27,6 +30,9 @@ class AuthProvider extends ChangeNotifier {
   bool get isAuthenticated => _isAuthenticated;
   bool get isServerHealthy => _isServerHealthy;
   bool get isNewUser => _isNewUser;
+  bool get accountRestored => _accountRestored;
+  String? get deletionScheduledFor => _deletionScheduledFor;
+  String? get deleteError => _deleteError;
   String? get serverError => _serverError;
   String? get errorMessage => _errorMessage;
 
@@ -175,6 +181,7 @@ class AuthProvider extends ChangeNotifier {
 
     _isLoading = true;
     _errorMessage = null;
+    _accountRestored = false;
     _safeNotify();
 
     try {
@@ -188,6 +195,7 @@ class AuthProvider extends ChangeNotifier {
         final data = response.data;
         final userData = data['user'];
         _isNewUser = data['is_new_user'] ?? false;
+        _accountRestored = data['account_restored'] ?? false;
 
         await _storageService.saveTokens(
           accessToken: data['access_token'],
@@ -200,8 +208,17 @@ class AuthProvider extends ChangeNotifier {
         _isLoading = false;
         _safeNotify();
         return true;
+      } else if (response.statusCode == 403) {
+        // Deleted account past the grace window whose purge hasn't run yet.
+        final detail = (response.data?['detail'] as String?) ?? '';
+        _errorMessage = detail.toLowerCase().contains('finalized')
+            ? t.login_account_finalizing
+            : (detail.isNotEmpty ? detail : t.error_verification_failed);
+        _isLoading = false;
+        _safeNotify();
+        return false;
       } else {
-        _errorMessage = response.data['detail'] ?? t.error_verification_failed;
+        _errorMessage = response.data?['detail'] ?? t.error_verification_failed;
         _isLoading = false;
         _safeNotify();
         return false;
@@ -341,6 +358,83 @@ class AuthProvider extends ChangeNotifier {
     _isAuthenticated = false;
     _isNewUser = false;
     _safeNotify();
+  }
+
+  // ============================================================
+  // Delete account (30-day grace)
+  // ============================================================
+
+  /// Send the SMS confirmation code required for deletion.
+  /// Returns true if the code was sent, false on error (cooldown/rate-limit).
+  Future<bool> requestDeleteCode(BuildContext context) async {
+    final t = AppLocalizations.of(context)!;
+    _deleteError = null;
+    try {
+      final response = await AuthService.requestDeleteCode();
+      if (response.statusCode == 204) {
+        _safeNotify();
+        return true;
+      }
+      if (response.statusCode == 429) {
+        final detail = (response.data?['detail'] as String?) ?? '';
+        final secondsMatch = RegExp(r'(\d+)').firstMatch(detail);
+        _deleteError = secondsMatch != null
+            ? t.delete_account_error_cooldown(int.parse(secondsMatch.group(1)!))
+            : detail.isNotEmpty
+                ? detail
+                : t.error_too_many_attempts;
+      } else {
+        _deleteError =
+            (response.data?['detail'] as String?) ?? t.delete_account_error_generic;
+      }
+      _safeNotify();
+      return false;
+    } on DioException catch (e) {
+      _deleteError = e.response != null
+          ? ((e.response?.data?['detail'] as String?) ?? t.delete_account_error_generic)
+          : t.error_network;
+      _safeNotify();
+      return false;
+    } catch (e) {
+      _deleteError = t.delete_account_error_generic;
+      _safeNotify();
+      return false;
+    }
+  }
+
+  /// Verify the delete code and schedule the account for deletion.
+  /// On success, clears local session so the app routes back to login.
+  Future<bool> deleteAccount(String code, {String? reason}) async {
+    _deleteError = null;
+    _deletionScheduledFor = null;
+    try {
+      final response = await AuthService.deleteAccount(code, reason: reason);
+      if (response.statusCode == 200) {
+        _deletionScheduledFor = response.data?['deletion_scheduled_for'] as String?;
+        await _storageService.clearTokens();
+        await PushService().logout();
+        _user = null;
+        _phone = null;
+        _isAuthenticated = false;
+        _isNewUser = false;
+        _safeNotify();
+        return true;
+      }
+      _deleteError = (response.data?['detail'] as String?) ??
+          'delete_account_error_generic';
+      _safeNotify();
+      return false;
+    } on DioException catch (e) {
+      _deleteError = e.response != null
+          ? ((e.response?.data?['detail'] as String?) ?? 'delete_account_error_generic')
+          : 'network_error';
+      _safeNotify();
+      return false;
+    } catch (e) {
+      _deleteError = 'delete_account_error_generic';
+      _safeNotify();
+      return false;
+    }
   }
 
   // ============================================================

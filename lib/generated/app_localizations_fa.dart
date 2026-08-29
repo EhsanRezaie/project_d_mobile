@@ -1603,4 +1603,76 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get lang_armenian => 'ارمنی';
+
+  @override
+  String get delete_account_title => 'حذف حساب';
+
+  @override
+  String get delete_account_desc =>
+      'پروفایل، عکس‌ها و گفتگوهای شما به‌صورت کامل حذف می‌شود. تا ۳۰ روز می‌توانید نظرتان را عوض کنید — فقط دوباره وارد شوید تا حساب برگردد.';
+
+  @override
+  String delete_account_step_code(String phone) {
+    return 'برای تأیید هویت، یک کد ۶ رقمی به $phone ارسال می‌کنیم.';
+  }
+
+  @override
+  String get delete_account_code_label => 'کد تأیید';
+
+  @override
+  String get delete_account_code_hint => 'کد ۶ رقمی را وارد کنید';
+
+  @override
+  String get delete_account_resend => 'ارسال مجدد کد';
+
+  @override
+  String get delete_account_reason_hint => 'به ما بگویید چرا می‌روید (اختیاری)';
+
+  @override
+  String get delete_account_confirm => 'حذف حساب من';
+
+  @override
+  String get delete_account_cancel => 'انصراف';
+
+  @override
+  String get delete_account_sending => 'در حال ارسال کد…';
+
+  @override
+  String get delete_account_deleting => 'در حال حذف حساب…';
+
+  @override
+  String get delete_account_error_code => 'کد نامعتبر یا منقضی شده است.';
+
+  @override
+  String delete_account_error_cooldown(int seconds) {
+    return 'لطفاً $seconds ثانیه دیگر صبر کنید.';
+  }
+
+  @override
+  String get delete_account_error_generic => 'مشکلی پیش آمد. دوباره تلاش کنید.';
+
+  @override
+  String get delete_account_success_title => 'حذف حساب زمان‌بندی شد';
+
+  @override
+  String delete_account_success_body(String date) {
+    return 'حساب شما در تاریخ $date به‌صورت دائمی حذف می‌شود. قبل از آن می‌توانید دوباره وارد شوید تا حساب حفظ شود.';
+  }
+
+  @override
+  String get delete_account_permanent_note =>
+      'پس از ۳۰ روز این کار قابل بازگشت نیست.';
+
+  @override
+  String get login_account_restored => 'خوش آمدید — حساب شما بازیابی شد.';
+
+  @override
+  String get login_account_finalizing =>
+      'حذف حساب در حال نهایی‌شدن است. این شماره به‌زودی آزاد می‌شود.';
+
+  @override
+  String get done => 'تمام';
+
+  @override
+  String get settings_delete_account_desc => 'حذف دائمی حساب و اطلاعات شما';
 }

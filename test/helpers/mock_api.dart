@@ -75,10 +75,16 @@ class MockApi {
     );
   }
 
-  void onDelete(String path, {int statusCode = 204}) {
+  void onDelete(
+    String path, {
+    int statusCode = 204,
+    Object? body,
+    Object? data,
+  }) {
     adapter.onDelete(
       path,
-      (server) => server.reply(statusCode, null, delay: Duration.zero),
+      (server) => server.reply(statusCode, body, delay: Duration.zero),
+      data: data,
     );
   }
 

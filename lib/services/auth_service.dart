@@ -157,21 +157,6 @@ class AuthService {
     }
   }
 
-  // ============================================================
-  // Delete Account (soft delete)
-  // DELETE /users/me
-  // ============================================================
-  static Future<Response> deleteAccount() async {
-    try {
-      return await ApiService.delete('/users/me');
-    } on DioException catch (e) {
-      if (e.response != null) {
-        return e.response!;
-      }
-      rethrow;
-    }
-  }
-
   static Future<Response> updateInterests(List<String> interests) async {
     try {
       return await ApiService.put('/users/me/interests', data: {
@@ -205,6 +190,42 @@ class AuthService {
       return await ApiService.put('/users/me/prompts', data: {
         'prompts': prompts,
       });
+    } on DioException catch (e) {
+      if (e.response != null) {
+        return e.response!;
+      }
+      rethrow;
+    }
+  }
+
+  // ============================================================
+  // Delete account
+  // ============================================================
+
+  /// Send an SMS confirmation code required to delete the account.
+  /// POST /users/me/delete-code
+  static Future<Response> requestDeleteCode() async {
+    try {
+      return await ApiService.post('/users/me/delete-code');
+    } on DioException catch (e) {
+      if (e.response != null) {
+        return e.response!;
+      }
+      rethrow;
+    }
+  }
+
+  /// Delete the account (soft delete with 30-day grace).
+  /// DELETE /users/me with {code, reason}
+  static Future<Response> deleteAccount(String code, {String? reason}) async {
+    try {
+      return await ApiService.dio.delete(
+        '/users/me',
+        data: {
+          'code': code,
+          if (reason != null && reason.isNotEmpty) 'reason': reason,
+        },
+      );
     } on DioException catch (e) {
       if (e.response != null) {
         return e.response!;

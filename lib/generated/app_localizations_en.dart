@@ -1600,4 +1600,80 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get lang_armenian => 'Armenian';
+
+  @override
+  String get delete_account_title => 'Delete Account';
+
+  @override
+  String get delete_account_desc =>
+      'Permanently deletes your profile, photos and conversations. You can still change your mind within 30 days — just log in again and your account comes back.';
+
+  @override
+  String delete_account_step_code(String phone) {
+    return 'We\'ll send a 6-digit code to $phone to confirm it\'s really you.';
+  }
+
+  @override
+  String get delete_account_code_label => 'Verification code';
+
+  @override
+  String get delete_account_code_hint => 'Enter the 6-digit code';
+
+  @override
+  String get delete_account_resend => 'Resend code';
+
+  @override
+  String get delete_account_reason_hint =>
+      'Tell us why you\'re leaving (optional)';
+
+  @override
+  String get delete_account_confirm => 'Delete my account';
+
+  @override
+  String get delete_account_cancel => 'Cancel';
+
+  @override
+  String get delete_account_sending => 'Sending code…';
+
+  @override
+  String get delete_account_deleting => 'Deleting account…';
+
+  @override
+  String get delete_account_error_code => 'Invalid or expired code.';
+
+  @override
+  String delete_account_error_cooldown(int seconds) {
+    return 'Please wait ${seconds}s before requesting a new code.';
+  }
+
+  @override
+  String get delete_account_error_generic =>
+      'Something went wrong. Please try again.';
+
+  @override
+  String get delete_account_success_title => 'Account deletion scheduled';
+
+  @override
+  String delete_account_success_body(String date) {
+    return 'Your account will be permanently deleted on $date. You can log back in before then to keep your account.';
+  }
+
+  @override
+  String get delete_account_permanent_note =>
+      'This can\'t be undone after the 30-day period.';
+
+  @override
+  String get login_account_restored =>
+      'Welcome back — your account has been restored.';
+
+  @override
+  String get login_account_finalizing =>
+      'Account deletion is being finalized. This number will become available shortly.';
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String get settings_delete_account_desc =>
+      'Permanently delete your account and data';
 }
