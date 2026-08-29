@@ -12,6 +12,11 @@ class ApiService {
   static CacheStore? _cacheStore;
   static const FlutterSecureStorage _secureStorage = FlutterSecureStorage();
 
+  /// Invoked when the session can no longer be refreshed (expired/revoked
+  /// refresh token). Wired up in main.dart to clear auth state and navigate to
+  /// the login screen — without this the user is stranded on a dead session.
+  static void Function()? onSessionExpired;
+
   static Future<void> init() async {
     if (kIsWeb) {
       _cacheStore = HiveCacheStore('dio_cache');
@@ -53,7 +58,7 @@ class ApiService {
           final refreshToken = await _secureStorage.read(key: 'refresh_token');
 
           if (isRefreshCall || refreshToken == null) {
-            await _secureStorage.deleteAll();
+            await _clearSession();
             return handler.next(error);
           }
 
@@ -77,7 +82,7 @@ class ApiService {
               key: 'access_token',
             );
             if (newAccessToken == null) {
-              await _secureStorage.deleteAll();
+              await _clearSession();
               return handler.next(error);
             }
 
@@ -85,7 +90,7 @@ class ApiService {
                 'Bearer $newAccessToken';
             return handler.resolve(await _dio.fetch(error.requestOptions));
           } catch (e) {
-            await _secureStorage.deleteAll();
+            await _clearSession();
             return handler.next(error);
           }
         },
@@ -109,6 +114,13 @@ class ApiService {
   }
 
   static Dio get dio => _dio;
+
+  /// Clears stored tokens and notifies the app that the session is dead so it
+  /// can redirect to login (see [onSessionExpired]).
+  static Future<void> _clearSession() async {
+    await _secureStorage.deleteAll();
+    onSessionExpired?.call();
+  }
 
   // Single-flight refresh: only one /auth/refresh runs at a time so concurrent
   // 401s never reuse the same (single-use) refresh token — which the backend's

@@ -8,7 +8,9 @@ import 'package:dating_app/config/app_constants.dart';
 /// session. Chat-level events are gated by subscribe/unsubscribe topics, so
 /// opening a chat never creates a second connection.
 class SessionSocketService {
-  final String jwtToken;
+  /// Resolves the auth token fresh on every (re)connect so reconnects after a
+  /// 401 never reuse an expired token.
+  final Future<String?> Function() tokenProvider;
   final StreamChannel<dynamic> Function(Uri url) channelFactory;
 
   StreamChannel<dynamic>? _channel;
@@ -21,10 +23,30 @@ class SessionSocketService {
   final _eventsController = StreamController<Map<String, dynamic>>.broadcast();
   final _connectionStateController = StreamController<bool>.broadcast();
 
-  SessionSocketService({
-    required this.jwtToken,
+  SessionSocketService._({
+    required this.tokenProvider,
+    required this.channelFactory,
+  });
+
+  factory SessionSocketService({
+    required String jwtToken,
     StreamChannel<dynamic> Function(Uri url)? channelFactory,
-  }) : channelFactory = channelFactory ?? WebSocketChannel.connect;
+  }) {
+    return SessionSocketService._(
+      tokenProvider: () async => jwtToken,
+      channelFactory: channelFactory ?? WebSocketChannel.connect,
+    );
+  }
+
+  factory SessionSocketService.withTokenProvider({
+    required Future<String?> Function() tokenProvider,
+    StreamChannel<dynamic> Function(Uri url)? channelFactory,
+  }) {
+    return SessionSocketService._(
+      tokenProvider: tokenProvider,
+      channelFactory: channelFactory ?? WebSocketChannel.connect,
+    );
+  }
 
   Stream<Map<String, dynamic>> get events => _eventsController.stream;
   Stream<bool> get connectionState => _connectionStateController.stream;
@@ -34,7 +56,9 @@ class SessionSocketService {
 
     try {
       final baseUrl = AppConstants.wsBaseUrl;
-      final url = '$baseUrl/ws/stream?token=$jwtToken';
+      final token = await tokenProvider();
+      if (token == null || token.isEmpty || _disposed) return;
+      final url = '$baseUrl/ws/stream?token=$token';
 
       _channel = channelFactory(Uri.parse(url));
 

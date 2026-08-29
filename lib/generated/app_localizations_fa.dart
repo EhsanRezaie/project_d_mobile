@@ -1700,4 +1700,64 @@ class AppLocalizationsFa extends AppLocalizations {
   @override
   String get blocked_users_load_error =>
       'امکان بارگذاری کاربران مسدود شده وجود ندارد';
+
+  @override
+  String get search_sort_title => 'مرتب‌سازی بر اساس';
+
+  @override
+  String get search_sort_order => 'ترتیب';
+
+  @override
+  String get search_sort_asc => 'صعودی';
+
+  @override
+  String get search_sort_desc => 'نزولی';
+
+  @override
+  String get system_maintenance_title => 'در حال نگهداری';
+
+  @override
+  String get system_maintenance_body =>
+      'در حال کار روی برنامه هستیم. لطفاً کمی بعد دوباره تلاش کنید.';
+
+  @override
+  String get system_update_required_title => 'به‌روزرسانی لازم است';
+
+  @override
+  String get system_update_required_body =>
+      'نسخه جدیدی از برنامه منتشر شده است. لطفاً برای ادامه، به‌روزرسانی کنید.';
+
+  @override
+  String get system_update_now => 'به‌روزرسانی';
+
+  @override
+  String get system_update_later => 'الان نه';
+
+  @override
+  String get profile_referral => 'دعوت دوستان';
+
+  @override
+  String get referral_title => 'دعوت دوستان';
+
+  @override
+  String get referral_subtitle =>
+      'کد خود را به اشتراک بگذارید تا شما و دوستتان روزهای پریمیوم رایگان بگیرید.';
+
+  @override
+  String get referral_your_code => 'کد شما';
+
+  @override
+  String get referral_copy => 'کپی';
+
+  @override
+  String get referral_copied => 'کد کپی شد';
+
+  @override
+  String get referral_stats_successful => 'دعوت‌های موفق';
+
+  @override
+  String get referral_stats_days => 'روزهای پریمیوم کسب‌شده';
+
+  @override
+  String get referral_load_error => 'امکان بارگذاری اطلاعات دعوت وجود ندارد';
 }

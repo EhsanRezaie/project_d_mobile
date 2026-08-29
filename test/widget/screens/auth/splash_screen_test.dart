@@ -96,6 +96,55 @@ void main() {
       expect(find.byType(SplashScreen), findsNothing);
     });
 
+    testWidgets('maintenance mode -> shows maintenance gate', (tester) async {
+      MockApi()
+        ..onPost(
+          '/system/version-check',
+          body: {
+            'status': 'maintenance',
+            'message': 'Down for maintenance',
+            'current_version': '1.0.0',
+            'minimum_version': '1.0.0',
+            'platform': 'android',
+            'force_update': false,
+          },
+          data: {'platform': 'android', 'version': '1.0.0'},
+        )
+        ..install();
+
+      await tester.pumpWidget(buildSplash());
+      await tester.pump(const Duration(seconds: 2));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Under maintenance'), findsOneWidget);
+      expect(find.text('Down for maintenance'), findsOneWidget);
+    });
+
+    testWidgets('forced update -> shows update gate with Update button',
+        (tester) async {
+      MockApi()
+        ..onPost(
+          '/system/version-check',
+          body: {
+            'status': 'update_required',
+            'current_version': '1.0.0',
+            'minimum_version': '2.0.0',
+            'platform': 'android',
+            'update_url': 'https://play.google.com/store/apps/details?id=x',
+            'force_update': true,
+          },
+          data: {'platform': 'android', 'version': '1.0.0'},
+        )
+        ..install();
+
+      await tester.pumpWidget(buildSplash());
+      await tester.pump(const Duration(seconds: 2));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Update required'), findsOneWidget);
+      expect(find.text('Update'), findsOneWidget);
+    });
+
     testWidgets('authenticated -> navigates to MainScreen', (tester) async {
       MockApi()
         ..onGet('/discover', body: {'profiles': []})

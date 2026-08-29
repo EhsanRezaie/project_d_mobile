@@ -41,6 +41,7 @@ void main() {
       service.connectionState.listen(states.add);
 
       await service.connect();
+      await Future<void>.delayed(Duration.zero);
 
       expect(opened, isNotNull);
       expect(opened!.path, contains('/ws/stream'));
@@ -194,6 +195,38 @@ void main() {
   });
 
   group('reconnect', () {
+    test('re-reads the auth token on every (re)connect', () async {
+      final tokens = <String>['old-token', 'new-token'];
+      Uri? lastUri;
+      fake = FakeWebSocketChannel();
+      service = SessionSocketService.withTokenProvider(
+        tokenProvider: () async => tokens.removeAt(0),
+        channelFactory: (uri) {
+          lastUri = uri;
+          return fake;
+        },
+      );
+
+      await service.connect();
+      expect(lastUri!.queryParameters['token'], 'old-token');
+
+      await service.connect();
+      expect(lastUri!.queryParameters['token'], 'new-token');
+    });
+
+    test('does not open a socket when no token is available', () async {
+      var factoryCalls = 0;
+      service = SessionSocketService.withTokenProvider(
+        tokenProvider: () async => null,
+        channelFactory: (uri) {
+          factoryCalls++;
+          return FakeWebSocketChannel();
+        },
+      );
+      await service.connect();
+      expect(factoryCalls, 0);
+    });
+
     test('reconnects 1s after the server closes the connection', () {
       fakeAsync((async) {
         final fakes = <FakeWebSocketChannel>[];

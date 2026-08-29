@@ -215,6 +215,30 @@ class AuthService {
     }
   }
 
+  // ============================================================
+  // Referrals
+  // ============================================================
+
+  /// GET /referrals/my-code
+  static Future<Response> getMyReferralCode() async {
+    try {
+      return await ApiService.get('/referrals/my-code');
+    } on DioException catch (e) {
+      if (e.response != null) return e.response!;
+      rethrow;
+    }
+  }
+
+  /// GET /referrals/stats
+  static Future<Response> getReferralStats() async {
+    try {
+      return await ApiService.get('/referrals/stats');
+    } on DioException catch (e) {
+      if (e.response != null) return e.response!;
+      rethrow;
+    }
+  }
+
   /// Delete the account (soft delete with 30-day grace).
   /// DELETE /users/me with {code, reason}
   static Future<Response> deleteAccount(String code, {String? reason}) async {

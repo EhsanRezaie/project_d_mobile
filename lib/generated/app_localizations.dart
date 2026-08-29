@@ -1469,7 +1469,7 @@ abstract class AppLocalizations {
   /// No description provided for @search_sort_last_seen.
   ///
   /// In en, this message translates to:
-  /// **'Last Seen'**
+  /// **'Last seen'**
   String get search_sort_last_seen;
 
   /// No description provided for @search_filter_location.
@@ -3253,6 +3253,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t load blocked users'**
   String get blocked_users_load_error;
+
+  /// No description provided for @search_sort_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by'**
+  String get search_sort_title;
+
+  /// No description provided for @search_sort_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Order'**
+  String get search_sort_order;
+
+  /// No description provided for @search_sort_asc.
+  ///
+  /// In en, this message translates to:
+  /// **'Ascending'**
+  String get search_sort_asc;
+
+  /// No description provided for @search_sort_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Descending'**
+  String get search_sort_desc;
+
+  /// No description provided for @system_maintenance_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Under maintenance'**
+  String get system_maintenance_title;
+
+  /// No description provided for @system_maintenance_body.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re working on things right now. Please try again shortly.'**
+  String get system_maintenance_body;
+
+  /// No description provided for @system_update_required_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Update required'**
+  String get system_update_required_title;
+
+  /// No description provided for @system_update_required_body.
+  ///
+  /// In en, this message translates to:
+  /// **'A new version of the app is available. Please update to continue.'**
+  String get system_update_required_body;
+
+  /// No description provided for @system_update_now.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get system_update_now;
+
+  /// No description provided for @system_update_later.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get system_update_later;
+
+  /// No description provided for @profile_referral.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite Friends'**
+  String get profile_referral;
+
+  /// No description provided for @referral_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite Friends'**
+  String get referral_title;
+
+  /// No description provided for @referral_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Share your code and you and your friend both get free premium days.'**
+  String get referral_subtitle;
+
+  /// No description provided for @referral_your_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Your code'**
+  String get referral_your_code;
+
+  /// No description provided for @referral_copy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get referral_copy;
+
+  /// No description provided for @referral_copied.
+  ///
+  /// In en, this message translates to:
+  /// **'Code copied'**
+  String get referral_copied;
+
+  /// No description provided for @referral_stats_successful.
+  ///
+  /// In en, this message translates to:
+  /// **'Successful referrals'**
+  String get referral_stats_successful;
+
+  /// No description provided for @referral_stats_days.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium days earned'**
+  String get referral_stats_days;
+
+  /// No description provided for @referral_load_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load your referral info'**
+  String get referral_load_error;
 }
 
 class _AppLocalizationsDelegate

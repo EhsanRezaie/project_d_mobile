@@ -18,6 +18,7 @@ import 'package:dating_app/screens/profile/edit_photos_screen.dart';
 import 'package:dating_app/screens/profile/settings_screen.dart';
 import 'package:dating_app/screens/profile/tickets_screen.dart';
 import 'package:dating_app/screens/profile/verify_selfie_screen.dart';
+import 'package:dating_app/screens/profile/referral_screen.dart';
 import 'package:dating_app/generated/app_localizations.dart';
 import 'package:dating_app/widgets/action_toast.dart';
 
@@ -769,6 +770,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           listen: false,
                         ),
                       ),
+                    ),
+                  );
+                },
+                showChevron: true,
+                isLast: true,
+              ),
+              // 7. Invite Friends
+              _buildAccountTile(
+                icon: Icons.card_giftcard_outlined,
+                title: AppLocalizations.of(context)!.profile_referral,
+                onSurfaceColor: onSurfaceColor,
+                textMutedColor: textMutedColor,
+                isDark: isDark,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const ReferralScreen(),
                     ),
                   );
                 },

@@ -544,6 +544,36 @@ class _SearchFilterSheetState extends State<SearchFilterSheet> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        _buildSectionHeader('↕️', t.search_sort_title, isDark, primaryColor),
+        _buildChipRow(
+          options: ['recent', 'distance', 'age', 'name', 'last_seen'],
+          selected: _sortBy,
+          onTap: (v) => setState(() {
+            if (v != null) _sortBy = v;
+          }),
+          isDark: isDark,
+          primaryColor: primaryColor,
+          textColor: textColor,
+          labelBuilder: (v) => switch (v) {
+            'recent' => t.search_sort_recent,
+            'distance' => t.search_sort_distance,
+            'age' => t.search_sort_age,
+            'name' => t.search_sort_name,
+            _ => t.search_sort_last_seen,
+          },
+        ),
+        const SizedBox(height: 8),
+        _buildChipRow(
+          options: ['desc', 'asc'],
+          selected: _sortOrder,
+          onTap: (v) => setState(() {
+            if (v != null) _sortOrder = v;
+          }),
+          isDark: isDark,
+          primaryColor: primaryColor,
+          textColor: textColor,
+          labelBuilder: (v) => v == 'asc' ? t.search_sort_asc : t.search_sort_desc,
+        ),
         _buildSectionHeader('👤', t.search_filter_gender, isDark, primaryColor),
         _buildChipRow(
           options: ['all', 'male', 'female'],

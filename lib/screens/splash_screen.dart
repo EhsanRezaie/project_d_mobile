@@ -1,12 +1,17 @@
 // lib/screens/splash_screen.dart
 import 'dart:math';
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:dating_app/generated/app_localizations.dart';
+import '../config/app_constants.dart';
 import '../config/app_theme.dart';
 import '../providers/auth_provider.dart';
 import '../providers/onboarding_provider.dart';
 import '../providers/settings_provider.dart';
+import '../services/system_service.dart';
+import '../widgets/action_toast.dart';
 import 'login_screen.dart';
 import 'main_screen.dart';
 import 'onboarding/basic_info_screen.dart';
@@ -27,6 +32,9 @@ class _SplashScreenState extends State<SplashScreen>
   bool _isLoading = true;
   bool _hasError = false;
   String _errorMessage = '';
+  String? _noticeType; // 'maintenance' | 'force_update' | 'update'
+  String? _noticeMessage;
+  String? _noticeUrl;
   int _targetProgress = 50;
 
   final Random _random = Random();
@@ -61,6 +69,37 @@ class _SplashScreenState extends State<SplashScreen>
       duration: const Duration(milliseconds: 800),
     );
 
+    await _checkVersionAndGate();
+    if (_noticeType != null || !mounted) return;
+
+    await _continueInit(authProvider);
+  }
+
+  /// Calls /system/version-check and shows maintenance / update gates.
+  Future<void> _checkVersionAndGate() async {
+    final platform = defaultTargetPlatform == TargetPlatform.android
+        ? 'android'
+        : 'ios';
+    final result = await SystemService.checkVersion(
+      platform: platform,
+      version: AppConstants.appVersion,
+    );
+    if (!mounted || result == null) return; // fail-open on outage
+    if (result.isMaintenance) {
+      setState(() {
+        _noticeType = 'maintenance';
+        _noticeMessage = result.message;
+      });
+    } else if (result.isUpdateRequired) {
+      setState(() {
+        _noticeType = result.forceUpdate ? 'force_update' : 'update';
+        _noticeMessage = result.message;
+        _noticeUrl = result.updateUrl;
+      });
+    }
+  }
+
+  Future<void> _continueInit(AuthProvider authProvider) async {
     final isAuthenticated = await authProvider.initializeApp();
 
     if (authProvider.user != null && mounted) {
@@ -123,6 +162,39 @@ class _SplashScreenState extends State<SplashScreen>
     }
   }
 
+  void _dismissNotice() {
+    setState(() {
+      _noticeType = null;
+      _noticeMessage = null;
+      _noticeUrl = null;
+    });
+  }
+
+  Future<void> _openUpdateUrl() async {
+    final url = _noticeUrl;
+    if (url == null || url.isEmpty) return;
+    final uri = Uri.tryParse(url);
+    if (uri == null) return;
+    final ok = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!ok && mounted) {
+      showActionToast(context, AppLocalizations.of(context)!.error_something_wrong, isError: true);
+    }
+  }
+
+  void _retry() {
+    setState(() {
+      _isLoading = true;
+      _hasError = false;
+      _errorMessage = '';
+      _noticeType = null;
+      _noticeMessage = null;
+      _noticeUrl = null;
+      _targetProgress = 50 + _random.nextInt(50);
+    });
+    _progressController.value = 0.0;
+    _initializeApp();
+  }
+
   Widget _resumeScreen(int step, bool selfieStage) {
     if (step >= 4 || selfieStage) return const PhotoUploadScreen();
     switch (step) {
@@ -152,17 +224,6 @@ class _SplashScreenState extends State<SplashScreen>
       duration: duration,
       curve: Curves.easeOut,
     );
-  }
-
-  void _retry() {
-    setState(() {
-      _isLoading = true;
-      _hasError = false;
-      _errorMessage = '';
-      _targetProgress = 50 + _random.nextInt(50);
-    });
-    _progressController.value = 0.0;
-    _initializeApp();
   }
 
   @override
@@ -226,7 +287,9 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                   const SizedBox(height: 60),
 
-                  if (isError)
+                  if (_noticeType != null)
+                    _buildNoticeWidget()
+                  else if (isError)
                     _buildErrorWidget()
                   else if (_isLoading)
                     _buildLoadingWidget()
@@ -340,6 +403,102 @@ class _SplashScreenState extends State<SplashScreen>
             child: Text(
               t.splash_retry,
               style: (isPersian ? AppTheme.buttonFa : AppTheme.button),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNoticeWidget() {
+    final t = AppLocalizations.of(context)!;
+    final isPersian = !Localizations.localeOf(
+      context,
+    ).languageCode.contains('en');
+
+    final isMaintenance = _noticeType == 'maintenance';
+    final title = isMaintenance
+        ? t.system_maintenance_title
+        : t.system_update_required_title;
+    final message = (_noticeMessage?.isNotEmpty ?? false)
+        ? _noticeMessage!
+        : (isMaintenance
+            ? t.system_maintenance_body
+            : t.system_update_required_body);
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          isMaintenance ? Icons.engineering : Icons.system_update_alt,
+          size: 48,
+          color: AppTheme.textOnPhoto.withValues(alpha: 0.9),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          title,
+          textAlign: TextAlign.center,
+          style: (isPersian ? AppTheme.bodyBoldFa : AppTheme.bodyBold).copyWith(
+            color: AppTheme.textOnPhoto,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          message,
+          textAlign: TextAlign.center,
+          style: (isPersian ? AppTheme.bodyFa : AppTheme.body).copyWith(
+            color: AppTheme.textOnPhoto.withValues(alpha: 0.85),
+          ),
+        ),
+        const SizedBox(height: 32),
+        if (!isMaintenance)
+          SizedBox(
+            height: 50,
+            width: 200,
+            child: ElevatedButton(
+              onPressed: _openUpdateUrl,
+              style: AppTheme.primaryButtonSmall.copyWith(
+                backgroundColor: WidgetStatePropertyAll(AppTheme.textOnPhoto),
+                foregroundColor: WidgetStatePropertyAll(
+                  AppTheme.primaryGradientStart,
+                ),
+              ),
+              child: Text(
+                t.system_update_now,
+                style: (isPersian ? AppTheme.buttonFa : AppTheme.button),
+              ),
+            ),
+          ),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 50,
+          width: 200,
+          child: OutlinedButton(
+            onPressed: () {
+              if (isMaintenance) {
+                _retry();
+              } else if (_noticeType == 'update') {
+                _dismissNotice();
+                _continueInit(
+                  Provider.of<AuthProvider>(context, listen: false),
+                );
+              } else {
+                _retry();
+              }
+            },
+            style: OutlinedButton.styleFrom(
+              side: BorderSide(color: AppTheme.textOnPhoto.withValues(alpha: 0.7)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            child: Text(
+              isMaintenance
+                  ? t.splash_retry
+                  : (_noticeType == 'update' ? t.system_update_later : t.splash_retry),
+              style: (isPersian ? AppTheme.buttonFa : AppTheme.button).copyWith(
+                color: AppTheme.textOnPhoto,
+              ),
             ),
           ),
         ),

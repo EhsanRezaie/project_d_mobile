@@ -1090,7 +1090,11 @@ class ChatProvider extends ChangeNotifier {
     if (token == null) return;
 
     await _socketService?.dispose();
-    _socketService = SessionSocketService(jwtToken: token);
+    // Token is re-read on every reconnect so an expired access token (after a
+    // silent HTTP refresh) doesn't strand the socket on a 401 loop.
+    _socketService = SessionSocketService.withTokenProvider(
+      tokenProvider: _storageService.getAccessToken,
+    );
 
     _connectionStateSubscription = _socketService!.connectionState.listen((
       connected,

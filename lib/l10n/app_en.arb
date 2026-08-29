@@ -228,7 +228,7 @@
   "search_sort_distance": "Distance",
   "search_sort_age": "Age",
   "search_sort_name": "Name",
-  "search_sort_last_seen": "Last Seen",
+  "search_sort_last_seen": "Last seen",
   "search_filter_location": "Location",
   "search_filter_country": "Country",
   "search_filter_province": "Province",
@@ -650,5 +650,24 @@
         "type": "String"
       }
     }
-  }
+  },
+  "search_sort_title": "Sort by",
+  "search_sort_order": "Order",
+  "search_sort_asc": "Ascending",
+  "search_sort_desc": "Descending",
+  "system_maintenance_title": "Under maintenance",
+  "system_maintenance_body": "We're working on things right now. Please try again shortly.",
+  "system_update_required_title": "Update required",
+  "system_update_required_body": "A new version of the app is available. Please update to continue.",
+  "system_update_now": "Update",
+  "system_update_later": "Not now",
+  "profile_referral": "Invite Friends",
+  "referral_title": "Invite Friends",
+  "referral_subtitle": "Share your code and you and your friend both get free premium days.",
+  "referral_your_code": "Your code",
+  "referral_copy": "Copy",
+  "referral_copied": "Code copied",
+  "referral_stats_successful": "Successful referrals",
+  "referral_stats_days": "Premium days earned",
+  "referral_load_error": "Couldn't load your referral info"
 }

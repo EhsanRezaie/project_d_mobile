@@ -29,6 +29,7 @@ import 'package:dating_app/providers/onboarding_provider.dart';
 import 'package:dating_app/providers/settings_provider.dart';
 import 'package:dating_app/screens/auth/verify_code_screen.dart';
 import 'package:dating_app/screens/main_screen.dart';
+import 'package:dating_app/services/system_service.dart';
 import 'package:dating_app/screens/profile/avatar_crop_screen.dart';
 import 'package:dating_app/screens/splash_screen.dart';
 import 'package:dating_app/services/api_service.dart';
@@ -470,6 +471,10 @@ void main() {
   group('§7 manual rows', () {
     for (final (width, height, label) in _kSizes) {
       testWidgets('splash no overflow @$label', (tester) async {
+        // The splash runs /system/version-check on boot; under FakeAsync a real
+        // HTTP attempt would leave a pending timer, so short-circuit it.
+        SystemService.checkVersionOverride = () async => VersionCheck(status: 'ok');
+        addTearDown(() => SystemService.checkVersionOverride = null);
         await _pumpAt(
           tester,
           width,

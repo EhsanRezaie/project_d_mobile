@@ -738,7 +738,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get search_sort_name => 'Name';
 
   @override
-  String get search_sort_last_seen => 'Last Seen';
+  String get search_sort_last_seen => 'Last seen';
 
   @override
   String get search_filter_location => 'Location';
@@ -1700,4 +1700,64 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get blocked_users_load_error => 'Couldn\'t load blocked users';
+
+  @override
+  String get search_sort_title => 'Sort by';
+
+  @override
+  String get search_sort_order => 'Order';
+
+  @override
+  String get search_sort_asc => 'Ascending';
+
+  @override
+  String get search_sort_desc => 'Descending';
+
+  @override
+  String get system_maintenance_title => 'Under maintenance';
+
+  @override
+  String get system_maintenance_body =>
+      'We\'re working on things right now. Please try again shortly.';
+
+  @override
+  String get system_update_required_title => 'Update required';
+
+  @override
+  String get system_update_required_body =>
+      'A new version of the app is available. Please update to continue.';
+
+  @override
+  String get system_update_now => 'Update';
+
+  @override
+  String get system_update_later => 'Not now';
+
+  @override
+  String get profile_referral => 'Invite Friends';
+
+  @override
+  String get referral_title => 'Invite Friends';
+
+  @override
+  String get referral_subtitle =>
+      'Share your code and you and your friend both get free premium days.';
+
+  @override
+  String get referral_your_code => 'Your code';
+
+  @override
+  String get referral_copy => 'Copy';
+
+  @override
+  String get referral_copied => 'Code copied';
+
+  @override
+  String get referral_stats_successful => 'Successful referrals';
+
+  @override
+  String get referral_stats_days => 'Premium days earned';
+
+  @override
+  String get referral_load_error => 'Couldn\'t load your referral info';
 }

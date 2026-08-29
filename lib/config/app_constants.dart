@@ -17,4 +17,8 @@ class AppConstants {
   
   // Pagination
   static const int defaultPageSize = 20;
+
+  // Reported to /system/version-check for min-version / force-update gating.
+  // Bump on each release so the backend can force updates.
+  static const String appVersion = '1.0.0';
 }

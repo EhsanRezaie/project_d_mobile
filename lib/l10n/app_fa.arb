@@ -650,5 +650,24 @@
         "type": "String"
       }
     }
-  }
+  },
+  "search_sort_title": "مرتب‌سازی بر اساس",
+  "search_sort_order": "ترتیب",
+  "search_sort_asc": "صعودی",
+  "search_sort_desc": "نزولی",
+  "system_maintenance_title": "در حال نگهداری",
+  "system_maintenance_body": "در حال کار روی برنامه هستیم. لطفاً کمی بعد دوباره تلاش کنید.",
+  "system_update_required_title": "به‌روزرسانی لازم است",
+  "system_update_required_body": "نسخه جدیدی از برنامه منتشر شده است. لطفاً برای ادامه، به‌روزرسانی کنید.",
+  "system_update_now": "به‌روزرسانی",
+  "system_update_later": "الان نه",
+  "profile_referral": "دعوت دوستان",
+  "referral_title": "دعوت دوستان",
+  "referral_subtitle": "کد خود را به اشتراک بگذارید تا شما و دوستتان روزهای پریمیوم رایگان بگیرید.",
+  "referral_your_code": "کد شما",
+  "referral_copy": "کپی",
+  "referral_copied": "کد کپی شد",
+  "referral_stats_successful": "دعوت‌های موفق",
+  "referral_stats_days": "روزهای پریمیوم کسب‌شده",
+  "referral_load_error": "امکان بارگذاری اطلاعات دعوت وجود ندارد"
 }

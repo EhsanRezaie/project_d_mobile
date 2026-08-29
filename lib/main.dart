@@ -16,6 +16,7 @@ import 'providers/chat_provider.dart';
 import 'providers/notifications_provider.dart';
 import 'providers/ticket_provider.dart';
 import 'screens/splash_screen.dart';
+import 'screens/login_screen.dart';
 import 'utils/global_navigator.dart';
 import 'widgets/action_toast.dart';
 
@@ -39,6 +40,18 @@ void main() async {
   await dotenv.load();
 
   await ApiService.init();
+
+  // When the refresh token dies (expired/revoked) the Dio interceptor clears
+  // storage; make sure the user is actually taken back to login instead of
+  // being stranded on a dead session.
+  ApiService.onSessionExpired = () {
+    final nav = appNavigatorKey.currentState;
+    if (nav == null) return;
+    nav.pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
+      (route) => false,
+    );
+  };
 
   final prefs = await SharedPreferences.getInstance();
   final savedLanguage = prefs.getString('selected_language') ?? 'en';
