@@ -34,6 +34,18 @@ void main() {
       expect(u.hideLastSeen, isFalse);
       expect(u.hideOnlineStatus, isFalse);
     });
+
+    test('parses main_photo_url', () {
+      final u = User.fromJson(
+        jsonUser()..['main_photo_url'] = 'https://example.com/me.jpg',
+      );
+      expect(u.mainPhotoUrl, 'https://example.com/me.jpg');
+    });
+
+    test('main_photo_url is null when absent', () {
+      final u = User.fromJson(jsonUser());
+      expect(u.mainPhotoUrl, isNull);
+    });
   });
 
   group('UserSettings.fromJson', () {

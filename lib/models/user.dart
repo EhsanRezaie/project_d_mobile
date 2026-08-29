@@ -80,6 +80,7 @@ class User {
   final String? city;
   final double? lat;
   final double? lng;
+  final String? mainPhotoUrl;
   final bool locationManual;
   final bool isPremium;
   final DateTime? premiumUntil;
@@ -128,6 +129,7 @@ class User {
     this.city,
     this.lat,
     this.lng,
+    this.mainPhotoUrl,
     this.locationManual = false,
     this.isPremium = false,
     this.premiumUntil,
@@ -188,6 +190,7 @@ class User {
       city: json['city'],
       lat: json['lat']?.toDouble(),
       lng: json['lng']?.toDouble(),
+      mainPhotoUrl: json['main_photo_url'],
       locationManual: json['location_manual'] ?? false,
       isPremium: json['is_premium'] ?? false,
       premiumUntil: json['premium_until'] != null 
@@ -243,6 +246,7 @@ class User {
       'city': city,
       'lat': lat,
       'lng': lng,
+      'main_photo_url': mainPhotoUrl,
       'location_manual': locationManual,
       'is_premium': isPremium,
       'premium_until': premiumUntil?.toIso8601String(),

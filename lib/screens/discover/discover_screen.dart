@@ -4,9 +4,11 @@ import 'package:dating_app/config/app_theme.dart';
 import 'package:dating_app/generated/app_localizations.dart';
 import 'package:dating_app/models/discover_profile.dart';
 import 'package:dating_app/providers/discover_provider.dart';
+import 'package:dating_app/providers/auth_provider.dart';
 import 'package:dating_app/services/onboarding_service.dart';
 import 'package:dating_app/utils/responsive.dart';
 import 'package:dating_app/widgets/user_card.dart';
+import 'package:dating_app/widgets/match_dialog.dart';
 import 'package:dating_app/widgets/discover_action_button.dart';
 import 'package:dating_app/screens/discover/profile_detail_screen.dart';
 import 'package:dating_app/screens/shared/profile_detail_loader.dart';
@@ -406,154 +408,24 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     bool messageSent = false,
   }) {
     if (!mounted) return;
-    final t = AppLocalizations.of(context)!;
-    final isPersian = !Localizations.localeOf(
-      context,
-    ).languageCode.contains('en');
-    final heroStyle =
-        (isPersian ? AppTheme.heroDisplayFa : AppTheme.heroDisplay).copyWith(
-          fontSize: 30,
-        );
-    final bodyStyle = (isPersian ? AppTheme.bodyFa : AppTheme.body).copyWith(
-      color: Colors.white.withValues(alpha: 0.85),
-      fontSize: 15,
-    );
+    final auth = Provider.of<AuthProvider>(context, listen: false);
 
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          child: Container(
-            padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(28),
-              gradient: AppTheme.primaryGradient(),
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.primaryGradientStart.withValues(alpha: 0.4),
-                  blurRadius: 32,
-                  offset: const Offset(0, 12),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      width: 72,
-                      height: 72,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white.withValues(alpha: 0.2),
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.6),
-                          width: 2,
-                        ),
-                      ),
-                      child: const Icon(
-                        Icons.favorite,
-                        size: 34,
-                        color: Colors.white,
-                      ),
-                    ),
-                    if (profile.mainPhotoUrl != null &&
-                        profile.mainPhotoUrl!.isNotEmpty)
-                      Positioned(
-                        top: -40,
-                        child: ClipOval(
-                          child: SizedBox(
-                            width: 56,
-                            height: 56,
-                            child: Image.network(
-                              profile.mainPhotoUrl!,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, _, _) =>
-                                  const SizedBox.shrink(),
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 56),
-                Text(
-                  t.discover_match_title,
-                  textAlign: TextAlign.center,
-                  style: heroStyle.copyWith(color: Colors.white),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  t.discover_match_subtitle(profile.name),
-                  textAlign: TextAlign.center,
-                  style: bodyStyle,
-                ),
-                if (messageSent) ...[
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.check_circle,
-                        size: 16,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        t.discover_match_message_sent,
-                        style: bodyStyle.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-                const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(ctx);
-                      if (mounted) {
-                        _switchToChatsTab();
-                      }
-                    },
-                    style: AppTheme.primaryButton.copyWith(
-                      backgroundColor: const WidgetStatePropertyAll<Color>(
-                        Colors.white,
-                      ),
-                      foregroundColor: const WidgetStatePropertyAll<Color>(
-                        AppTheme.primaryGradientStart,
-                      ),
-                      elevation: const WidgetStatePropertyAll<double>(0),
-                    ),
-                    child: Text(
-                      t.discover_send_message,
-                      style: (isPersian ? AppTheme.buttonFa : AppTheme.button)
-                          .copyWith(color: AppTheme.primaryGradientStart),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                TextButton(
-                  onPressed: () => Navigator.pop(ctx),
-                  child: Text(
-                    t.discover_keep_swiping,
-                    style: (isPersian ? AppTheme.bodyBoldFa : AppTheme.bodyBold)
-                        .copyWith(color: Colors.white, fontSize: 15),
-                  ),
-                ),
-              ],
-            ),
-          ),
+        return MatchDialog(
+          myPhotoUrl: auth.user?.mainPhotoUrl,
+          theirPhotoUrl: profile.mainPhotoUrl,
+          name: profile.name,
+          messageSent: messageSent,
+          onSendMessage: () {
+            Navigator.pop(ctx);
+            if (mounted) {
+              _switchToChatsTab();
+            }
+          },
+          onKeepSwiping: () => Navigator.pop(ctx),
         );
       },
     );
