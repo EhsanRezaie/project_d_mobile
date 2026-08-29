@@ -143,6 +143,7 @@ Map<String, dynamic> jsonDiscoverProfile({
   String? city = 'Tehran',
   String? province = 'Tehran',
   bool isOnline = true,
+  String? createdAt,
 }) {
   return {
     'id': id,
@@ -158,6 +159,7 @@ Map<String, dynamic> jsonDiscoverProfile({
     'city': city,
     'province': province,
     'is_online': isOnline,
+    'created_at': createdAt,
   };
 }
 

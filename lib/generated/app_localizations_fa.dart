@@ -1760,4 +1760,7 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get referral_load_error => 'امکان بارگذاری اطلاعات دعوت وجود ندارد';
+
+  @override
+  String get discover_new_here => 'تازه وارد';
 }

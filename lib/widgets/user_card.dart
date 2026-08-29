@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:dating_app/config/app_theme.dart';
+import 'package:dating_app/generated/app_localizations.dart';
 import 'package:dating_app/models/discover_profile.dart';
 import 'package:dating_app/utils/responsive.dart';
 import 'package:dating_app/utils/cached_image.dart';
@@ -353,6 +354,7 @@ class UserCardState extends State<UserCard>
     Color primaryColor,
   ) {
     final profile = widget.profile;
+    final t = AppLocalizations.of(context)!;
     final isPersian = !Localizations.localeOf(
       context,
     ).languageCode.contains('en');
@@ -672,7 +674,7 @@ class UserCardState extends State<UserCard>
                         ],
                       ),
                       child: Text(
-                        'New Here',
+                        t.discover_new_here,
                         style: TextStyle(
                           fontFamily: font,
                           fontSize: AppLayout.s(context, 10),

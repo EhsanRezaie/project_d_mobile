@@ -1760,4 +1760,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get referral_load_error => 'Couldn\'t load your referral info';
+
+  @override
+  String get discover_new_here => 'New Here';
 }

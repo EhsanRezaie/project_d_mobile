@@ -669,5 +669,6 @@
   "referral_copied": "کد کپی شد",
   "referral_stats_successful": "دعوت‌های موفق",
   "referral_stats_days": "روزهای پریمیوم کسب‌شده",
-  "referral_load_error": "امکان بارگذاری اطلاعات دعوت وجود ندارد"
+  "referral_load_error": "امکان بارگذاری اطلاعات دعوت وجود ندارد",
+  "discover_new_here": "تازه وارد"
 }

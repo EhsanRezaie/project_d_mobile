@@ -669,5 +669,6 @@
   "referral_copied": "Code copied",
   "referral_stats_successful": "Successful referrals",
   "referral_stats_days": "Premium days earned",
-  "referral_load_error": "Couldn't load your referral info"
+  "referral_load_error": "Couldn't load your referral info",
+  "discover_new_here": "New Here"
 }

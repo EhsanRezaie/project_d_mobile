@@ -3367,6 +3367,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t load your referral info'**
   String get referral_load_error;
+
+  /// No description provided for @discover_new_here.
+  ///
+  /// In en, this message translates to:
+  /// **'New Here'**
+  String get discover_new_here;
 }
 
 class _AppLocalizationsDelegate
