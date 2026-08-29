@@ -3211,6 +3211,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Permanently delete your account and data'**
   String get settings_delete_account_desc;
+
+  /// No description provided for @blocked_users_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked Users'**
+  String get blocked_users_title;
+
+  /// No description provided for @blocked_users_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t blocked anyone'**
+  String get blocked_users_empty;
+
+  /// No description provided for @blocked_users_empty_sub.
+  ///
+  /// In en, this message translates to:
+  /// **'People you block won\'t appear in your search or likes'**
+  String get blocked_users_empty_sub;
+
+  /// No description provided for @blocked_users_unblock.
+  ///
+  /// In en, this message translates to:
+  /// **'Unblock'**
+  String get blocked_users_unblock;
+
+  /// No description provided for @blocked_users_unblock_confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Unblock {name}?'**
+  String blocked_users_unblock_confirm(String name);
+
+  /// No description provided for @blocked_users_unblocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Unblocked'**
+  String get blocked_users_unblocked;
+
+  /// No description provided for @blocked_users_load_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load blocked users'**
+  String get blocked_users_load_error;
 }
 
 class _AppLocalizationsDelegate

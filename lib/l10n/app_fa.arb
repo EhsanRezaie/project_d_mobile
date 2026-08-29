@@ -636,5 +636,19 @@
     }
   },
   "done": "تمام",
-  "settings_delete_account_desc": "حذف دائمی حساب و اطلاعات شما"
+  "settings_delete_account_desc": "حذف دائمی حساب و اطلاعات شما",
+  "blocked_users_title": "کاربران مسدود شده",
+  "blocked_users_empty": "هنوز کسی را مسدود نکرده‌اید",
+  "blocked_users_empty_sub": "افرادی که مسدود می‌کنید در جستجو و لایک‌ها نمایش داده نمی‌شوند",
+  "blocked_users_unblock": "رفع مسدودیت",
+  "blocked_users_unblock_confirm": "مسدودیت {name} رفع شود؟",
+  "blocked_users_unblocked": "مسدودیت رفع شد",
+  "blocked_users_load_error": "امکان بارگذاری کاربران مسدود شده وجود ندارد",
+  "@blocked_users_unblock_confirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

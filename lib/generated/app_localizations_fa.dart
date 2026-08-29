@@ -1675,4 +1675,29 @@ class AppLocalizationsFa extends AppLocalizations {
 
   @override
   String get settings_delete_account_desc => 'حذف دائمی حساب و اطلاعات شما';
+
+  @override
+  String get blocked_users_title => 'کاربران مسدود شده';
+
+  @override
+  String get blocked_users_empty => 'هنوز کسی را مسدود نکرده‌اید';
+
+  @override
+  String get blocked_users_empty_sub =>
+      'افرادی که مسدود می‌کنید در جستجو و لایک‌ها نمایش داده نمی‌شوند';
+
+  @override
+  String get blocked_users_unblock => 'رفع مسدودیت';
+
+  @override
+  String blocked_users_unblock_confirm(String name) {
+    return 'مسدودیت $name رفع شود؟';
+  }
+
+  @override
+  String get blocked_users_unblocked => 'مسدودیت رفع شد';
+
+  @override
+  String get blocked_users_load_error =>
+      'امکان بارگذاری کاربران مسدود شده وجود ندارد';
 }

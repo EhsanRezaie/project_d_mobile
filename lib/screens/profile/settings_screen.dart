@@ -6,6 +6,7 @@ import 'package:dating_app/providers/auth_provider.dart';
 import 'package:dating_app/providers/settings_provider.dart';
 import 'package:dating_app/providers/language_provider.dart';
 import 'package:dating_app/screens/login_screen.dart';
+import 'package:dating_app/screens/profile/blocked_users_screen.dart';
 import 'package:dating_app/screens/profile/delete_account_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -269,6 +270,52 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     borderColor: borderColor,
                     surfaceColor: surfaceColor,
                     primaryColor: primaryColor,
+                  ),
+                  _buildDivider(isDark),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const BlockedUsersScreen(),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? AppTheme.darkError.withValues(alpha: 0.1)
+                                  : AppTheme.lightError.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(
+                              Icons.block,
+                              color: isDark ? AppTheme.darkError : AppTheme.lightError,
+                              size: 22,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Text(
+                              t.blocked_users_title,
+                              style: TextStyle(
+                                fontFamily: AppTheme.fontFor(!Localizations.localeOf(context).languageCode.contains('en')),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: onSurfaceColor,
+                              ),
+                            ),
+                          ),
+                          Icon(Icons.chevron_right, color: textMutedColor),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
                 surfaceColor: surfaceColor,

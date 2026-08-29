@@ -636,5 +636,19 @@
     }
   },
   "done": "Done",
-  "settings_delete_account_desc": "Permanently delete your account and data"
+  "settings_delete_account_desc": "Permanently delete your account and data",
+  "blocked_users_title": "Blocked Users",
+  "blocked_users_empty": "You haven't blocked anyone",
+  "blocked_users_empty_sub": "People you block won't appear in your search or likes",
+  "blocked_users_unblock": "Unblock",
+  "blocked_users_unblock_confirm": "Unblock {name}?",
+  "blocked_users_unblocked": "Unblocked",
+  "blocked_users_load_error": "Couldn't load blocked users",
+  "@blocked_users_unblock_confirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

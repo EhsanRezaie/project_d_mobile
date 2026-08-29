@@ -1676,4 +1676,28 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get settings_delete_account_desc =>
       'Permanently delete your account and data';
+
+  @override
+  String get blocked_users_title => 'Blocked Users';
+
+  @override
+  String get blocked_users_empty => 'You haven\'t blocked anyone';
+
+  @override
+  String get blocked_users_empty_sub =>
+      'People you block won\'t appear in your search or likes';
+
+  @override
+  String get blocked_users_unblock => 'Unblock';
+
+  @override
+  String blocked_users_unblock_confirm(String name) {
+    return 'Unblock $name?';
+  }
+
+  @override
+  String get blocked_users_unblocked => 'Unblocked';
+
+  @override
+  String get blocked_users_load_error => 'Couldn\'t load blocked users';
 }
