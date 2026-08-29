@@ -38,6 +38,10 @@ class SessionSocketService {
 
       _channel = channelFactory(Uri.parse(url));
 
+      // Deliver any frames queued while we were disconnected (subscribe /
+      // typing / read). The sink buffers until the socket actually opens.
+      _flushOutbox();
+
       _connectionStateController.add(true);
       _reconnectAttempts = 0;
 
@@ -124,8 +128,66 @@ class SessionSocketService {
   }
 
   void _send(Map<String, dynamic> data) {
-    if (_channel != null && !_disposed) {
-      _channel!.sink.add(jsonEncode(data));
+    if (_disposed) return;
+    if (_channel == null) {
+      // Socket not (yet) connected — queue the frame so it isn't silently
+      // dropped (realtime typing/read/subscribe must survive reconnects).
+      _enqueue(data);
+      return;
+    }
+    _flushOutbox();
+    _channel!.sink.add(jsonEncode(data));
+  }
+
+  // ── Outbox (reliable delivery across reconnects) ─────────────────
+
+  final List<Map<String, dynamic>> _outbox = [];
+
+  void _enqueue(Map<String, dynamic> data) {
+    final type = data['type'] as String;
+    if (type == 'typing' || type == 'typing_stopped') {
+      // Ephemeral — keep only the latest typing state.
+      _outbox.removeWhere(
+        (f) => f['type'] == 'typing' || f['type'] == 'typing_stopped',
+      );
+    } else if (type == 'subscribe' || type == 'unsubscribe') {
+      final chatId = data['chat_id'];
+      _outbox.removeWhere(
+        (f) =>
+            (f['type'] == 'subscribe' || f['type'] == 'unsubscribe') &&
+            f['chat_id'] == chatId,
+      );
+    } else if (type == 'read') {
+      // Merge message ids for the same chat into one frame.
+      final chatId = data['chat_id'];
+      final existingIdx = _outbox.indexWhere(
+        (f) => f['type'] == 'read' && f['chat_id'] == chatId,
+      );
+      if (existingIdx != -1) {
+        final existingIds =
+            (_outbox[existingIdx]['message_ids'] as List? ?? const [])
+                .cast<String>()
+                .toSet();
+        final newIds = (data['message_ids'] as List? ?? const [])
+            .cast<String>();
+        existingIds.addAll(newIds);
+        _outbox[existingIdx]['message_ids'] = existingIds.toList();
+        return;
+      }
+    }
+    _outbox.add(data);
+  }
+
+  void _flushOutbox() {
+    if (_channel == null) return;
+    while (_outbox.isNotEmpty) {
+      final frame = _outbox.removeAt(0);
+      try {
+        _channel!.sink.add(jsonEncode(frame));
+      } catch (_) {
+        _outbox.insert(0, frame);
+        break;
+      }
     }
   }
 
@@ -133,6 +195,7 @@ class SessionSocketService {
     _disposed = true;
     _heartbeatTimer?.cancel();
     _reconnectTimer?.cancel();
+    _outbox.clear();
     await _channel?.sink.close();
     await _eventsController.close();
     await _connectionStateController.close();

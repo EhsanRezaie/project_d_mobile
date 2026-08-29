@@ -454,6 +454,98 @@ void main() {
       expect(provider.messages.first.isEdited, isFalse);
     });
   });
+
+  group('message dedup via client_id (optimistic send reconciliation)', () {
+    test('does not duplicate when a WS echo carries the same client_id', () {
+      // Simulate: optimistic temp exists (client_id tmp-1), then the WS echo
+      // for the same send arrives with the real id + the same client_id.
+      provider.applyNewMessage(jsonMessage(id: 'srv-1', clientId: 'tmp-1'));
+      provider.applyNewMessage(jsonMessage(id: 'srv-1', clientId: 'tmp-1'));
+
+      expect(provider.messages, hasLength(1));
+      expect(provider.messages.first.id, 'srv-1');
+      expect(provider.messages.first.clientId, 'tmp-1');
+    });
+
+    test('adds distinct client_ids as separate messages', () {
+      provider.applyNewMessage(jsonMessage(id: 'srv-1', clientId: 'tmp-1'));
+      provider.applyNewMessage(jsonMessage(id: 'srv-2', clientId: 'tmp-2'));
+
+      expect(provider.messages, hasLength(2));
+    });
+
+    test('dedups by server id when client_id is absent (multi-device)', () {
+      provider.applyNewMessage(jsonMessage(id: 'srv-1'));
+      provider.applyNewMessage(jsonMessage(id: 'srv-1'));
+
+      expect(provider.messages, hasLength(1));
+    });
+  });
+
+  group('realtime read receipts on the chat list', () {
+    test('flips the list card last-message tick to read', () async {
+      api.onGet('/chats', body: {
+        'chats': [
+          {
+            'id': 'chat-1',
+            'status': 'accepted',
+            'initiator_id': 'user-a',
+            'user': {'id': 'user-b', 'name': 'Bob', 'age': 28},
+            'last_message': {
+              'id': 'msg-9',
+              'content': 'Hey',
+              'message_type': 'text',
+              'is_sent': true,
+              'is_read': false,
+              'sent_at': kNowIso,
+            },
+            'unread_count': 0,
+            'updated_at': kNowIso,
+          },
+        ],
+        'next_offset': null,
+      });
+      api.install();
+      await provider.loadConversations();
+      expect(provider.conversations.first.lastMessage!.isRead, isFalse);
+
+      // The peer read my last message — realtime event arrives even though
+      // this device is not inside the chat.
+      provider.applyMessagesRead({'chat_id': 'chat-1', 'message_ids': ['msg-9']});
+
+      expect(provider.conversations.first.lastMessage!.isRead, isTrue);
+    });
+
+    test('ignores reads that do not include the last message', () async {
+      api.onGet('/chats', body: {
+        'chats': [
+          {
+            'id': 'chat-1',
+            'status': 'accepted',
+            'initiator_id': 'user-a',
+            'user': {'id': 'user-b', 'name': 'Bob', 'age': 28},
+            'last_message': {
+              'id': 'msg-9',
+              'content': 'Hey',
+              'message_type': 'text',
+              'is_sent': true,
+              'is_read': false,
+              'sent_at': kNowIso,
+            },
+            'unread_count': 0,
+            'updated_at': kNowIso,
+          },
+        ],
+        'next_offset': null,
+      });
+      api.install();
+      await provider.loadConversations();
+
+      provider.applyMessagesRead({'chat_id': 'chat-1', 'message_ids': ['other-1']});
+
+      expect(provider.conversations.first.lastMessage!.isRead, isFalse);
+    });
+  });
 }
 
 Map<String, dynamic> chatCardJson({

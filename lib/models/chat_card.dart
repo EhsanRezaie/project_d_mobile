@@ -56,6 +56,7 @@ class ChatUser {
 }
 
 class ChatLastMessage {
+  final String? id;
   final String? content;
   final String messageType;
   final bool isSent;
@@ -63,6 +64,7 @@ class ChatLastMessage {
   final DateTime sentAt;
 
   ChatLastMessage({
+    this.id,
     this.content,
     this.messageType = 'text',
     this.isSent = true,
@@ -72,6 +74,7 @@ class ChatLastMessage {
 
   factory ChatLastMessage.fromJson(Map<String, dynamic> json) {
     return ChatLastMessage(
+      id: json['id'],
       content: json['content'],
       messageType: json['message_type'] ?? 'text',
       isSent: json['is_sent'] ?? true,
@@ -82,12 +85,31 @@ class ChatLastMessage {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'content': content,
       'message_type': messageType,
       'is_sent': isSent,
       'is_read': isRead,
       'sent_at': sentAt.toIso8601String(),
     };
+  }
+
+  ChatLastMessage copyWith({
+    String? id,
+    String? content,
+    String? messageType,
+    bool? isSent,
+    bool? isRead,
+    DateTime? sentAt,
+  }) {
+    return ChatLastMessage(
+      id: id ?? this.id,
+      content: content ?? this.content,
+      messageType: messageType ?? this.messageType,
+      isSent: isSent ?? this.isSent,
+      isRead: isRead ?? this.isRead,
+      sentAt: sentAt ?? this.sentAt,
+    );
   }
 }
 

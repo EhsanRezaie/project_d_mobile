@@ -133,10 +133,12 @@ class ChatService {
     String identifier,
     String content, {
     String? replyToId,
+    String? clientId,
   }) async {
     try {
       final data = <String, dynamic>{'content': content};
       if (replyToId != null) data['reply_to_id'] = replyToId;
+      if (clientId != null) data['client_id'] = clientId;
       return await ApiService.post('/messages/$identifier/text', data: data);
     } on DioException catch (e) {
       if (e.response != null) return e.response!;
@@ -160,6 +162,7 @@ class ChatService {
     String identifier,
     String imagePath, {
     String? caption,
+    String? clientId,
   }) async {
     try {
       final formData = FormData.fromMap({
@@ -168,6 +171,7 @@ class ChatService {
           filename: 'photo_${DateTime.now().millisecondsSinceEpoch}.jpg',
         ),
         'caption': caption,
+        'client_id': ?clientId,
       });
       return await ApiService.upload('/messages/$identifier/photo', formData);
     } on DioException catch (e) {
@@ -179,8 +183,9 @@ class ChatService {
   static Future<Response> sendVoice(
     String identifier,
     String filePath,
-    int duration,
-  ) async {
+    int duration, {
+    String? clientId,
+  }) async {
     try {
       final formData = FormData.fromMap({
         'file': await MultipartFile.fromFile(
@@ -188,6 +193,7 @@ class ChatService {
           filename: 'voice_${DateTime.now().millisecondsSinceEpoch}.aac',
         ),
         'duration': duration,
+        'client_id': ?clientId,
       });
       return await ApiService.upload('/messages/$identifier/voice', formData);
     } on DioException catch (e) {

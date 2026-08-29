@@ -167,8 +167,60 @@ void main() {
         500,
       );
       await tester.pump();
+      // Let the snap-back animation complete before the callback fires.
+      await tester.pump(const Duration(milliseconds: 300));
 
       expect(replied, isTrue);
+    });
+
+    testWidgets('swipe right fires reply on own messages too', (tester) async {
+      var replied = false;
+
+      await tester.pumpWidget(
+        buildTestable(
+          ChatMessageBubble(
+            message: message(),
+            isMine: true,
+            onReplyTap: () => replied = true,
+          ),
+          providers: [
+            ChangeNotifierProvider(create: (_) => SettingsProvider()),
+          ],
+        ),
+      );
+
+      await tester.fling(
+        find.text('Hello'),
+        const Offset(320, 0),
+        500,
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(replied, isTrue);
+    });
+
+    testWidgets('small drag does not commit a reply', (tester) async {
+      var replied = false;
+
+      await tester.pumpWidget(
+        buildTestable(
+          ChatMessageBubble(
+            message: message(),
+            isMine: false,
+            onReplyTap: () => replied = true,
+          ),
+          providers: [
+            ChangeNotifierProvider(create: (_) => SettingsProvider()),
+          ],
+        ),
+      );
+
+      await tester.drag(find.text('Hello'), const Offset(20, 0));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(replied, isFalse);
     });
   });
 }

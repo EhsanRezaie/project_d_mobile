@@ -2,6 +2,7 @@ enum MessageType { text, photo, voice }
 
 class Message {
   final String id;
+  final String? clientId;
   final String matchId;
   final String senderId;
   final String receiverId;
@@ -23,6 +24,7 @@ class Message {
 
   Message({
     required this.id,
+    this.clientId,
     required this.matchId,
     required this.senderId,
     required this.receiverId,
@@ -46,6 +48,7 @@ class Message {
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
       id: json['id'] ?? '',
+      clientId: json['client_id'],
       matchId: json['match_id'] ?? '',
       senderId: json['sender_id'] ?? '',
       receiverId: json['receiver_id'] ?? '',
@@ -78,6 +81,7 @@ class Message {
   factory Message.fromSocketData(Map<String, dynamic> data) {
     return Message(
       id: data['id'] ?? '',
+      clientId: data['client_id'],
       matchId: data['match_id'] ?? '',
       senderId: data['sender_id'] ?? '',
       receiverId: data['receiver_id'] ?? '',
@@ -107,11 +111,13 @@ class Message {
     String senderId,
     String receiverId,
     String content, {
+    String? clientId,
     bool isSent = true,
     MessageType messageType = MessageType.text,
   }) {
     return Message(
       id: id,
+      clientId: clientId,
       matchId: matchId,
       senderId: senderId,
       receiverId: receiverId,
@@ -125,6 +131,7 @@ class Message {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'client_id': clientId,
       'match_id': matchId,
       'sender_id': senderId,
       'receiver_id': receiverId,
@@ -166,6 +173,7 @@ class Message {
   }) {
     return Message(
       id: id,
+      clientId: clientId,
       matchId: matchId,
       senderId: senderId,
       receiverId: receiverId,

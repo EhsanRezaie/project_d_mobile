@@ -65,6 +65,16 @@ void main() {
       final m = Message.fromJson(jsonMessage(matchId: null));
       expect(m.matchId, '');
     });
+
+    test('parses client_id from JSON', () {
+      final m = Message.fromJson(jsonMessage(clientId: 'tmp-1'));
+      expect(m.clientId, 'tmp-1');
+    });
+
+    test('client_id is null when absent', () {
+      final m = Message.fromJson(jsonMessage());
+      expect(m.clientId, isNull);
+    });
   });
 
   group('Message.fromSocketData', () {
@@ -75,6 +85,11 @@ void main() {
       expect(m.id, 'msg-1');
       expect(m.isDelivered, isFalse);
       expect(m.isRead, isFalse);
+    });
+
+    test('parses client_id from socket frames', () {
+      final m = Message.fromSocketData(jsonMessage(clientId: 'tmp-9'));
+      expect(m.clientId, 'tmp-9');
     });
   });
 
@@ -90,6 +105,18 @@ void main() {
       expect(m.sentAt.isBefore(after) || m.sentAt.isAtSameMomentAs(after), isTrue);
       expect(m.sentAt.isAfter(before) || m.sentAt.isAtSameMomentAs(before), isTrue);
     });
+
+    test('carries a client_id for optimistic-send reconciliation', () {
+      final m = Message.local(
+        'tmp-2',
+        'match-1',
+        'user-a',
+        'user-b',
+        'Hey',
+        clientId: 'tmp-2',
+      );
+      expect(m.clientId, 'tmp-2');
+    });
   });
 
   group('Message.toJson round-trip', () {
@@ -103,6 +130,12 @@ void main() {
       expect(round.isEdited, original.isEdited);
       expect(round.isDeleted, original.isDeleted);
       expect(round.sentAt, original.sentAt);
+    });
+
+    test('round-trips client_id', () {
+      final original = Message.fromJson(jsonMessage(clientId: 'tmp-7'));
+      final round = Message.fromJson(original.toJson());
+      expect(round.clientId, 'tmp-7');
     });
 
     test('serialises a photo message', () {

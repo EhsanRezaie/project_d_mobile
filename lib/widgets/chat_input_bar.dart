@@ -57,6 +57,14 @@ class _ChatInputBarState extends State<ChatInputBar> {
     if (widget.isEditing && widget.editingContent != null) {
       _controller.text = widget.editingContent!;
     }
+    // Stop broadcasting "typing..." as soon as the field loses focus, not just
+    // on send — otherwise the peer's indicator lingers until the 5s timeout.
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus) {
+        widget.onTypingStopped?.call();
+        _lastTypingSent = null;
+      }
+    });
   }
 
   @override

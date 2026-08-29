@@ -630,6 +630,7 @@ class ChatProvider extends ChangeNotifier {
       identifier,
       content,
       isSent: true,
+      clientId: tempId,
     );
     _messages.add(tempMessage);
     _sentCountInNewChat++;
@@ -640,6 +641,7 @@ class ChatProvider extends ChangeNotifier {
         identifier,
         content,
         replyToId: replyToId,
+        clientId: tempId,
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = response.data;
@@ -692,6 +694,7 @@ class ChatProvider extends ChangeNotifier {
       identifier,
       caption ?? '',
       messageType: MessageType.photo,
+      clientId: tempId,
     );
     _messages.add(tempMessage);
     _sentCountInNewChat++;
@@ -702,6 +705,7 @@ class ChatProvider extends ChangeNotifier {
         identifier,
         imagePath,
         caption: caption,
+        clientId: tempId,
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = response.data;
@@ -742,6 +746,7 @@ class ChatProvider extends ChangeNotifier {
       identifier,
       '',
       messageType: MessageType.voice,
+      clientId: tempId,
     );
     _messages.add(tempMessage);
     _sentCountInNewChat++;
@@ -752,6 +757,7 @@ class ChatProvider extends ChangeNotifier {
         identifier,
         filePath,
         duration,
+        clientId: tempId,
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = response.data;
@@ -1169,13 +1175,14 @@ class ChatProvider extends ChangeNotifier {
         break;
 
       case 'messages_read':
-        if (_isEventForActiveChat(event, data)) {
-          _handleMessagesRead({
-            'message_ids': List<String>.from(
-              event['message_ids'] ?? data['message_ids'] ?? [],
-            ),
-          });
-        }
+        // Always process — even when the sender is NOT in the open chat, the
+        // list card's last-message tick should flip to "read" in real time.
+        _handleMessagesRead({
+          'chat_id': event['chat_id'] ?? data['chat_id'],
+          'message_ids': List<String>.from(
+            event['message_ids'] ?? data['message_ids'] ?? [],
+          ),
+        });
         break;
 
       case 'chat_updated':
@@ -1295,8 +1302,12 @@ class ChatProvider extends ChangeNotifier {
 
   void _handleNewMessage(Map<String, dynamic> data) {
     final message = Message.fromSocketData(data);
-    // Don't add duplicate if already in list (optimistic add)
-    final exists = _messages.any((m) => m.id == message.id);
+    // Don't add duplicate if already in list (optimistic add). Match by
+    // client_id first — our optimistic temp carries it — then fall back to the
+    // server id (covers multi-device where we never created a temp).
+    final exists = (message.clientId != null && message.clientId!.isNotEmpty)
+        ? _messages.any((m) => m.clientId == message.clientId)
+        : _messages.any((m) => m.id == message.id);
     if (!exists) {
       _messages.add(message);
 
@@ -1362,6 +1373,26 @@ class ChatProvider extends ChangeNotifier {
         _messages[index] = _messages[index].copyWith(isRead: true);
       }
     }
+
+    // Even when the sender is not inside the chat, flip the list card's
+    // last-message tick to "read" so the receipt feels realtime everywhere.
+    final chatId = data['chat_id'] as String?;
+    if (chatId != null && messageIds.isNotEmpty) {
+      void patch(List<ChatCard> list) {
+        final idx = list.indexWhere((c) => c.id == chatId);
+        if (idx == -1) return;
+        final lm = list[idx].lastMessage;
+        if (lm != null && lm.id != null && messageIds.contains(lm.id)) {
+          list[idx] = list[idx].copyWith(
+            lastMessage: lm.copyWith(isRead: true),
+          );
+        }
+      }
+
+      patch(_conversations);
+      patch(_pendingChats);
+      patch(_incomingChats);
+    }
     _safeNotify();
   }
 
@@ -1382,6 +1413,12 @@ class ChatProvider extends ChangeNotifier {
   @visibleForTesting
   void applyMessageEdited(Map<String, dynamic> data) =>
       _handleMessageEdited(data);
+
+  @visibleForTesting
+  void applyNewMessage(Map<String, dynamic> data) => _handleNewMessage(data);
+
+  @visibleForTesting
+  void applyMessagesRead(Map<String, dynamic> data) => _handleMessagesRead(data);
 
   void _handleNewNotification(Map<String, dynamic> data) {
     debugPrint('WS new_notification: $data');

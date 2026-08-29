@@ -108,6 +108,63 @@ void main() {
     });
   });
 
+  group('outbox (reliable delivery across reconnects)', () {
+    test('queues frames sent before connect and flushes them on connect',
+        () async {
+      buildService();
+      service.subscribe('c1');
+      service.sendTyping('c1');
+      expect(fake.sent, isEmpty, reason: 'nothing sent while disconnected');
+
+      await service.connect();
+
+      expect(fake.sent, [
+        '{"type":"subscribe","chat_id":"c1"}',
+        '{"type":"typing","chat_id":"c1"}',
+      ]);
+    });
+
+    test('coalesces typing frames to the latest state while disconnected',
+        () async {
+      buildService();
+      service.sendTyping('c1');
+      service.sendTyping('c1');
+      service.sendTypingStopped('c1');
+      expect(fake.sent, isEmpty);
+
+      await service.connect();
+
+      expect(fake.sent, ['{"type":"typing_stopped","chat_id":"c1"}']);
+    });
+
+    test('merges read receipts for the same chat while disconnected', () async {
+      buildService();
+      service.sendReadReceipt('c1', ['a', 'b']);
+      service.sendReadReceipt('c1', ['c']);
+      expect(fake.sent, isEmpty);
+
+      await service.connect();
+
+      expect(fake.sent, [
+        '{"type":"read","chat_id":"c1","message_ids":["a","b","c"]}',
+      ]);
+    });
+
+    test('keeps subscribe for different chats separate', () async {
+      buildService();
+      service.subscribe('c1');
+      service.subscribe('c2');
+      expect(fake.sent, isEmpty);
+
+      await service.connect();
+
+      expect(fake.sent, [
+        '{"type":"subscribe","chat_id":"c1"}',
+        '{"type":"subscribe","chat_id":"c2"}',
+      ]);
+    });
+  });
+
   group('incoming frames', () {
     test('emits parsed JSON events', () async {
       buildService();

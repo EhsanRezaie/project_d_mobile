@@ -40,6 +40,9 @@ class _VoiceMessagePlayerState extends State<VoiceMessagePlayer> {
             _isPlaying = state.playing;
           });
           if (state.processingState == ProcessingState.completed) {
+            // Reset the cursor to the start so the next replay starts cleanly
+            // instead of resuming from the end.
+            _player!.seek(Duration.zero);
             setState(() {
               _isPlaying = false;
             });
@@ -62,6 +65,15 @@ class _VoiceMessagePlayerState extends State<VoiceMessagePlayer> {
     if (_isPlaying) {
       await _player!.pause();
     } else {
+      // Replaying after completion (or a stale position at the tail) must
+      // restart from the beginning, not resume at the end.
+      final position = _player!.position;
+      final duration = _player!.duration;
+      if (duration != null &&
+          duration > Duration.zero &&
+          position >= duration) {
+        await _player!.seek(Duration.zero);
+      }
       await _player!.play();
     }
   }

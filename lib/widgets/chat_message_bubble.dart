@@ -38,14 +38,9 @@ class ChatMessageBubble extends StatelessWidget {
       child: GestureDetector(
         onLongPress: isMine ? onLongPress : null,
         onTap: onTap,
-        onHorizontalDragEnd: (details) {
-          if (onReplyTap != null &&
-              details.primaryVelocity != null &&
-              details.primaryVelocity! > 250) {
-            onReplyTap!();
-          }
-        },
-        child: Container(
+        child: _SwipeToReply(
+          onReply: onReplyTap,
+          child: Container(
           constraints: BoxConstraints(
             maxWidth: MediaQuery.of(context).size.width * 0.75,
           ),
@@ -100,6 +95,7 @@ class ChatMessageBubble extends StatelessWidget {
                 ),
               ),
             ],
+          ),
           ),
         ),
       ),
@@ -328,6 +324,105 @@ class _PhotoLightbox extends StatelessWidget {
                 )
               : const Icon(Icons.image, size: 64, color: Colors.white54),
         ),
+      ),
+    );
+  }
+}
+
+/// Telegram-style swipe-to-reply: dragging the bubble right reveals a reply
+/// chip behind it and, past a threshold, triggers the reply. Works for both
+/// own and received messages. The bubble visually follows your finger (no
+/// more "static message" feeling) and snaps back when the gesture is cancelled.
+class _SwipeToReply extends StatefulWidget {
+  final Widget child;
+  final VoidCallback? onReply;
+
+  static const double maxDrag = 110;
+  static const double threshold = 70;
+
+  const _SwipeToReply({required this.child, this.onReply});
+
+  @override
+  State<_SwipeToReply> createState() => _SwipeToReplyState();
+}
+
+class _SwipeToReplyState extends State<_SwipeToReply>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 180),
+  );
+  bool _dragging = false;
+  double _startX = 0;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onStart(DragStartDetails details) {
+    _startX = details.globalPosition.dx;
+    _dragging = false;
+  }
+
+  void _onUpdate(DragUpdateDetails details) {
+    final raw = details.globalPosition.dx - _startX;
+    if (!_dragging && raw > 8) _dragging = true;
+    if (!_dragging) return;
+    _controller.value =
+        (raw.clamp(0.0, _SwipeToReply.maxDrag)) / _SwipeToReply.maxDrag;
+  }
+
+  void _onEnd(DragEndDetails details) {
+    final travelled = _controller.value * _SwipeToReply.maxDrag;
+    final committed =
+        travelled >= _SwipeToReply.threshold ||
+        (details.primaryVelocity ?? 0) > 300;
+    final callback = widget.onReply;
+    _controller.animateBack(0).then((_) {
+      if (committed && callback != null && mounted) {
+        callback();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onHorizontalDragStart: _onStart,
+      onHorizontalDragUpdate: _onUpdate,
+      onHorizontalDragEnd: _onEnd,
+      child: AnimatedBuilder(
+        animation: _controller,
+        child: widget.child,
+        builder: (context, child) {
+          final dx = _controller.value * _SwipeToReply.maxDrag;
+          final revealed = _controller.value.clamp(0.0, 1.0);
+          return Stack(
+            clipBehavior: Clip.none,
+            children: [
+              // Reply chip revealed behind the bubble as it slides right.
+              Positioned(
+                left: dx > 4 ? 4 : -32,
+                top: 0,
+                bottom: 0,
+                child: Center(
+                  child: Opacity(
+                    opacity: revealed,
+                    child: Icon(
+                      Icons.reply,
+                      size: 22,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ),
+              ),
+              Transform.translate(offset: Offset(dx, 0), child: child),
+            ],
+          );
+        },
       ),
     );
   }

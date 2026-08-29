@@ -17,6 +17,7 @@ final DateTime kNow = DateTime.parse(kNowIso);
 
 Map<String, dynamic> jsonMessage({
   String id = 'msg-1',
+  String? clientId,
   String? matchId = 'match-1',
   String senderId = 'user-a',
   String receiverId = 'user-b',
@@ -37,6 +38,7 @@ Map<String, dynamic> jsonMessage({
 }) {
   return {
     'id': id,
+    'client_id': clientId,
     'match_id': matchId,
     'sender_id': senderId,
     'receiver_id': receiverId,
