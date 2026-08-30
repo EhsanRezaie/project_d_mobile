@@ -2,8 +2,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dating_app/models/photo.dart';
-import 'package:dating_app/models/profile_stats.dart';
-import 'package:dating_app/services/chat_service.dart';
 import 'package:dating_app/services/photo_service.dart';
 
 class ProfileProvider extends ChangeNotifier {
@@ -20,14 +18,12 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   List<PhotoResponse> _photos = [];
-  ProfileStats? _stats;
   bool _isLoading = false;
   bool _isInitialized = false;
   String? _error;
 
   // Getters
   List<PhotoResponse> get photos => _photos;
-  ProfileStats? get stats => _stats;
   bool get isLoading => _isLoading;
   bool get isInitialized => _isInitialized;
   String? get error => _error;
@@ -64,30 +60,6 @@ class ProfileProvider extends ChangeNotifier {
     }
   }
 
-  // Load stats
-  Future<void> loadStats() async {
-    try {
-      final response = await ChatService.getSwipeStats();
-      if (response.statusCode == 200) {
-        final data = response.data as Map<String, dynamic>;
-        _stats = ProfileStats(
-          likesSent: data['total_likes_sent'] ?? 0,
-          matches: data['total_matches'] ?? 0,
-          messages: data['total_messages'] ?? 0,
-          likesRemainingToday: data['daily_likes_remaining'] ?? 0,
-        );
-      }
-      _safeNotify();
-    } catch (e) {
-      debugPrint('❌ Failed to load stats: $e');
-    }
-  }
-
-  void addPhotoFromUpload(PhotoResponse photo) {
-    _photos.add(photo);
-    _safeNotify();
-  }
-
   void removePhotoById(String id) {
     _photos.removeWhere((p) => p.id == id);
     _safeNotify();
@@ -105,24 +77,25 @@ class ProfileProvider extends ChangeNotifier {
     _safeNotify();
   }
 
-  // Refresh all data
-  Future<void> refreshData() async {
-    debugPrint('🔄 Refreshing profile data...');
-    await Future.wait([
-      loadPhotos(),
-      loadStats(),
-    ]);
-    debugPrint('✅ Profile data refreshed');
-  }
-
   void _setLoading(bool loading) {
     _isLoading = loading;
     _safeNotify();
   }
 
+  void addPhotoFromUpload(PhotoResponse photo) {
+    _photos.add(photo);
+    _safeNotify();
+  }
+
+  // Refresh all data
+  Future<void> refreshData() async {
+    debugPrint('🔄 Refreshing profile data...');
+    await Future.wait([loadPhotos()]);
+    debugPrint('✅ Profile data refreshed');
+  }
+
   void clear() {
     _photos = [];
-    _stats = null;
     _error = null;
     _isLoading = false;
     _isInitialized = false;

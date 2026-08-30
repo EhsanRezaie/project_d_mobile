@@ -7,38 +7,28 @@ import 'package:dating_app/providers/auth_provider.dart';
 import 'package:dating_app/providers/settings_provider.dart';
 import 'package:dating_app/models/photo.dart';
 import 'package:dating_app/models/user.dart';
-import 'package:dating_app/models/profile_stats.dart';
 import '../../../helpers/test_helpers.dart';
 import '../../../helpers/fixtures.dart';
 
 class FakeProfileProvider extends ProfileProvider {
   final List<PhotoResponse> _photos;
-  final ProfileStats? _stats;
   final bool _isLoading;
 
   // ignore: prefer_initializing_formals
   FakeProfileProvider({
     List<PhotoResponse> photos = const [],
-    ProfileStats? stats,
     bool isLoading = false,
   }) : _photos = photos, // ignore: prefer_initializing_formals
-       _stats = stats, // ignore: prefer_initializing_formals
        _isLoading = isLoading; // ignore: prefer_initializing_formals
 
   @override
   List<PhotoResponse> get photos => _photos;
 
   @override
-  ProfileStats? get stats => _stats;
-
-  @override
   bool get isLoading => _isLoading;
 
   @override
   Future<void> loadPhotos() async {}
-
-  @override
-  Future<void> loadStats() async {}
 
   @override
   Future<void> refreshData() async {}
@@ -115,6 +105,28 @@ void main() {
       );
 
       expect(find.byIcon(Icons.headset_mic_outlined), findsOneWidget);
+    });
+
+    testWidgets('shows profile completion percentage below the avatar', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        buildTestable(
+          const ProfileScreen(),
+          providers: [
+            ChangeNotifierProvider<ProfileProvider>(
+              create: (_) => FakeProfileProvider(),
+            ),
+            ChangeNotifierProvider<AuthProvider>(
+              create: (_) =>
+                  FakeAuthProvider(user: user(profileCompletion: 58)),
+            ),
+            ChangeNotifierProvider(create: (_) => SettingsProvider()),
+          ],
+        ),
+      );
+
+      expect(find.text('58%'), findsOneWidget);
     });
   });
 }

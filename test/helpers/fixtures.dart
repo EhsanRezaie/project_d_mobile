@@ -170,6 +170,7 @@ Map<String, dynamic> jsonUser({
   int? age = 30,
   String createdAt = kNowIso,
   Map<String, dynamic>? settings,
+  int profileCompletion = 0,
 }) {
   return {
     'id': id,
@@ -178,6 +179,7 @@ Map<String, dynamic> jsonUser({
     'age': age,
     'created_at': createdAt,
     'settings': ?settings,
+    'profile_completion': profileCompletion,
   };
 }
 
@@ -190,8 +192,8 @@ Message message({String? matchId, MessageType type = MessageType.text}) =>
         messageType: type == MessageType.photo
             ? 'photo'
             : type == MessageType.voice
-                ? 'voice'
-                : 'text',
+            ? 'voice'
+            : 'text',
         content: type == MessageType.text ? 'Hello' : null,
         mediaUrl: type == MessageType.text ? null : 'https://example.com/m',
         mediaDuration: type == MessageType.voice ? 12 : null,
@@ -201,12 +203,11 @@ Message message({String? matchId, MessageType type = MessageType.text}) =>
 SwipeUser swipeUser({double? distanceKm}) =>
     SwipeUser.fromJson(jsonSwipeUser(distanceKm: distanceKm));
 
-Match match({String kind = 'match', int unreadCount = 0}) =>
-    Match.fromJson(
-      kind == 'match'
-          ? jsonMatch(unreadCount: unreadCount)
-          : jsonConversation(kind: 'unmatched', unreadCount: unreadCount),
-    );
+Match match({String kind = 'match', int unreadCount = 0}) => Match.fromJson(
+  kind == 'match'
+      ? jsonMatch(unreadCount: unreadCount)
+      : jsonConversation(kind: 'unmatched', unreadCount: unreadCount),
+);
 
 ChatCard chatCard({
   String id = 'chat-1',
@@ -217,40 +218,42 @@ ChatCard chatCard({
   bool isOnline = false,
   String? lastMessage,
   int unreadCount = 0,
-}) =>
-    ChatCard.fromJson({
-      'id': id,
-      'status': status,
-      'initiator_id': initiatorId,
-      'user': {
-        'id': 'user-b',
-        'name': name ?? 'Bob',
-        'age': 28,
-        'main_photo_url': mainPhotoUrl,
-        'is_online': isOnline,
-        'last_seen_at': null,
-      },
-      'last_message': lastMessage == null
-          ? null
-          : {
-              'content': lastMessage,
-              'message_type': 'text',
-              'is_sent': false,
-              'is_read': false,
-              'sent_at': kNowIso,
-            },
-      'unread_count': unreadCount,
-      'updated_at': kNowIso,
-    });
+}) => ChatCard.fromJson({
+  'id': id,
+  'status': status,
+  'initiator_id': initiatorId,
+  'user': {
+    'id': 'user-b',
+    'name': name ?? 'Bob',
+    'age': 28,
+    'main_photo_url': mainPhotoUrl,
+    'is_online': isOnline,
+    'last_seen_at': null,
+  },
+  'last_message': lastMessage == null
+      ? null
+      : {
+          'content': lastMessage,
+          'message_type': 'text',
+          'is_sent': false,
+          'is_read': false,
+          'sent_at': kNowIso,
+        },
+  'unread_count': unreadCount,
+  'updated_at': kNowIso,
+});
 
 DiscoverProfile discoverProfile({double? distanceKm}) =>
     DiscoverProfile.fromJson(jsonDiscoverProfile(distanceKm: distanceKm));
 
-User user() => User.fromJson(jsonUser());
+User user({int profileCompletion = 0}) =>
+    User.fromJson(jsonUser(profileCompletion: profileCompletion));
 
-Interest interest() => Interest.fromJson({'id': 'i1', 'name': 'Hiking', 'category': 'Outdoor'});
+Interest interest() =>
+    Interest.fromJson({'id': 'i1', 'name': 'Hiking', 'category': 'Outdoor'});
 
-Prompt prompt() => Prompt.fromJson({'id': 'p1', 'question': 'My simple pleasures'});
+Prompt prompt() =>
+    Prompt.fromJson({'id': 'p1', 'question': 'My simple pleasures'});
 
 PhotoResponse photoResponse() => PhotoResponse.fromJson({
   'id': 'ph1',

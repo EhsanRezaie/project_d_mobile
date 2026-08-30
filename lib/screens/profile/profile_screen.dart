@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:dating_app/config/app_theme.dart';
 import 'package:dating_app/models/photo.dart';
-import 'package:dating_app/models/profile_stats.dart';
 import 'package:dating_app/models/user.dart';
 import 'package:dating_app/providers/auth_provider.dart';
 import 'package:dating_app/providers/profile_provider.dart';
@@ -17,7 +16,6 @@ import 'package:dating_app/screens/profile/edit_prompts_screen.dart';
 import 'package:dating_app/screens/profile/edit_photos_screen.dart';
 import 'package:dating_app/screens/profile/settings_screen.dart';
 import 'package:dating_app/screens/profile/tickets_screen.dart';
-import 'package:dating_app/screens/profile/verify_selfie_screen.dart';
 import 'package:dating_app/screens/profile/referral_screen.dart';
 import 'package:dating_app/generated/app_localizations.dart';
 import 'package:dating_app/widgets/action_toast.dart';
@@ -91,7 +89,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: Text(
               'Profile',
               style: TextStyle(
-                fontFamily: AppTheme.fontFor(!Localizations.localeOf(context).languageCode.contains('en')),
+                fontFamily: AppTheme.fontFor(
+                  !Localizations.localeOf(context).languageCode.contains('en'),
+                ),
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
                 color: onSurfaceColor,
@@ -107,9 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => const TicketsScreen(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const TicketsScreen()),
                 );
               },
             ),
@@ -157,40 +155,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     },
                   ),
                   const SizedBox(height: 32),
-                  Selector<ProfileProvider, ProfileStats?>(
-                    selector: (_, p) => p.stats,
-                    builder: (context, stats, _) => _buildStatsSection(
-                      stats,
-                      primaryColor,
-                      onSurfaceColor,
-                      textMutedColor,
-                      isDark,
-                    ),
-                  ),
-                  const SizedBox(height: 32),
                   Selector<AuthProvider, User?>(
                     selector: (_, a) => a.user,
                     builder: (context, user, _) =>
                         _buildPremiumSection(user, primaryColor, isDark),
                   ),
                   const SizedBox(height: 32),
-                  Selector<AuthProvider, User?>(
-                    selector: (_, a) => a.user,
-                    builder: (context, user, _) {
-                      return Selector<ProfileProvider, PhotoResponse?>(
-                        selector: (_, p) => p.mainPhoto,
-                        builder: (context, mainPhoto, _) {
-                          return _buildAccountSection(
-                            user,
-                            mainPhoto,
-                            onSurfaceColor,
-                            textMutedColor,
-                            isDark,
-                          );
-                        },
-                      );
-                    },
-                  ),
+                  _buildAccountSection(onSurfaceColor, textMutedColor, isDark),
                   const SizedBox(height: 20),
                 ],
               ),
@@ -214,6 +185,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context,
     ).languageCode.contains('en');
     final avatarSize = AppLayout.s(context, 120);
+    final bgColor = isDark ? AppTheme.darkBackground : AppTheme.lightBackground;
     return Column(
       children: [
         Stack(
@@ -233,63 +205,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             Positioned.fill(
               child: Center(
-                child: Container(
-                  width: avatarSize,
-                  height: avatarSize,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: AppTheme.primaryGradient(),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppTheme.primaryGradientStart.withValues(alpha: 0.3),
-                        blurRadius: 16,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  padding: const EdgeInsets.all(3),
-                  child: ClipOval(
-                    child: Container(
-                      color: Colors.white,
-                      child: ClipOval(
-                        child: mainPhoto != null && mainPhoto.url.isNotEmpty
-                            ? LayoutBuilder(
-                                builder: (context, constraints) {
-                                  final double normX = mainPhoto.cropOffsetX;
-                                  final double normY = mainPhoto.cropOffsetY;
-                                  return Transform.translate(
-                                     offset: Offset(
-                                       normX * avatarSize,
-                                       normY * avatarSize,
-                                     ),
-                                     child: CachedImage.widget(
-                                       mainPhoto.displayUrl,
-                                       width: avatarSize,
-                                       height: avatarSize,
-                                       fit: BoxFit.cover,
-                                       errorWidget: Container(
-                                         color: Colors.grey.shade200,
-                                         child: const Icon(
-                                           Icons.person,
-                                           color: Colors.grey,
-                                           size: 50,
-                                         ),
-                                       ),
-                                     ),
-                                   );
-                                },
-                              )
-                            : Container(
-                                color: Colors.grey.shade200,
-                                child: const Icon(
-                                  Icons.person,
-                                  color: Colors.grey,
-                                  size: 50,
+                child: ClipOval(
+                  child: mainPhoto != null && mainPhoto.url.isNotEmpty
+                      ? LayoutBuilder(
+                          builder: (context, constraints) {
+                            final double normX = mainPhoto.cropOffsetX;
+                            final double normY = mainPhoto.cropOffsetY;
+                            return Transform.translate(
+                              offset: Offset(
+                                normX * avatarSize,
+                                normY * avatarSize,
+                              ),
+                              child: CachedImage.widget(
+                                mainPhoto.displayUrl,
+                                width: avatarSize,
+                                height: avatarSize,
+                                fit: BoxFit.cover,
+                                errorWidget: Container(
+                                  color: Colors.grey.shade200,
+                                  child: const Icon(
+                                    Icons.person,
+                                    color: Colors.grey,
+                                    size: 50,
+                                  ),
                                 ),
                               ),
-                      ),
-                    ),
-                  ),
+                            );
+                          },
+                        )
+                      : Container(
+                          color: Colors.grey.shade200,
+                          child: const Icon(
+                            Icons.person,
+                            color: Colors.grey,
+                            size: 50,
+                          ),
+                        ),
                 ),
               ),
             ),
@@ -334,6 +285,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
+            Positioned(
+              bottom: 4,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 1,
+                  ),
+                  decoration: BoxDecoration(
+                    color: primaryColor,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: bgColor, width: 1.5),
+                  ),
+                  child: Text(
+                    '${user?.profileCompletion ?? 0}%',
+                    style: TextStyle(
+                      fontFamily: AppTheme.fontFor(
+                        !Localizations.localeOf(
+                          context,
+                        ).languageCode.contains('en'),
+                      ),
+                      fontSize: 9,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 16),
@@ -360,83 +342,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStatsSection(
-    ProfileStats? stats,
-    Color primaryColor,
-    Color onSurfaceColor,
-    Color textMutedColor,
-    bool isDark,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isDark ? AppTheme.darkSurface : AppTheme.lightSurface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isDark ? AppTheme.darkBorder : AppTheme.lightBorder,
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildStatItem(
-            '❤️',
-            stats?.likesSent ?? 0,
-            'Likes',
-            onSurfaceColor,
-            textMutedColor,
-          ),
-          _buildStatItem(
-            '💑',
-            stats?.matches ?? 0,
-            'Matches',
-            onSurfaceColor,
-            textMutedColor,
-          ),
-          _buildStatItem(
-            '💬',
-            stats?.messages ?? 0,
-            'Messages',
-            onSurfaceColor,
-            textMutedColor,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatItem(
-    String icon,
-    int value,
-    String label,
-    Color onSurfaceColor,
-    Color textMutedColor,
-  ) {
-    return Column(
-      children: [
-        Text(icon, style: const TextStyle(fontSize: 24)),
-        const SizedBox(height: 4),
-        Text(
-          value.toString(),
-          style: TextStyle(
-            fontFamily: AppTheme.fontFor(!Localizations.localeOf(context).languageCode.contains('en')),
-            fontSize: 20,
-            fontWeight: FontWeight.w700,
-            color: onSurfaceColor,
-          ),
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            fontFamily: AppTheme.fontFor(!Localizations.localeOf(context).languageCode.contains('en')),
-            fontSize: 12,
-            color: textMutedColor,
-          ),
         ),
       ],
     );
@@ -481,7 +386,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Text(
                     isPremium ? 'PREMIUM' : 'BONDI PREMIUM',
                     style: TextStyle(
-                      fontFamily: AppTheme.fontFor(!Localizations.localeOf(context).languageCode.contains('en')),
+                      fontFamily: AppTheme.fontFor(
+                        !Localizations.localeOf(
+                          context,
+                        ).languageCode.contains('en'),
+                      ),
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
                       color: isPremium
@@ -504,7 +413,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Text(
                         'Active',
                         style: TextStyle(
-                          fontFamily: AppTheme.fontFor(!Localizations.localeOf(context).languageCode.contains('en')),
+                          fontFamily: AppTheme.fontFor(
+                            !Localizations.localeOf(
+                              context,
+                            ).languageCode.contains('en'),
+                          ),
                           fontSize: 8,
                           fontWeight: FontWeight.w700,
                           color: Colors.white,
@@ -536,7 +449,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Text(
                         '$daysLeft days',
                         style: TextStyle(
-                          fontFamily: AppTheme.fontFor(!Localizations.localeOf(context).languageCode.contains('en')),
+                          fontFamily: AppTheme.fontFor(
+                            !Localizations.localeOf(
+                              context,
+                            ).languageCode.contains('en'),
+                          ),
                           fontSize: 12,
                           color: Colors.white.withValues(alpha: 0.8),
                           fontWeight: FontWeight.w500,
@@ -553,7 +470,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ? 'You have Premium access'
                 : 'Unlock Exclusive Connections',
             style: TextStyle(
-              fontFamily: AppTheme.fontFor(!Localizations.localeOf(context).languageCode.contains('en')),
+              fontFamily: AppTheme.fontFor(
+                !Localizations.localeOf(context).languageCode.contains('en'),
+              ),
               fontSize: 22,
               fontWeight: FontWeight.w600,
               color: Colors.white,
@@ -565,7 +484,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ? 'Enjoy unlimited likes, advanced filters, and more.'
                 : 'See who liked you, advanced filters, and more.',
             style: TextStyle(
-              fontFamily: AppTheme.fontFor(!Localizations.localeOf(context).languageCode.contains('en')),
+              fontFamily: AppTheme.fontFor(
+                !Localizations.localeOf(context).languageCode.contains('en'),
+              ),
               fontSize: 14,
               color: Colors.white.withValues(alpha: 0.8),
             ),
@@ -597,7 +518,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Text(
                 isPremium ? 'Manage Subscription' : 'Get Premium',
                 style: TextStyle(
-                  fontFamily: AppTheme.fontFor(!Localizations.localeOf(context).languageCode.contains('en')),
+                  fontFamily: AppTheme.fontFor(
+                    !Localizations.localeOf(
+                      context,
+                    ).languageCode.contains('en'),
+                  ),
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: isPremium ? Colors.white : primaryColor,
@@ -611,23 +536,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildAccountSection(
-    User? user,
-    PhotoResponse? mainPhoto,
     Color onSurfaceColor,
     Color textMutedColor,
     bool isDark,
   ) {
-    // Check if the user is verified (selfie/face verification)
-    final bool isFaceVerified = (user?.isVerified ?? false) ||
-        (mainPhoto?.faceVerified ?? false);
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'ACCOUNT',
           style: TextStyle(
-            fontFamily: AppTheme.fontFor(!Localizations.localeOf(context).languageCode.contains('en')),
+            fontFamily: AppTheme.fontFor(
+              !Localizations.localeOf(context).languageCode.contains('en'),
+            ),
             fontSize: 12,
             fontWeight: FontWeight.w600,
             color: isDark ? Colors.grey.shade500 : Colors.grey.shade700,
@@ -645,31 +566,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           child: Column(
             children: [
-              // 1. Verify Picture
-              _buildAccountTile(
-                icon: isFaceVerified ? Icons.verified : Icons.verified_outlined,
-                title: 'Verify Picture',
-                status: isFaceVerified ? '✅ Verified' : '',
-                onSurfaceColor: onSurfaceColor,
-                textMutedColor: textMutedColor,
-                isDark: isDark,
-                onTap: () {
-                  if (!isFaceVerified) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const VerifySelfieScreen(),
-                      ),
-                    ).then((verified) {
-                      if (verified == true && mounted) {
-                        _onRefresh();
-                      }
-                    });
-                  }
-                },
-                showChevron: !isFaceVerified,
-              ),
-              // 2. Basic Info
+              // 1. Basic Info
               _buildAccountTile(
                 icon: Icons.person_outline,
                 title: 'Basic Info',
@@ -786,9 +683,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (_) => const ReferralScreen(),
-                    ),
+                    MaterialPageRoute(builder: (_) => const ReferralScreen()),
                   );
                 },
                 showChevron: true,
@@ -850,7 +745,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontFamily: AppTheme.fontFor(!Localizations.localeOf(context).languageCode.contains('en')),
+                        fontFamily: AppTheme.fontFor(
+                          !Localizations.localeOf(
+                            context,
+                          ).languageCode.contains('en'),
+                        ),
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                         color: onSurfaceColor,
@@ -865,7 +764,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          fontFamily: AppTheme.fontFor(!Localizations.localeOf(context).languageCode.contains('en')),
+                          fontFamily: AppTheme.fontFor(
+                            !Localizations.localeOf(
+                              context,
+                            ).languageCode.contains('en'),
+                          ),
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
                           color: status.contains('Verified')

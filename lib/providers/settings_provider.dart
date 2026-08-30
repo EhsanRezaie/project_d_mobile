@@ -40,7 +40,7 @@ class SettingsProvider extends ChangeNotifier {
     super.dispose();
   }
 
-   Future<void> _loadSavedDarkMode() async {
+  Future<void> _loadSavedDarkMode() async {
     final prefs = await SharedPreferences.getInstance();
     // Dark is the default unless the user explicitly chose otherwise. This
     // also repairs stale 'dark_mode=false' written by older buggy builds.
@@ -145,4 +145,3 @@ class SettingsProvider extends ChangeNotifier {
     }
   }
 }
-

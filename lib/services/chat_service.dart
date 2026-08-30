@@ -60,10 +60,7 @@ class ChatService {
     }
   }
 
-  static Future<Response> createChat(
-    String userId,
-    String content,
-  ) async {
+  static Future<Response> createChat(String userId, String content) async {
     try {
       return await ApiService.post(
         '/chats',
@@ -88,22 +85,16 @@ class ChatService {
     }
   }
 
-  static Future<Response> getLikedUsers({int limit = 20, int offset = 0}) async {
+  static Future<Response> getLikedUsers({
+    int limit = 20,
+    int offset = 0,
+  }) async {
     try {
       return await ApiService.get(
         '/swipes/liked',
         queryParams: {'limit': limit, 'offset': offset},
         cacheOptions: ApiService.noCache,
       );
-    } on DioException catch (e) {
-      if (e.response != null) return e.response!;
-      rethrow;
-    }
-  }
-
-  static Future<Response> getSwipeStats() async {
-    try {
-      return await ApiService.get('/swipes/stats', cacheOptions: ApiService.noCache);
     } on DioException catch (e) {
       if (e.response != null) return e.response!;
       rethrow;
@@ -289,7 +280,10 @@ class ChatService {
 
   static Future<Response> reportUser(String userId, String reason) async {
     try {
-      return await ApiService.post('/reports/$userId', data: {'reason': reason});
+      return await ApiService.post(
+        '/reports/$userId',
+        data: {'reason': reason},
+      );
     } on DioException catch (e) {
       if (e.response != null) return e.response!;
       rethrow;
@@ -429,7 +423,9 @@ class ChatService {
 
   static Future<Response> deleteDeviceToken(String tokenId) async {
     try {
-      return await ApiService.dio.delete('/notifications/device-token/$tokenId');
+      return await ApiService.dio.delete(
+        '/notifications/device-token/$tokenId',
+      );
     } on DioException catch (e) {
       if (e.response != null) return e.response!;
       rethrow;
